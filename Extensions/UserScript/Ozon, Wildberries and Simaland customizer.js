@@ -3,8 +3,8 @@
 // @name:ru      Ozon, Wildberries и Simaland настройка: сортировка отзывов по возрастанию рейтинга
 // @namespace    http://tampermonkey.net/
 // @version      2024-05-20
-// @description  Ozon.ru with reviews sorted in descending order of rating
-// @description:ru  Ozon и Wildberries: сортировка отзывов по товару по возрастанию рейтинга
+// @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
+// @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
 // @license        GPL-3.0-or-later
 // @icon         https://raw.githubusercontent.com/LebedevIV/Ozon-and-Wildberries-customizer/main/icons/ozon_wildberries_44x44.png
