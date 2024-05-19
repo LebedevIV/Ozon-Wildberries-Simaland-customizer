@@ -2,20 +2,20 @@
 // @name         Ozon, Wildberries and Simaland customizer: sorting reviews by ascending rating
 // @name:ru      Ozon, Wildberries и Simaland настройка: сортировка отзывов по возрастанию рейтинга
 // @namespace    http://tampermonkey.net/
-// @version      2024-05-18
+// @version      2024-05-20
 // @description  Ozon.ru with reviews sorted in descending order of rating
 // @description:ru  Ozon и Wildberries: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
 // @license        GPL-3.0-or-later
-// @icon         https://raw.githubusercontent.com/LebedevIV/Ozon-and-Wildberries-customizer/master/icons/ozon_wildberries_44x44.png
+// @icon         https://raw.githubusercontent.com/LebedevIV/Ozon-and-Wildberries-customizer/main/icons/ozon_wildberries_44x44.png
 // @match          http://*.ozon.ru/*
 // @match          https://*.ozon.ru/*
 // @match          http://*.wildberries.ru/*
 // @match          https://*.wildberries.ru/*
 // @match          http://*.sima-land.ru/*
 // @match          https://*.sima-land.ru/*
-// @downloadURL    https://github.com/LebedevIV/Ozon-and-Wildberries-customizer/raw/main/Extensions/UserScript/Ozon%20and%20Wildberries%20customizer.js
-// @updateURL      https://github.com/LebedevIV/Ozon-and-Wildberries-customizer/raw/main/Extensions/UserScript/Ozon%20and%20Wildberries%20customizer.js
+// @downloadURL    https://raw.githubusercontent.com/LebedevIV/Ozon-and-Wildberries-customizer/main/Extensions/UserScript/Ozon%20and%20Wildberries%20customizer.js
+// @updateURL      https://raw.githubusercontent.com/LebedevIV/Ozon-and-Wildberries-customizer/main/Extensions/UserScript/Ozon%20and%20Wildberries%20customizer.js
 // ==/UserScript==
 
 (function() {
