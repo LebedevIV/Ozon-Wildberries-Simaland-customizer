@@ -18,6 +18,7 @@
 // @updateURL      https://raw.githubusercontent.com/LebedevIV/Ozon-Wildberries-Simaland-customizer/main/Extensions/UserScript/Ozon%2C%20Wildberries%20and%20Simaland%20customizer.js
 // ==/UserScript==
 
+
 (function() {
     'use strict'
 
@@ -157,7 +158,7 @@
             }
         }, 50);
     }
-    
+
     // Sima-lend: Ожидание загружки страницы каталога привязка к рейтингам ссылок на страницы товара
     function SimaLendCatalogReviews() {
         // выбор всех Рейтинги на странице каталога: div с классом 'YREwlL'
