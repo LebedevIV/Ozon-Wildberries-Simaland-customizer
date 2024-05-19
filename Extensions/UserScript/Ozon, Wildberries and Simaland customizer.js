@@ -14,8 +14,8 @@
 // @match          https://*.wildberries.ru/*
 // @match          http://*.sima-land.ru/*
 // @match          https://*.sima-land.ru/*
-// @downloadURL    https://raw.githubusercontent.com/LebedevIV/Ozon-and-Wildberries-customizer/main/Extensions/UserScript/Ozon%20and%20Wildberries%20customizer.js
-// @updateURL      https://raw.githubusercontent.com/LebedevIV/Ozon-and-Wildberries-customizer/main/Extensions/UserScript/Ozon%20and%20Wildberries%20customizer.js
+// @downloadURL    https://raw.githubusercontent.com/LebedevIV/Ozon-Wildberries-Simaland-customizer/main/Extensions/UserScript/Ozon%2C%20Wildberries%20and%20Simaland%20customizer.js
+// @updateURL      https://raw.githubusercontent.com/LebedevIV/Ozon-Wildberries-Simaland-customizer/main/Extensions/UserScript/Ozon%2C%20Wildberries%20and%20Simaland%20customizer.js
 // ==/UserScript==
 
 (function() {
