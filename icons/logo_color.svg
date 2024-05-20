@@ -1,147 +1,26 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   width="66.487076mm"
-   height="66.487083mm"
-   viewBox="0 0 66.487076 66.487083"
-   version="1.1"
-   id="svg1"
-   sodipodi:docname="logo_color.svg"
-   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <sodipodi:namedview
-     id="namedview6"
-     pagecolor="#ffffff"
-     bordercolor="#000000"
-     borderopacity="0.25"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     inkscape:document-units="mm"
-     inkscape:zoom="0.36213173"
-     inkscape:cx="-151.87843"
-     inkscape:cy="461.15816"
-     inkscape:window-width="1488"
-     inkscape:window-height="1032"
-     inkscape:window-x="40"
-     inkscape:window-y="0"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="layer1" />
-  <defs
-     id="defs6">
-    <linearGradient
-       id="linearGradient1">
-      <stop
-         style="stop-color:#0000ff;stop-opacity:1;"
-         offset="0"
-         id="stop1" />
-      <stop
-         style="stop-color:#004fff;stop-opacity:1;"
-         offset="1"
-         id="stop2" />
+<svg width="66.487076mm" height="66.487083mm" viewBox="0 0 66.487076 66.487083" version="1.1" id="svg1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
+  <defs id="defs6">
+    <linearGradient id="linearGradient1">
+      <stop style="stop-color:#0000ff;stop-opacity:1;" offset="0" id="stop1"></stop>
+      <stop style="stop-color:#1f4fff;stop-opacity:1;" offset="1" id="stop2"></stop>
     </linearGradient>
-    <linearGradient
-       id="linearGradient2"
-       x1="84.636856"
-       y1="167.30284"
-       x2="116.45966"
-       y2="115.76886"
-       gradientUnits="userSpaceOnUse"
-       xlink:href="#linearGradient1" />
-    <!-- Градиент для нижнего сектора -->
-    <radialGradient
-       id="Gradient1"
-       gradientTransform="scale(1.316674,0.75948944)"
-       cx="87.199776"
-       cy="233.7655"
-       fx="87.199776"
-       fy="233.7655"
-       r="21.885454"
-       gradientUnits="userSpaceOnUse">
-      <stop
-         offset="0"
-         style="stop-color:#ffd500;stop-opacity:1;"
-         id="stop3" />
-      <stop
-         offset="1"
-         style="stop-color:#c15300;stop-opacity:1;"
-         id="stop4" />
-    </radialGradient>
-    <!-- Градиент для правого сектора -->
-    <linearGradient
-       id="Gradient3"
-       gradientTransform="scale(0.81575557,1.2258574)"
-       x1="161.21608"
-       y1="128.44086"
-       x2="135.40808"
-       y2="93.192429"
-       gradientUnits="userSpaceOnUse">
-      <stop
-         offset="0"
-         style="stop-color:#e8005a;stop-opacity:1;"
-         id="stop5" />
-      <stop
-         offset="1"
-         style="stop-color:#fe68ad;stop-opacity:1;"
-         id="stop6" />
+    <linearGradient id="gradient-0" bx:pinned="true">
+      <stop offset="0.413" style="stop-color: rgb(255, 230, 0);"></stop>
     </linearGradient>
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#Gradient1"
-       id="linearGradient6"
-       x1="124.90358"
-       y1="149.59593"
-       x2="114.58726"
-       y2="187.95386"
-       gradientUnits="userSpaceOnUse" />
+    <linearGradient gradientUnits="userSpaceOnUse" x1="114.266" y1="154.162" x2="114.266" y2="187.406" id="gradient-2">
+      <stop offset="0" style="stop-color:#fcff0a;stop-opacity:1;" id="stop3"></stop>
+      <stop offset="1" style="stop-color:#c65100;stop-opacity:1;" id="stop4"></stop>
+    </linearGradient>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="130.965" y1="120.919" x2="130.965" y2="170.875" id="gradient-3">
+      <stop offset="0" style="stop-color:#e8005a;stop-opacity:1;" id="stop5"></stop>
+      <stop offset="1" style="stop-color:#fe55a0;stop-opacity:1;" id="stop6"></stop>
+    </linearGradient>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="97.726" cy="145.763" r="16.626" id="linearGradient1-0" xlink:href="#linearGradient1"></radialGradient>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="97.726" y1="120.919" x2="97.726" y2="170.607" id="linearGradient1-1" xlink:href="#linearGradient1"></linearGradient>
   </defs>
-  <g
-     inkscape:label="Слой 1"
-     inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(-81.099636,-120.91881)">
-    <!-- Изначальный сектор -->
-    <path
-       style="fill:url(#linearGradient2);stroke-width:2;stroke-linecap:round"
-       id="path1"
-       sodipodi:type="arc"
-       sodipodi:cx="114.34318"
-       sodipodi:cy="154.16235"
-       sodipodi:rx="33.243542"
-       sodipodi:ry="33.243542"
-       sodipodi:start="2.6241364"
-       sodipodi:end="4.7126639"
-       sodipodi:arc-type="slice"
-       d="m 85.45187,170.60697 a 33.243542,33.243542 0 0 1 0.155039,-33.15868 33.243542,33.243542 0 0 1 28.745411,-16.52948 l -0.009,33.24354 z" />
-    <!-- Нижний сектор -->
-    <path
-       style="fill:url(#linearGradient6);stroke-width:2;stroke-linecap:round"
-       id="path2"
-       sodipodi:type="arc"
-       sodipodi:cx="114.34317"
-       sodipodi:cy="154.16235"
-       sodipodi:rx="33.243542"
-       sodipodi:ry="33.243542"
-       sodipodi:start="0.52667104"
-       sodipodi:end="2.6242677"
-       sodipodi:arc-type="slice"
-       d="m 143.08172,170.8725 a 33.243542,33.243542 0 0 1 -28.8939,16.53303 33.243542,33.243542 0 0 1 -28.738116,-16.80235 l 28.893466,-16.44083 z" />
-    <!-- Правый сектор -->
-    <path
-       style="fill:url(#Gradient3);stroke-width:2;stroke-linecap:round"
-       id="path3"
-       sodipodi:type="arc"
-       sodipodi:cx="114.34317"
-       sodipodi:cy="154.16235"
-       sodipodi:rx="33.243542"
-       sodipodi:ry="33.243542"
-       sodipodi:start="4.7124989"
-       sodipodi:end="0.52674977"
-       sodipodi:arc-type="slice"
-       d="m 114.34682,120.91881 a 33.243542,33.243542 0 0 1 28.81316,16.66874 33.243542,33.243542 0 0 1 -0.0796,33.28721 l -28.73723,-16.71241 z" />
+  <g id="layer1" transform="translate(-81.099636,-120.91881)">
+    <path style="stroke-width: 2; stroke-linecap: round; fill: url(#linearGradient1-1);" id="path1" d="m 85.45187,170.60697 a 33.243542,33.243542 0 0 1 0.155039,-33.15868 33.243542,33.243542 0 0 1 28.745411,-16.52948 l -0.009,33.24354 z"></path>
+    <path style="stroke-width: 2; stroke-linecap: round; fill-rule: nonzero; fill: url(#gradient-2);" id="path2" d="m 143.08172,170.8725 a 33.243542,33.243542 0 0 1 -28.8939,16.53303 33.243542,33.243542 0 0 1 -28.738116,-16.80235 l 28.893466,-16.44083 z"></path>
+    <path style="stroke-width: 2; stroke-linecap: round; fill: url(#gradient-3);" id="path3" d="m 114.34682,120.91881 a 33.243542,33.243542 0 0 1 28.81316,16.66874 33.243542,33.243542 0 0 1 -0.0796,33.28721 l -28.73723,-16.71241 z"></path>
   </g>
 </svg>
