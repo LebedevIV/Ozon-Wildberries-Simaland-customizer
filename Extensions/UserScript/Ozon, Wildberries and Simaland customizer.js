@@ -2,7 +2,7 @@
 // @name         Ozon, Wildberries and Simaland customizer: sorting reviews by ascending rating
 // @name:ru      Ozon, Wildberries и Simaland настройка: сортировка отзывов по возрастанию рейтинга
 // @namespace    http://tampermonkey.net/
-// @version      2024-05-20
+// @version      2024-05-21
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
