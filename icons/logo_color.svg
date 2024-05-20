@@ -2,21 +2,21 @@
   <defs id="defs6">
     <linearGradient id="linearGradient1">
       <stop style="stop-color:#0000ff;stop-opacity:1;" offset="0" id="stop1"></stop>
-      <stop style="stop-color:#1f4fff;stop-opacity:1;" offset="1" id="stop2"></stop>
+      <stop style="stop-opacity: 1; stop-color: rgb(46, 91, 255);" offset="1" id="stop2"></stop>
     </linearGradient>
     <linearGradient id="gradient-0" bx:pinned="true">
-      <stop offset="0.413" style="stop-color: rgb(255, 230, 0);"></stop>
+      <stop offset="0.413" style="stop-color: rgb(255, 99, 0);"></stop>
     </linearGradient>
     <linearGradient gradientUnits="userSpaceOnUse" x1="114.266" y1="154.162" x2="114.266" y2="187.406" id="gradient-2">
       <stop offset="0" style="stop-color:#fcff0a;stop-opacity:1;" id="stop3"></stop>
       <stop offset="1" style="stop-color:#c65100;stop-opacity:1;" id="stop4"></stop>
     </linearGradient>
-    <linearGradient gradientUnits="userSpaceOnUse" x1="130.965" y1="120.919" x2="130.965" y2="170.875" id="gradient-3">
-      <stop offset="0" style="stop-color:#e8005a;stop-opacity:1;" id="stop5"></stop>
-      <stop offset="1" style="stop-color:#fe55a0;stop-opacity:1;" id="stop6"></stop>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="130.965" y1="120.919" x2="130.965" y2="170.875" id="gradient-3" gradientTransform="matrix(-0.874521, 0.484987, -0.570392, -1.028569, 326.723513, 231.641441)">
+      <stop offset="0" style="stop-opacity: 1; stop-color: rgb(121, 0, 190);" id="stop5"></stop>
+      <stop offset="1" style="stop-opacity: 1; stop-color: rgb(255, 87, 194);" id="stop6"></stop>
     </linearGradient>
     <radialGradient gradientUnits="userSpaceOnUse" cx="97.726" cy="145.763" r="16.626" id="linearGradient1-0" xlink:href="#linearGradient1"></radialGradient>
-    <linearGradient gradientUnits="userSpaceOnUse" x1="97.726" y1="120.919" x2="97.726" y2="170.607" id="linearGradient1-1" xlink:href="#linearGradient1"></linearGradient>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="97.726" y1="120.919" x2="97.726" y2="170.607" id="linearGradient1-1" gradientTransform="matrix(-0.872212, -0.489129, 0.59505, -1.061093, 98.831868, 346.661369)" xlink:href="#linearGradient1"></linearGradient>
   </defs>
   <g id="layer1" transform="translate(-81.099636,-120.91881)">
     <path style="stroke-width: 2; stroke-linecap: round; fill: url(#linearGradient1-1);" id="path1" d="m 85.45187,170.60697 a 33.243542,33.243542 0 0 1 0.155039,-33.15868 33.243542,33.243542 0 0 1 28.745411,-16.52948 l -0.009,33.24354 z"></path>
