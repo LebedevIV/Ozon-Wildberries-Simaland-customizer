@@ -7,7 +7,7 @@
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
 // @license        GPL-3.0-or-later
-// @icon         https://raw.githubusercontent.com/LebedevIV/Ozon-and-Wildberries-customizer/main/icons/ozon_wildberries_44x44.png
+// @icon         https://raw.githubusercontent.com/LebedevIV/Ozon-Wildberries-Simaland-customizer/main/icons/logo_color.svg
 // @match          http://*.ozon.ru/*
 // @match          https://*.ozon.ru/*
 // @match          http://*.wildberries.ru/*
