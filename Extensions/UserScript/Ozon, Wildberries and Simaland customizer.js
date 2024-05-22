@@ -30,50 +30,34 @@
     function sortWildberriesReviews() {
         const interval = setInterval(() => {
             // ожидание загрузки страницы до необходимого значения
-            const sortButton = document.querySelector("#app > div:nth-child(5) > div > section > div.product-feedbacks__main > div.user-activity__tab-content > div.product-feedbacks__sorting > ul > li:nth-child(2) > a");
-            // if (sortButton) {
-            //     sortButton.click(); // Первый клик по кнопке сортировки
-            //     sortButton.click(); // Второй клик с непонятной целью - потенциально для удостоверения сортировки
-            //     clearInterval(interval);
-            // }
-            if (sortButton) {
-                // Создаем событие click
-                // let eventClick = new MouseEvent("click", {
-                //     bubbles: true,
-                //     cancelable: true,
-                //     // clientX: 100,
-                //     // clientY: 100
-                // });
-                // Инициируем событие на элементе
-                // Проверяет, содержит ли элемент класс 'sorting__selected'
-                if (sortButton.classList.contains('sorting__selected')) {
-                    // Находим элемент <span> внутри найденного <a>
-                    let span = sortButton.querySelector('span');
-
-                    // Проверяем, содержит ли <span> класс 'sorting__decor--up'
-                    // Если содержит, значит, сортировка по возрастанию уже произведена и никаких действий производить не нужно (всё равно приходится произвести два клика, так как, по-видимому, по мере загрузки происходит последующий сброс настроек) - надо отловить объект, который появляется уже после сброса, и зацепиться за него
-                    if (span && span.classList.contains('sorting__decor--up')) {
-                        // console.log('Элемент <span> внутри <a> принадлежит классу sorting__decor--up.');
-                        // Первое нажатие производит сортировку по убыванию рейтинга
-                        // sortButton.dispatchEvent(eventClick);
-                        // sortButton.click();
-                        // Второе нажатие производит сортировку по возрастанию рейтинга
-                        // sortButton.dispatchEvent(eventClick);
-                        // sortButton.click();
+			const preloader = document.querySelector('#app > div[data-link="visible{:router.showPreview}"]')
+			if (preloader?.style.display === 'none') {            
+                const sortButton = document.querySelector("#app > div:nth-child(5) > div > section > div.product-feedbacks__main > div.user-activity__tab-content > div.product-feedbacks__sorting > ul > li:nth-child(2) > a");
+                if (sortButton) {
+                    // Инициируем событие на элементе
+                    // Проверяет, содержит ли элемент класс 'sorting__selected'
+                    if (sortButton.classList.contains('sorting__selected')) {
+                        // Находим элемент <span> внутри найденного <a>
+                        let span = sortButton.querySelector('span');
+                        // Проверяем, содержит ли <span> класс 'sorting__decor--up'
+                        // Если содержит, значит, сортировка по возрастанию уже произведена и никаких действий производить не нужно (всё равно приходится произвести два клика, так как, по-видимому, по мере загрузки происходит последующий сброс настроек) - надо отловить объект, который появляется уже после сброса, и зацепиться за него
+                        if (span && span.classList.contains('sorting__decor--up')) {
+                            // Первое нажатие производит сортировку по убыванию рейтинга
+                            // sortButton.click();
+                            // Второе нажатие производит сортировку по возрастанию рейтинга
+                            // sortButton.click();
+                        } else {
+                            // Нажатие производит сортировку по возрастанию рейтинга
+                            sortButton.click();
+                        }
                     } else {
-                        // Нажатие производит сортировку по возрастанию рейтинга
-                        // sortButton.dispatchEvent(eventClick);
+                        // Первое нажатие производит сортировку по убыванию рейтинга
+                        sortButton.click();
+                        // Второе нажатие производит сортировку по возрастанию рейтинга
                         sortButton.click();
                     }
-                } else {
-                    // Первое нажатие производит сортировку по убыванию рейтинга
-                    // sortButton.dispatchEvent(eventClick);
-                    sortButton.click();
-                    // Второе нажатие производит сортировку по возрастанию рейтинга
-                    // sortButton.dispatchEvent(eventClick);
-                    sortButton.click();
+                    clearInterval(interval);
                 }
-                clearInterval(interval);
             }
         }, 50);
     }
