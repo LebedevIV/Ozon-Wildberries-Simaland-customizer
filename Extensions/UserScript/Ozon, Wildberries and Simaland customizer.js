@@ -237,7 +237,7 @@
     // перехват событияй истории (кнопок назад-вперёд)
     window.onpopstate = () => {
         // получаем текущий адрес страницы
-        if (new URL(window.location.href).pathname.startsWith('/catalog/') && window.location.search.includes('feedbacks?imtId=')) {
+        if (new URL(window.location.href).pathname.startsWith('/catalog/') && window.location.href.includes('feedbacks?imtId=')) {
             sortWildberriesReviews();
         }
     };
