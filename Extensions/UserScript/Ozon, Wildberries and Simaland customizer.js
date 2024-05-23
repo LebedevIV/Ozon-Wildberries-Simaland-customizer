@@ -229,7 +229,7 @@
 					NewURL = `${currentURL}&sort=score_asc`;				
 				}
 			}
-			chrome.runtime.sendMessage({action: "redirect", url: NewURL});
+			window.location.href = NewURL;
 		}
     // Ozon: Страница каталога товаров
     } else if (currentURL.includes('ozon.ru/category/') ) {
