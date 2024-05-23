@@ -222,9 +222,9 @@
         // Если условия выполняются - добавляем к адресу параметр и перезагружаем страницу с новым адресом, производящим сортировку рейтингов по возрастанию
         if (config.SettingsOnOff) {
 			let NewURL
-			if (!currentURL.includes('reviews?sort=score_asc') && !currentURL.includes('reviews?sort=score_desc')) {
+			if (!currentURL.includes('/reviews?sort=score_asc') && !currentURL.includes('/reviews?sort=score_desc')) {
 				if (currentURL.includes('/reviews')) {
-					NewURL = currentURL.replace('/reviews', 'reviews?sort=score_asc');
+					NewURL = currentURL.replace('/reviews', '/reviews?sort=score_asc');
 				} else {
 					NewURL = `${currentURL}&sort=score_asc`;				
 				}
