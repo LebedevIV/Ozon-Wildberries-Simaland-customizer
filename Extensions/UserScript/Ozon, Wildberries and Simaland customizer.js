@@ -37,7 +37,7 @@
 				// Привязка к блоку рейтингов (звёздочек) ссылки на рейтинги
 				if(link_parentNode.tagName.toLowerCase() === 'div' && link_parentNode.classList.contains('iy6')) {
 					// Определение наличия вложенного элемента, содержащего рейтинги
-					var divStars = link_parentNode.querySelector('div.iw.wi1');
+					var divStars = link_parentNode.querySelector('div.tsBodyMBold');
 					if (divStars) {
 						// Сохранение текущего содержимого div
 						let oldHTML = divStars.innerHTML;
