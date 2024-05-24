@@ -1,0 +1,1128 @@
+/* @import "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"; */
+/* @import url('https://fonts.googleapis.com/css2?family=Wire+One&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=BenchNine:wght@300&display=swap');
+
+/* Variables */
+:root {
+	--primary: #cc2929;
+	--accent: #581111;
+
+	--background: #111;
+	--background: linear-gradient(#141e30, #3c76b8);
+	--secondary: #272727;
+	--tertiary: #424242;
+	--lightGrey: #999;
+	--lightlightGrey: #f0f0f0;
+	--white: #fff;
+	--SigninButtonsWidth:93%;
+}
+
+.login__form {
+  background-color: #263238;
+  padding: 50px;
+  border-radius: 10px;
+}
+
+label {
+  cursor: pointer;
+  color: #666;
+}
+
+html,
+body {
+  min-width: 300px;
+  height: fit-content;
+  min-height: 300px;
+}
+
+
+
+body {
+	/* display: flex; */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(#141e30, #3c76b8);
+  /* background-color: #263238; */
+  /* font-family: "Lato", sans-serif; */
+  /* font-family: "Open+Sans"; */
+  /* font-weight: 200;   */
+  /* font-family: "BenchNine"; */
+  width: 300px;
+  min-height: 300px;
+	margin:0;
+	padding:0px;
+}
+
+.div-view{
+	box-sizing: border-box; /* border and padding include in dimensions of element  */
+	padding:8px;
+	  width: 100%;
+  /* height: calc(100% -  2px ); */
+  border-radius: 0.5rem;
+	/* z-index:-1; */
+  margin-top: 0px;
+  padding:10px;
+  /* opacity: 0; */
+  /* pointer-events: none; */
+  transition-duration: 0.15s;
+  transition-timing-function: ease-in-out;
+  transform: scale(1.1);
+	/* right: 0px; */
+  top: 0px;
+  left: 0px;
+	/* border: 2px solid var(--secondary); */
+	/* border-radius: 0.5rem; */
+	/* background: var(--background); */
+	/* position: fixed; */
+}
+
+/* #divDonate {
+}
+#divSettings {
+}
+#divSignIn {
+}
+#divSignIn > center > .container {
+} */
+
+h1 {
+  color: #fff;
+  text-align: center;
+  font-size: 30px;
+  font-weight:normal;
+  padding: 0;
+  margin: 0 0 5px;
+}
+
+h2 {
+  color: #fff;
+  text-align: center;
+  font-size: 20px;
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+/* #extensionName {
+	cursor: pointer;
+}
+#extensionName:hover {
+	text-decoration: underline; 
+} */
+#extensionName_div {
+	/* margin: 0.3rem 0 0.3rem 0; */
+	padding: 0.2rem 0 1px 0;
+	color: white;
+	cursor: pointer;
+    -webkit-transition: 0.5s all ease-in-out;
+	transition: 0.5s all ease-in-out;
+}
+#extensionName_div:hover {
+	text-decoration: underline; 
+	background: #ffffff4d;
+    -webkit-transition: none;
+	transition: none;
+}
+#ext {
+	/* padding: 0.25rem 0; */
+	z-index: 69;
+	position: fixed;
+	/* background: var(--secondary); */
+	margin: 0;
+	/* top: 1px; */
+	right: 10px;
+	/* border-radius: 0.25rem; */
+	cursor: pointer;
+    -webkit-transition: 0.5s all ease-in-out;
+	transition: 0.5s all ease-in-out;
+	color: var(--white);
+}
+#ext:hover {
+	text-decoration: underline;
+	background: #ffffff4d;
+    -webkit-transition: none;
+	transition: none;
+}
+#ext-version {
+	/* padding: 0.25rem 0.5rem; */
+	color: white;
+	font-size: 15px;
+	font-family: system-ui;
+}
+
+#ext-update {
+	cursor: pointer;
+	color: var(--white);
+	text-decoration: none;
+	/* background: var(--primary); */
+	border-radius: 0.25rem;
+}
+#ext-update:hover {
+	text-decoration: underline;
+}
+
+.btn {
+  display: block;
+  border: 1px solid transparent;
+  height: 45px;
+  width: 100%;
+  border-radius: 5px;
+  transition: all 0.5s ease;
+  cursor: pointer;
+  outline: none;
+  /* font-family: "Lato", sans-serif; */
+  /* font-family: "Open+Sans"; */
+  /* font-weight: 200; */
+}
+
+.social__login {
+  display: flex;
+  width: var(--SigninButtonsWidth);
+}
+
+.social__login a {
+  flex: 1;
+  text-align: center;
+  text-decoration: none;
+  line-height: 45px;
+/* margin: 5px; */
+/* padding-left: 10px; */
+/* padding-right: 10px; */
+  margin-bottom: 20px
+}
+
+.social__login i {
+  margin-right: 10px;
+}
+
+.btn__google {
+  background-color: #4285F4;
+  color: #fff;
+  font-size: 18px;
+  margin-top: 5px;
+}
+
+.btn__google:hover {
+  background-color: #fff;
+  color: #4285F4;
+  border: 1px solid #4285F4;
+}
+
+.btn__github {
+  background-color: #333;
+  color: #fff;
+  font-size: 18px;
+}
+
+.btn__github:hover {
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #333;
+}
+
+
+
+
+.container{
+	
+}
+
+form#form_LoginGoogle {
+	width: 100%;
+}
+
+form#form_LoginWithEmailAndPasswordSignIn {
+	align-items: center;
+	/* display: flex; */
+	width: 100%;
+	/* height: 100%; */
+	justify-content: center;
+	flex-direction: column;
+	text-align: center;
+	box-sizing: border-box;
+	color:white;
+	/* background-color: #4285f4; */
+	flex-wrap: wrap;
+}
+
+
+div#password-out, div#password-out_DeleteAccount {
+	width: 100%;
+	padding: 0px;
+	/* justify-content: center; */
+	/* align-items: center; */
+	margin-bottom: 0px;
+	margin-top: 5px;
+	/* height: 15px; */
+	transition-duration: 0.3s;
+	--focusWithinScale: scale(1.2);
+
+}
+div#password-out_DeleteAccount {
+	position: relative!important;
+}
+div#password-out:focus-within, div#password-out_DeleteAccount:focus-within {
+  transform: var(--focusWithinScale);
+  transition-duration: 0.3s;
+}
+div#password-out_DeleteAccount:focus-within {
+  transform: var(--focusWithinScale);
+  transition-duration: 0.3s;
+}
+input#input_email, input#password-input, input#password-input_DeleteAccount {
+	margin: 5px;
+	font-size: 150%;
+	text-align: left;
+	width: 85%;
+	height: 5%;
+	padding: 10px;
+	/* border: none; */
+	font-family: monospace;
+	transition-duration: 0.3s;
+	border-radius: 5px;
+}
+input#password-input_DeleteAccount {
+	width: 92%;
+	margin: 0 0 5px 0;
+	/* position: absolute; */
+	right: 0;
+	top: 5px;
+	height: unset;
+}
+input#input_email:focus/*, input#password-input:focus*/
+{
+	transform: scale(1.2);
+}
+div#password-input-div{
+	border-radius: 5px;
+	padding: 0px;
+	width: 77%;
+	/* background-color:#fff; */
+	background-color:#f5c2e0;
+	margin: 10px auto;
+	/* display: inline-block; */
+	border: none;
+}
+/*
+div#password-input-div-input:focus-within {
+  transform: scale(1.2);
+  transition-duration: 0.3s;
+}
+div#password-input-div:focus-within {
+  transform: scale(1.2);
+  transition-duration: 0.3s;
+}*/
+
+div#password-input-div-input, div#password-input-div-input_DeleteAccount{
+	margin-bottom: 0px;
+}
+input#password-input {
+	margin: 0px;
+}
+
+div#password-input-div-a, div#password-input-div-a_DeleteAccount{
+	/* position: absolute ; */ /*почему-то отбрасывает элемент наверх*/
+	right:10px;
+	top:0px;
+	bottom:0px;
+	vertical-align: middle;
+	padding: 5px;
+    /* float: right; */
+    /* position: relative; */
+    /* right: 15px; */
+    /* top: -35px; */
+	
+	cursor:pointer;
+	
+      /* background-image: url("data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2020%2020%22%20width%3D%2225pt%22%20height%3D%2225pt%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M.2%2010a11%2011%200%200%201%2019.6%200A11%2011%200%200%201%20.2%2010zm9.8%204a4%204%200%201%200%200-8%204%204%200%200%200%200%208zm0-2a2%202%200%201%201%200-4%202%202%200%200%201%200%204z%22%2F%3E%3C%2Fsvg%3E"); */
+      /* background-repeat: no-repeat; */
+}
+div#password-input-div-a_DeleteAccount{
+	position: absolute;
+	right: 0px;
+}
+/* a#password-input-showpwd {
+	width: 80%;
+	margin: 5px;
+	padding: 5px;
+	border-radius: 0px;
+	position: relative;
+	right:5px;
+	top:3px;
+} */
+
+
+/*#password-input {
+	width: 100%;
+	padding: 5px 0;
+	height: 30px;
+	line-height: 40px;
+	text-indent: 10px;
+	margin: 0 0 15px 0;
+//	border-radius: 5px;
+	border: 1px solid #999;
+	font-size: 18px;
+}*/
+/*
+.password {
+	width: 200px;
+	margin: 15px auto;
+//	position: relative;
+	background-color:#fff;
+}*/
+/*
+.password-control {
+	position: absolute;
+	top: 11px;
+	right: 6px;
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	background: url(../css/view.svg) 0 0 no-repeat;
+}
+.password-control.view {
+	background: url(../css/no-view.svg) 0 0 no-repeat;
+}
+*/
+button#button_LoginWithEmailAndPasswordSignIn, #button_Donate, #button_Registration, #button_AccountSettings, #button_EmailPasswordReset, #button_url_user_set, #id_btn__delete_account_confirmation, #btn_id_EmailVerification {
+	font-size: 200%;
+	/* background-color: #f5c2e0;*//* magenta */ 
+	/* background-color: #f0f0f0; *//* light-gray */
+	background-color: #4285f4;/* синий */
+	color:white;
+	border-radius: 5px;
+	border: none;
+	text-align: center;
+	font-family: monospace;
+	/* font-weight: bold; */
+	transition-duration: 0.3s;
+	padding: 10px;
+	cursor: pointer;
+	width: var(--SigninButtonsWidth);
+}
+#button_LoginWithEmailAndPasswordSignIn {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+#button_Registration, #button_AccountSettings {
+	padding: 10px;
+	margin: 5px 0 5px 0;
+}
+#button_EmailPasswordReset {
+	margin: 10px 0 10px 0;
+}
+#button_url_user_set{
+	
+	padding: 10px;
+	margin: 5px 0 10px 0;
+	background: gray;
+}
+#btn_id_EmailVerification{
+	margin-top: 10px;
+	height: auto;
+	
+  background-color: #4285F4;
+  color: #fff;
+  font-size: 18px;
+  margin-top: 10px;
+}
+#btn_id_EmailVerification:hover{
+  background-color: #fff;
+  color: #4285F4;
+  /* border: 1px solid #4285F4; */
+}
+
+
+
+
+.white_placeholder::placeholder {
+	color: white;
+}
+
+output#output_Login {
+	/* margin: 0px; */
+	/* margin-top: 50px; */
+	font-size: 150%;
+	color: white;
+	width: 100%;
+	/* line-height: 30px; */
+
+	padding: 5px;
+	border: none;
+	font-family: monospace;
+	/* background-color: rgba(0, 125, 215, 0.0); */
+}
+
+
+
+
+
+
+.d-flex { display: flex; }
+.justify-center { justify-content: center; }
+
+.form-control{
+  padding: .9em;
+  caret-color: #333;
+  &:not(select) {
+    padding: 1.75em .75rem 0 5px;
+  }
+  width: calc(100% - (.75rem + 5px) );
+  border-radius: 2px;
+  border: 2px solid transparent;
+  border-bottom: 2px solid #cfcfcf;
+  background: rgb(242, 242, 243);
+  font-size: 16px;
+}
+.form-control:hover {
+	/* background: rgb(229, 229, 230); */
+}
+select.form-control {
+  -webkit-appearance: menulist-button;
+  height: 55px;
+}
+.form-control:focus {
+  outline: none;
+}
+.form-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+  height: 56px;
+}
+
+.form-control-placeholder {
+  position: absolute;
+  bottom: 1.25em;
+  left: 0;
+  padding: 7px 0 0 13px;
+  transition: all 250ms;
+  opacity: 0.5;
+}
+span.error-msg {
+  color: rgb(224, 32, 32); 
+  font-size: 12px; 
+  font-weight: 500; 
+  transition: all .5s;
+  opacity: 0;
+}
+.form-control:focus + .form-control-placeholder,
+.form-control:valid:not(:placeholder-shown) + .form-control-placeholder,
+.form-control:not(:placeholder-shown) + .form-control-placeholder,
+.form-control:invalid:not(:placeholder-shown) + .form-control-placeholder{
+  font-size: 75%;
+  transform: translate3d(0, -100%, 0);
+  opacity: 1;
+}
+.form-control:invalid:not(:placeholder-shown):not(select):not(:focus), .form-control.invalid:not(:focus) {
+  border-bottom: 2px solid #f55;
+  caret-color: #f55;
+  +label {
+    color: rgb(224, 32, 32);
+    +.error-msg {
+      opacity: 1;
+    }
+  }
+}
+.form-control:invalid:focus {
+  border-bottom: 2px solid #cfcfcf;  
+}
+.showpwd {
+	/* position: absolute; */
+  right: 25px;
+  top: 10px;
+  cursor: pointer;
+  font-size:24px;
+  text-decoration:none; 
+  color: #666;
+}
+
+
+.relative {
+  position: relative;
+  width: fit-content;
+  i {
+    position: absolute;
+    top: 3px; 
+    right: 5px;
+  }
+}
+
+
+hr {
+  /* margin: 50px auto; */
+}
+
+/* Окно настроек */
+
+
+.switch:before {
+  content: attr(data-hover);
+  visibility: hidden;
+  width: 250px;
+  background-color: var(--secondary);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 160%;
+}
+
+.switch:hover:before {
+  visibility: visible;
+}
+
+
+#button_Settings, #button_CloseCurrentView {
+  position: fixed;
+  background: none;
+  box-shadow: none;
+  color: var(--lightlightGrey);
+  top: 1px;
+  right: 1px;
+  padding: 2px;
+	/* z-index: 69; */
+  height: 2rem;
+  width: 2rem;
+}
+#button_CloseCurrentView {
+  top: 0px;
+  right: 1px;
+}
+#button_Settings {
+  top: 0px;
+  right: 30px;
+}
+
+#button_Settings:hover, #button_CloseCurrentView:hover {
+  color: var(--white);
+  transform: rotate(-90deg);
+}
+
+#button_Settings:active, #button_CloseCurrentView:active {
+  transform: scale(1.5);
+}
+
+/*
+//Легенды основных полей
+#dialogboxDonate #dialogboxDonateLegend {
+	font-size: 20px;
+	text-align: center;
+	color:white;
+}*/
+/*
+fieldset {
+    font-family: sans-serif;
+    border: 5px solid #1F497D;
+    background: #ddd;
+    border-radius: 5px;
+    padding: 15px;
+}
+*/
+fieldset legend {
+	/* background: #1F497D; */
+    color: #fff;
+    padding: 5px 10px ;
+    font-size: 30px;
+	/* border-radius: 5px; */
+	/* box-shadow: 0 0 0 5px #ddd; */
+	text-align: center;
+	/* font-weight: bold; */
+}
+
+.dialogbox {
+  transition-duration: 0.15s;
+  transition-timing-function: ease-in-out;
+	/* position: fixed; */
+  background: var(--background);
+	/* margin-top: 5px; */
+	/* left: 0px; */
+	/* width: auto; */
+width: calc(100% - 5px);
+ height: calc(100% - 2px);
+
+	/* border: 2px solid var(--secondary); */
+  border-radius: 0.5rem;
+  padding: 1rem;
+ box-sizing: border-box;
+}
+/*
+button {
+  color: var(--white);
+  background: var(--secondary);
+// box-shadow: 0 2px 4px -1px rgb(0 0 0 / 20%), 0 4px 5px 0 rgb(0 0 0 / 14%),
+ //   0 1px 10px 0 rgb(0 0 0 / 12%);
+}
+*/
+
+#button_Donate, #id_btn__delete_account_confirmation {
+	width: 86%;
+	/* margin-top: 0.3em; */
+	/* margin-bottom: 0.5em; */
+	/* margin-top: 0; */
+	margin-bottom: 10px;
+	cursor: pointer;
+	/* padding: 7px 10px 7px 10px; */
+	padding: 10px 10px 10px 10px;
+	border-radius: 5px;
+	border: none;
+	transition: 0.4s;
+	font-weight: 500;
+	/* background: #ffdaf0;//розовый */
+	background: lightpink;/* розовый */
+	color:#366aa6;
+	font-weight: bold;
+	font-size: 220%;
+	/* z-index:10; */
+}
+#button_Donate{
+	background: #c2f5d3;/* розовый */
+	margin: 0;
+	width: 100%;
+}
+#delete_account_confirmation {
+	width: 92%;
+}
+#id_btn__delete_account_confirmation {
+	background: #ff5a5a;/* розовый */
+	width: 100%;
+}
+#id_btn__delete_account {
+	font-size: 150%;
+}
+
+#dialogboxSettingsLegend {
+  color: var(--tertiary) !important;
+  /* margin: auto; */ /* Center the label */
+  /* padding: .25rem .5rem; */
+  /* border-radius: .25rem; */
+  /* border: .25rem solid var(--secondary); */
+}
+
+
+
+/*   Switches   */
+.toggle-button {
+ position: relative;
+ display: inline-block;
+ width: 50px;
+ height: 25px;
+ margin: 0 3px 0 0;
+ vertical-align: top;
+ background: #ffffff;
+ border: 1px solid #bbc1e1;
+ border-radius: 15px;
+ outline: none;
+ cursor: pointer;
+ -webkit-appearance: none;
+ -moz-appearance: none;
+ appearance: none;
+ transition: all 0.3s cubic-bezier(0.2, 0.85, 0.32, 1.2);
+}
+.toggle-button::after {
+  content: "";
+
+  display: inline-block;
+  position: absolute;
+  left: 1.5px;
+  top: 0.7px;
+
+  width: 22px;
+  height: 22px;
+  background-color: blue;
+  border-radius: 50%;
+
+  transform: translateX(0);
+  transition: all 0.3s cubic-bezier(0.2, 0.85, 0.32, 1.2);
+}
+.toggle-button:checked::after {
+  transform: translateX(calc(100% + 1.5px));
+  background-color: #fff;  
+}
+.toggle-button:checked {
+  background-color: blue;
+}
+.toggle-text {
+  font-size: 20px;
+  color: white;
+  /* font-weight: 600; */
+}
+.container_toggle_SettingsOnOff, .container_toggle_settings_blocking_bypass {
+    margin: 5px 5px 5px 10px;
+}
+
+#server-status {
+  height: 72px;
+  width: 90px;
+  /* filter: invert(21%) sepia(100%) saturate(3618%) hue-rotate(102deg)
+    brightness(96%) contrast(108%); */
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding:5px;
+  
+}
+
+/* Donates */
+/* button_Donates */
+/* General */
+.donate-btn {
+	width:auto;
+	text-align:center;
+	border-style: solid;
+	cursor: pointer;
+	border-width: 2px;
+	border-color: lightgray;
+}
+
+/*
+.donate-btn:hover {
+	color: white;
+	box-shadow: 0 0 0 10px rgba(250, 250, 250, 0.1)
+  transform: scale(1.2);
+  transition-duration: 0.3s;
+}*/
+.donate-btn img {
+	width: 80%;
+	height: 80px;
+	object-fit: contain;
+	/* border-style: solid; */
+	/* border-color: #cfcfcf94; */
+	/* border-width: 1px; */
+	cursor:pointer;
+}
+div#link_donate_Patreon:hover,div#link_donate_YooMoney:hover,div#link_donate_Crypto:hover {
+    transform: scale(1.2);
+  transition-duration: 0.3s;
+}
+div#link_donate_Patreon,div#link_donate_YooMoney,div#link_donate_Crypto {
+  transition-duration: 0.3s;
+}
+div#link_donate_Patreon img {
+	object-fit: fill;
+}
+/*
+.donate-btn::before {
+	content: "";
+	position: absolute;
+	z-index: -1;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0;
+}
+
+.donate-btn.gradient:hover {
+	color: white;
+	box-shadow: 0 5px 35px rgba(0, 0, 0, 0.6);
+	transform: translateY(-5px);
+}
+
+//Individual
+.donate-btnte {
+	background: white;
+	color: black;
+	transition: 0.4s;
+	transform: perspective(1px) translateZ(0);
+}
+
+
+.donate-btn::before {
+	clip-path: circle(0.5% at 50% 50%);
+	background: #9900cc;
+	transition: 0.4s;
+	opacity: 1;
+}
+
+.donate-btn:hover::before {
+	clip-path: circle(100% at 50% 50%);
+}
+*/
+.btn__sign_out {
+  background-color: #4285F4;
+  color: #fff;
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+.btn__sign_out:hover {
+  background-color: #fff;
+  color: #4285F4;
+  border: 1px solid #4285F4;
+}
+
+#sign_out, #delete_account {
+	/* width: 100%; */
+  width: var(--SigninButtonsWidth);
+  /* height: 20px; */
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+/* @keyframes choosing {
+    100% {
+        transform: rotate(0deg) scale(1.1);
+        box-shadow: 0px 0px 20px 2px white;
+    }
+}
+@keyframes choosingBlack {
+    100% {
+        transform: rotate(0deg) scale(1.1);
+        box-shadow: 0px 0px 20px 2px black;
+    }
+} */
+#div_Donate {
+	margin-bottom: 10px;
+	width: 86%;
+	border-radius: 5px;
+}
+
+#sign_out, #delete_account, #delete_account_finish, #div_Donate, #id_div_btn_EmailVerification {
+    -webkit-transition: 0.4s all ease-in-out;
+	transition: 0.4s all ease-in-out;
+	/* transform: rotate(0deg) scale(1); */
+}
+#sign_out:hover, #delete_account:hover, #delete_account_finish:hover, #div_Donate:hover, #id_div_btn_EmailVerification:hover {
+    /* animation-name: choosing; */
+    /* animation-direction: normal; */
+    /* animation-fill-mode: forwards; */
+    /* animation-duration: 0.4s; */
+
+	transform: rotate(0deg) scale(1.1);
+	box-shadow: 0px 0px 20px 2px white;
+    -webkit-transition: 0.2s all ease-in-out;
+	transition: 0.2s all ease-in-out;
+}
+#delete_account:hover, #delete_account_finish:hover {
+    /* animation-name: choosingBlack; */
+	box-shadow: 0px 0px 20px 2px black;
+}
+
+/* URL validation */
+/* https://codepen.io/mikeyclarke/pen/nRNVjg */
+#input_AddLinkToPRD_url_user_label {
+   font-size: 1.25em;
+   color: #222;
+}
+/*
+#input_AddLinkToPRD_url_user :focus {
+	outline: none;
+	background-color: #fff;
+	border-color: rgba(28, 126, 194,.8);
+	box-shadow: inset 0 0.0625em 0.125em rgba(0,0,0,.2), 0 0 0.125em rgba(28, 126, 194,.8);
+	opacity: 1;
+}*/
+
+/*#input_AddLinkToPRD_url_user{*/
+input[type="url"] {
+	/*font-size: 1.5em;*/
+	width:/*100%*/calc(100% - 35px);
+	margin: /*0.375em 0 1.25em 0*/5px 0 5px 0;
+	padding:0.25em 0.375em;
+	background-color: #fdfdfd;
+	border: /*0.0625*/0.15em solid;
+	border-color: #ccc;
+	box-shadow: inset 0 0.0625em 0.125em rgba(0,0,0,.2);
+	opacity: .75;/*может и заремить*/
+	
+	border-radius: 5px;
+}
+input[type="url"]:focus {
+	outline: none;
+	/* background-color: #fff; */
+	background-color: #F5F7FA;
+	border-color: rgba(28, 126, 194,.8);
+	box-shadow: inset 0 0.0625em 0.125em rgba(0,0,0,.2), 0 0 0.125em rgba(28, 126, 194,.8);
+	opacity: 1;
+}
+/*#input_AddLinkToPRD_url_user :invalid {*/
+input[type="url"]:invalid {
+	background-color: rgba(238,63,88,.16);
+	border-color: rgba(203,0,2,.8);
+	box-shadow: inset 0 0.0625em 0.125em rgba(0,0,0,.2), 0 0 0.125em rgba(203,0,2,.8);
+}
+#input_AddLinkToPRD_url_user {
+	margin-top: 0;
+}
+
+input[type="email"] {
+	border: /*0.0625*/0.15em solid;
+}
+input[type="email"]:focus {
+	outline: none;
+	background-color: #fff;
+	border-color: rgba(28, 126, 194,.8);
+	box-shadow: inset 0 0.0625em 0.125em rgba(0,0,0,.2), 0 0 0.125em rgba(28, 126, 194,.8);
+	opacity: 1;
+}
+/*#input_AddLinkToPRD_url_user :invalid {*/
+input[type="email"]:invalid {
+	border-color: rgba(203,0,2,.8);
+	box-shadow: inset 0 0.0625em 0.125em rgba(0,0,0,.2), 0 0 0.125em rgba(203,0,2,.8);
+}
+
+#div_input_AddLinkToPRD_url_user{
+	transform: scale(1.0);
+	transition-duration: 0.3s;
+	/* text-align: center; */
+}
+#div_input_AddLinkToPRD_url_user:hover{
+	transform: scale(1.1);
+	transition-duration: 0.3s;
+}
+#div_input_AddLinkToPRD_url_user:hover{
+	transition-duration: 0.3s;
+}
+#input_AddLinkToPRD_url_user_label{
+	margin-bottom: 10px;
+	font-size: 1.2rem;
+	/* font-weight: 600; */
+	color: white;
+}
+
+#link_EmailLoginProblems{
+	text-decoration:none;
+	/* visibility:hidden; */
+	/* opacity:0; */
+	font-size: 0.8rem;
+	/* display:none; */
+	cursor:pointer;
+    -webkit-transition: 0.5s all ease-in-out;
+	transition: 0.5s all ease-in-out;
+	
+}
+#link_EmailLoginProblems:hover{
+	text-decoration: underline; 
+	/* background: #ffffff4d; */
+    -webkit-transition: none;
+	transition: none;
+}
+#output_EmailPasswordReset{
+	font-size: 1rem;
+	color: white;
+	/* font-weight: 600; */
+}
+#textarea_url_user_current{
+	font-size: 1rem;
+	height: 23px;
+	min-width: calc(100% - 28px);
+	max-width: calc(100% - 28px);
+	max-height: 150px;
+	border-radius: 4px;
+	margin-top: 5px;
+	padding: 0 3px 0 3px;
+	background-color: #c0e5ffcc;
+	font-family: 'BenchNine', sans-serif;
+}
+.spinner {
+    display: block;
+    width: 12px;
+    height: 12px;
+    /* margin: 80px 150px; */
+    /* position: relative; */
+    position: absolute;
+	top:33px;
+	left: 18px;
+
+    border: 2px solid rgba(0,0,0,0.5);
+    border-top-color: transparent;
+    border-radius: 100%;
+
+    animation: spin 1s infinite linear;
+	
+	
+ }
+/*TODO: надо разобраться и вернуть, вызывает глюк при оптимизации:*/
+@keyframes spin {
+    to { 
+		transform: rotate(360deg); 
+	}
+}​ 
+ 
+.spinner:after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    position: absolute;
+    top: -8px;
+    left: 0px;
+    
+    border: 5px solid transparent; /* = top */
+    border-bottom-color: rgba(0,0,0,0.5);
+    
+    transform: rotate(45deg);
+}
+#divRegistration_id{
+	margin: 15px 0 15px 0;
+	text-align: center;
+}
+#messageRegistration, #messageNeedForRegistration, #messagePrivacyPolicy, #messagePrivacyPolicyLastUpdated, #messageNeedForRegistrationPrivacyPolicy {
+	color: white; 
+	font-size:150%;
+	text-align:center;
+	/* font-weight: 600; */
+	font-weight: 200;
+}
+#messagePrivacyPolicyLastUpdated {
+	font-size:100%;
+}
+#messageNeedForRegistration, #messageNeedForRegistrationPrivacyPolicy{
+	font-size:120%;
+	text-align:justify;
+}
+#messagePrivacyPolicy {
+	cursor: pointer;
+	text-decoration: underline; 
+	/* transform: scale(1); */
+}
+#div_messagePrivacyPolicy {
+    -webkit-transition: 0.6s all ease-in-out;
+	transition: 0.6s all ease;
+}
+#div_messagePrivacyPolicy:hover {
+	transform: scale(1.3);
+    -webkit-transition: 0.5s all ease-in-out;
+	transition: 0.5s all ease;
+}
+#checkboxPrivacyPolicyAccept{
+	margin: 10px 0 0 0;
+}
+label[for=checkboxPrivacyPolicyAccept]{
+	color: white; 
+	font-size:150%;
+	/* font-weight: 600; */
+	cursor: default;
+}
+/* #checkboxPrivacyPolicyAccept + label{
+	color: white; 
+	font-size:150%;
+	font-weight: 600;
+	cursor: default;
+
+} */
+#div_id_AccountEmail{
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+#messageDeleteAccountDescription, #messageDeleteAccountNeedPassword {
+    color: white;
+    text-align: justify;
+    font-size: 120%;
+    /* font-weight: 600; */
+    margin-bottom: 15px;
+    margin-top: 10px;
+}
+#div_id_AccountEmailHeader, #div_id_AccountEmailValue, #div_id_EmailVerificationNeed {
+    width: 92%;
+    color: white;
+    text-align: justify;
+    font-size: 120%;
+    /* font-weight: 600; */
+    /* margin-bottom: 15px; */
+    margin-top: 10px;
+}
