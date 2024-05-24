@@ -1,0 +1,67 @@
+{
+   "extensionName": {
+      "message": "Ozon, Wildberries и Simaland: сортировка отзывов по возрастанию рейтинга",
+	  "description": "Название"
+   },
+   "extensionDesc": {
+      "message": "Ozon, Wildberries и Simaland: сортировка отзывов по возрастанию рейтинга, и другие улучшения",
+	  "description": "Описание"
+   },
+   "extensionDefaultTitle": {
+      "message": "Ozon, Wildberries и Simaland: сортировка отзывов по возрастанию рейтинга"
+   },
+    "legendDonate": {
+      "message": "Пожертвовать на развитие"
+   },
+   "legendSettings": {
+      "message": "Настройки"
+   },
+   "SettingsOnOff": {
+      "message": "Выключить/включить расширение"
+   },
+   "SettingsOnOffHover": {
+      "message": "Быстрая приостановка/возобновление работы расширения"
+   },
+   "SettingsExtensionOn": {
+      "message": "Работает"
+   },
+   "SettingsExtensionOff": {
+      "message": "Выключено"
+   },
+   "textSettingsHover": {
+      "message": ""
+   },
+   "customColors": {
+      "message": ""
+   },
+   "customNumberFormats": {
+      "message": ""
+   },
+   "considerDonating": {
+      "message": "Поддержать автора: на улучшение программы"
+   },
+   "linkDonate": {
+      "message": "Пожертвовать"
+   },
+   "linkDonateInCripto": {
+      "message": "Пожертвовать в криптовалюте"
+   },
+   "linkFAQ": {
+      "message": "ЧАВО"
+   },
+   "linkHelp": {
+      "message": "Помощь"
+   },
+   "linkWebsite": {
+      "message": "Сайт"
+   },
+   "textDeveloper": {
+      "message": "Игорь Лебедев"
+   },
+   "textUpdate": {
+      "message": "обновление до"
+   },
+   "whatsnew": {
+      "message": "Что нового"
+   }
+}

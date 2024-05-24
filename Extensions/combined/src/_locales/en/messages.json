@@ -1,0 +1,74 @@
+{
+   "extensionName": {
+      "message": "Ozon, Wildberries and Simaland: sorting reviews by rating ascending",
+	  "description": "Name"
+   },
+   "extensionDesc": {
+      "message": "Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating, and other features",
+	  "description": "Description"
+   },
+   "extensionDefaultTitle": {
+      "message": "Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating"
+   },
+   "extensionWebsite": {
+      "message": "Go to site"
+   },
+    "legendDonate": {
+      "message": "Donate"
+   },
+   "legendSettings": {
+      "message": "Settings"
+   },
+   "SettingsOnOff": {
+      "message": "Disable/enable extension"
+   },
+   "SettingsOnOffHover": {
+      "message": "Quick pause/resume of the extension"
+   },
+   "SettingsExtensionOn": {
+      "message": "Working"
+   },
+   "SettingsExtensionOff": {
+      "message": "Turned off"
+   },
+   "textSettingsHover": {
+      "message": ""
+   },
+   "customColors": {
+      "message": ""
+   },
+   "customNumberFormats": {
+      "message": ""
+   },
+   "considerDonating": {
+      "message": "Support the author: to improve the program"
+   },
+   "linkDonate": {
+      "message": "Donate"
+   },
+   "linkDonateInCripto": {
+      "message": "Donate in crypto"
+   },
+  "linkFAQ": {
+      "message": "FAQ"
+   },
+   "linkHelp": {
+      "message": "Help"
+   },
+   "linkWebsite": {
+      "message": "Website"
+   },
+   "shortsSupport": {
+      "message": "YouTube Shorts Support"
+   },
+   "textDeveloper": {
+      "message": "by Igor Lebedev"
+   },
+   "textUpdate": {
+      "message": "update to"
+   },
+   "whatsnew": {
+      "message": "What's new"
+   }
+	
+}
