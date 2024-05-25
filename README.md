@@ -15,4 +15,4 @@ Donate the development and the author (Поддержать разработку
 https://yoomoney.ru/to/4100117799116116
 
 Crypto (Криптовалюта):
-chrome-extension://amejeniigadoppbngggfdodifmhlgmpg/popup/crypto.html
+https://sites.google.com/view/facts-and-fakes/ru/donate-in-crypto
