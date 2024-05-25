@@ -10,7 +10,9 @@ Mozilla extention:
 https://addons.mozilla.org/addon/ozon-wildberries-simaland-cust
 
 Donate the development and the author (Поддержать разработку и автора):
+
 Рубли:
 https://yoomoney.ru/to/4100117799116116
+
 Crypto (Криптовалюта):
 chrome-extension://amejeniigadoppbngggfdodifmhlgmpg/popup/crypto.html
