@@ -1,10 +1,4 @@
 //@author Igor Lebedev
-// @name         Ozon, Wildberries and Simaland customizer: sorting reviews by ascending rating
-// @name:ru      Ozon, Wildberries и Simaland настройка: сортировка отзывов по возрастанию рейтинга
-// @namespace    http://tampermonkey.net/
-// @version      2024-05-21
-// @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
-// @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
 // @license        GPL-3.0-or-later
 
 
@@ -103,12 +97,14 @@
     // Sima-lend: Ожидание загружки страницы товара до появления элемента сортировки рейтинга и искусственное нажатие этого элемента чтобы добиться сортировки рейтинга по возрастанию
     function sortSimaLendReviews() {
         const interval = setInterval(() => {
-            // ожидание загрузки страницы до появления ссылки на отзывы
-            const aReviews = document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(1) > div > div > div.hb20Nd > div.bcg7Pf > div > div > div.RB0Z2S.vZiVTa > a");
+            // ожидание загрузки страницы до появления ссылки на отзывы: соответствено для десктопной или мобильной версии
+            const aReviews = document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(1) > div > div > div.hb20Nd > div.bcg7Pf > div > div > div.RB0Z2S.vZiVTa > a") || document.querySelector("#product__root > div > div.k41rqL > div:nth-child(9) > button");
             if (aReviews) {
-                // если ссылка активна (когда отзывыы есть)
-                if (aReviews?.getAttribute('tabindex') === "0" && !aReviews.classList.contains('HuzmFE')) {
-                    aReviews?.addEventListener('click', (event) => {
+                // если ссылка активна (когда отзывы есть в случае десктопной версии) или счётчик отзывов > 0 (в случае мобильной версии)
+                if ((aReviews.tagName === 'A' && aReviews.getAttribute('tabindex') === "0" && !aReviews.classList.contains('HuzmFE'))
+						|| (aReviews.tagName === 'BUTTON' && Number(aReviews.querySelector('.WKsLn3 >span.HrbHuT')?.innerText) > 0)
+				) {
+                    aReviews.addEventListener('click', (event) => {
                         // event.preventDefault(); // Предотвратить переход по ссылке
                         const interval2 = setInterval(() => {
 							// отключаем динамический выезд
@@ -120,12 +116,12 @@
 							// const divGpksVe = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div.GpksVe")
 							// if (divGpksVe)
 								// divGpksVe.style.setProperty("--transition-duration", "0ms");
-                            const sortButton = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > a");
+                            const sortButton = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > a") || document.querySelector("button.vuz3sk");
                             if (sortButton) {
                                 sortButton?.addEventListener('click', (event) => {
                                     const interval3 = setInterval(() => {
                                         // ожидание дозагрузки страницы до раскрытия списка сортировки ипоявления пункта сортировки по возрастанию рейтинга
-                                        const sortButtonSortingPoint = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > div > div > div.os-padding > div > div > div:nth-child(4)");
+                                        const sortButtonSortingPoint = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > div > div > div.os-padding > div > div > div:nth-child(4)") || document.querySelector("#product__root > div.lPxD1I > div > div > div.os-host.os-host-foreign.os-theme-dark.os-host-resize-disabled.os-host-scrollbar-horizontal-hidden.VV8J6y.XTXFkP.os-host-flexbox.os-host-scrollbar-vertical-hidden.os-host-transition > div.os-padding > div > div > div > div > button:nth-child(4)");
                                         if (sortButtonSortingPoint) {
                                             clearInterval(interval3);
 											if (config.SettingsOnOff)
@@ -154,22 +150,24 @@
 				frameWithReviews.style.transition = 'transform 0s';
 			}			
             // ожидание загрузки страницы до появления ссылки на отзывы
-            const aReviews = document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(1) > div > div > div.hb20Nd > div.bcg7Pf > div > div > div.RB0Z2S.vZiVTa > a")
+            const aReviews = document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(1) > div > div > div.hb20Nd > div.bcg7Pf > div > div > div.RB0Z2S.vZiVTa > a") || document.querySelector("#product__root > div > div.k41rqL > div:nth-child(10) > button")
             if (aReviews) {
-                // если ссылка активна (когда отзывыы есть)
-                if (aReviews?.getAttribute('tabindex') === "0" && !aReviews.classList.contains('HuzmFE')) {
-                    aReviews?.addEventListener('click', (event) => {
+                // если ссылка активна (когда отзывы есть в случае десктопной версии) или счётчик отзывов > 0 (в случае мобильной версии)
+                if ((aReviews.tagName === 'A' && aReviews.getAttribute('tabindex') === "0" && !aReviews.classList.contains('HuzmFE'))
+						|| (aReviews.tagName === 'BUTTON' && Number(aReviews.querySelector('.WKsLn3 >span.HrbHuT')?.innerText) > 0)
+				) {
+                    aReviews.addEventListener('click', (event) => {
                         const interval_appWrappers = setInterval(() => {
                             let appWrappers = document.querySelectorAll('[data-testid="app-wrapper"]');
                             if (appWrappers) {
                                 const interval2 = setInterval(() => {
                                     // ожидание дозагрузки страницы до появления ссылки открытия списка сортировки
-                                    const sortButton = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > a");
+                                    const sortButton = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > a") || document.querySelector("button.vuz3sk");
                                     if (sortButton) {
                                         sortButton?.addEventListener('click', (event) => {
                                             const interval3 = setInterval(() => {
                                                 // ожидание дозагрузки страницы до раскрытия списка сортировки ипоявления пункта сортировки по возрастанию рейтинга
-                                                const sortButtonSortingPoint = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > div > div > div.os-padding > div > div > div:nth-child(4)");
+                                                const sortButtonSortingPoint = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > div > div > div.os-padding > div > div > div:nth-child(4)") || document.querySelector("#product__root > div.lPxD1I > div > div > div.os-host.os-host-foreign.os-theme-dark.os-host-resize-disabled.os-host-scrollbar-horizontal-hidden.VV8J6y.XTXFkP.os-host-flexbox.os-host-scrollbar-vertical-hidden.os-host-transition > div.os-padding > div > div > div > div > button:nth-child(4)");
                                                 if (sortButtonSortingPoint) {
                                                     clearInterval(interval3);
 													if (config.SettingsOnOff)
