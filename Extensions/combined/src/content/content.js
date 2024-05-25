@@ -1,4 +1,4 @@
-//@author Igor Lebedev
+// @author Igor Lebedev
 // @license        GPL-3.0-or-later
 
 
