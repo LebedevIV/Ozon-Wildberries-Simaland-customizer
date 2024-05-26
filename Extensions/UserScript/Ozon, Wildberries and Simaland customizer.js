@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         Ozon, Wildberries and Simaland customizer: sorting reviews by ascending rating
-// @name:ru      Ozon, Wildberries и Simaland настройка: сортировка отзывов по возрастанию рейтинга
+// @name         Ozon, Wildberries and Simaland customizer: bad reviews first
+// @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы
 // @namespace    http://tampermonkey.net/
 // @version      2024-05-26_15-05
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
