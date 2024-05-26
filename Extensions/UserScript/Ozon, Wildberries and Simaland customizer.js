@@ -2,7 +2,7 @@
 // @name         Ozon, Wildberries and Simaland customizer: sorting reviews by ascending rating
 // @name:ru      Ozon, Wildberries и Simaland настройка: сортировка отзывов по возрастанию рейтинга
 // @namespace    http://tampermonkey.net/
-// @version      2024-05-26
+// @version      2024-05-26_06-22
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
@@ -24,6 +24,7 @@
 
     // получаем текущий адрес страницы
     const currentURL = window.location.href
+
 
     // Ozon: Функция для добавления к ссылкам параметра сортировки рейтинга по возрастанию - на случай если пользователь будет вручную открывать ссылки с карточкой товара в новой вкладке
     function addOzonSortParamToLinks() {
@@ -211,14 +212,6 @@
         }, 50);
     }
 
-
-    // Ozon: Функция для добавления к ссылкам параметра сортировки рейтинга по возрастанию - на случай если пользователь будет вручную открывать ссылки с карточкой товара в новой вкладке
-    function addOzonSortParamToLinks() {
-        const links = document.querySelectorAll('a[href^="/product/"]:not([href*="&sort=score_asc"])');
-        links.forEach(link => {
-            link.href += '&sort=score_asc';
-        });
-    }
 
 
     // Проверка, является ли страница карточкой товара, содержащей отзывы, и если да - сортировка отзывов по возрастанию рейтинга. В случае Simalend важна последовательность
