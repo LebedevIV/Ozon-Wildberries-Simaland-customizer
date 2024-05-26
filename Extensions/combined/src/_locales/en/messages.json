@@ -10,6 +10,9 @@
    "extensionDefaultTitle": {
       "message": "Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating"
    },
+   "extensionWebsite": {
+      "message": "Go to site"
+   },   
     "legendDonate": {
       "message": "Donate"
    },
