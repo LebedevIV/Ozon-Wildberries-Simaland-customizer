@@ -1,6 +1,6 @@
 {
    "extensionName": {
-      "message": "Ozon, Wildberries and Simaland: sorting reviews by rating ascending",
+      "message": "Ozon, Wildberries and Simaland: Bad reviews first",
 	  "description": "Name"
    },
    "extensionDesc": {
@@ -9,9 +9,6 @@
    },
    "extensionDefaultTitle": {
       "message": "Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating"
-   },
-   "extensionWebsite": {
-      "message": "Go to site"
    },
     "legendDonate": {
       "message": "Donate"
@@ -58,9 +55,6 @@
    "linkWebsite": {
       "message": "Website"
    },
-   "shortsSupport": {
-      "message": "YouTube Shorts Support"
-   },
    "textDeveloper": {
       "message": "by Igor Lebedev"
    },
@@ -69,6 +63,5 @@
    },
    "whatsnew": {
       "message": "What's new"
-   }
-	
+   }	
 }
