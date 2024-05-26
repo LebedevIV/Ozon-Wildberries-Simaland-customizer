@@ -26,7 +26,8 @@
     const currentURL = window.location.href
 
 
-    // Ozon: Функция для добавления к ссылкам параметра сортировки рейтинга по возрастанию - на случай если пользователь будет вручную открывать ссылки с карточкой товара в новой вкладке
+    // Ozon: Функция для добавления к ссылкам на страницах каталогов параметра сортировки рейтинга по возрастанию - на случай если пользователь будет вручную открывать ссылки с карточкой товара в новой вкладке
+	// Так же добавление ссылок для блоков рейтингов (звёздочек)
     function addOzonSortParamToLinks() {
 		if (config.SettingsOnOff) {
 			const links = document.querySelectorAll('a[href^="/product/"]:not([href*="&sort=score_asc"])');
@@ -36,17 +37,38 @@
 				// Проверяем, является ли родительский элемент (parentNode) div с классом 'iy6'
 				const link_parentNode = link.parentNode
 				// Привязка к блоку рейтингов (звёздочек) ссылки на рейтинги
-				if(link_parentNode.tagName.toLowerCase() === 'div' && link_parentNode.classList.contains('iy6')) {
+				// if(link_parentNode.tagName.toLowerCase() === 'div' && link_parentNode.classList.contains('iy6')) {
+				if(link_parentNode.tagName.toLowerCase() === 'div') {
+					
 					// Определение наличия вложенного элемента, содержащего рейтинги
 					var divStars = link_parentNode.querySelector('div.tsBodyMBold');
 					if (divStars) {
 						// Сохранение текущего содержимого div
-						let oldHTML = divStars.innerHTML;
-						// Оборачивание существующего содержимого div в собственную ссылку
-						// и присвоение стиля 'cursor: pointer'
-						// привязка полученного href к текущему div + добавление к ссылке метки в виде трёх символов якоря, которые не удаляется из строки
+						// let oldHTML = divStars.innerHTML;
+						// // Оборачивание существующего содержимого div в собственную ссылку
+						// // и присвоение стиля 'cursor: pointer'
+						// // привязка полученного href к текущему div + добавление к ссылке метки в виде трёх символов якоря, которые не удаляется из строки
 						let url1Base = linkOrig.match(/(^[^\?]+)/g)[0];
-						divStars.innerHTML = `<a href="${url1Base}reviews?sort=score_asc" style="display: flex; width: 100%; height: 100%; cursor: pointer;">${oldHTML}</a>`;
+						// divStars.innerHTML = `<a href="${url1Base}reviews?sort=score_asc" style="display: flex; width: 100%; height: 100%; cursor: pointer;">${oldHTML}</a>`;
+					
+
+						// Создание нового узла <a>
+						let aNode = document.createElement('a');
+
+						// Установка параметров узла
+						aNode.href = `${url1Base}reviews?sort=score_asc`;
+						aNode.style.cssText = 'display: flex; width: 100%; height: 100%; cursor: pointer; text-decoration: none;';
+												
+						// Получаем родительский элемент div
+						let parentNode = divStars.parentNode;		
+
+						// Вставляем новый узел перед div1
+						parentNode.insertBefore(aNode, divStars);
+
+						// Перемещаем узел div внутрь aNode
+						aNode.appendChild(divStars);	
+						divStars.style.cursor = 'pointer';
+
 					}
 				}					
 			});
@@ -198,12 +220,20 @@
 							var link = div.parentNode.parentNode.parentNode
                         if(link?.tagName === "A") {
                             var href = link.getAttribute('href');
-                            // Сохранение текущего содержимого div
-                            var oldHTML = div.innerHTML;
-                            // Оборачивание существующего содержимого div в собственную ссылку
-                            // и присвоение стиля 'cursor: pointer'
-                            // привязка полученного href к текущему div + добавление к ссылке метки в виде трёх символов якоря, которые не удаляется из строки
-                            div.innerHTML = `<a href="${href}###" style="display: flex; width: 100%; height: 100%; cursor: pointer; text-decoration: none;">${oldHTML}</a>`;
+							
+							// Создание нового узла <a>
+							let aNode = document.createElement('a');
+
+							// Установка параметров узла
+							aNode.href = `${href}###`;
+							aNode.style.cssText = 'display: flex; width: 100%; height: 100%; cursor: pointer; text-decoration: none;';
+
+							// Перемещаем все дочерние узлы из div1 в новый узел <a>
+							while (div.firstChild) {
+								aNode.appendChild(div.firstChild);
+							}							
+							// Перемещаем узел div внутрь aNode
+							div.appendChild(aNode);	
                         }
                     }
                 });
@@ -211,6 +241,7 @@
             }
         }, 50);
     }
+
 
 
 
