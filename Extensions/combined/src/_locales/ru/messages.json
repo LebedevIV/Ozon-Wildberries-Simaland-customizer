@@ -10,6 +10,9 @@
    "extensionDefaultTitle": {
       "message": "Ozon, Wildberries и Simaland: сортировка отзывов по возрастанию рейтинга"
    },
+   "extensionWebsite": {
+      "message": "Перейти на сайт"
+   },   
     "legendDonate": {
       "message": "Пожертвовать на развитие"
    },
