@@ -175,32 +175,34 @@
     // Sima-lend: Ожидание загружки страницы каталога привязка к рейтингам ссылок на страницы товара
     function SimaLendCatalogReviews() {
         // выбор всех Рейтинги на странице каталога: div с классом 'YREwlL'
-
         const interval = setInterval(() => {
             // ожидание загрузки страницы до появления ссылки на отзывы
-            const aReviews = document.querySelector("#category-page__root > div > div.SvXTv3.pPpF_h.Go7gld.MoKdBA.ckfJXr.elXZ47 > div.WBjroC > div.YF_0Ly > div.R4UxqH > div")
+            const aReviews = document.querySelector("#category-page__root > div > div.SvXTv3.pPpF_h.Go7gld.MoKdBA.ckfJXr.elXZ47 > div.WBjroC > div.YF_0Ly > div.R4UxqH > div") || document.querySelector("div.Jweg1q")
+			
             if (aReviews) {
                 // var divs = document.querySelectorAll('.YREwlL');
                 var divs = document.querySelectorAll('.ulVbvy');
+				if (divs.length === 0) 
+					divs = document.querySelectorAll('div.Ca1QyR')
                 // цикл по каждому div
                 divs.forEach((div) => {
                     // если ссылка ранее не была добавлена: повторное добавление после загрузки всей страницы. По каким-то причинам в конце загрузки страницы ссылки удаляются, но их добавление во время загузки необходимо чтобы пльзователь имел возможность нажимать
                     if (!div.querySelector('a')) {
                         // получение ссылки из parentnode.parentnode
-                        var link = div.parentNode.parentNode.parentNode.querySelector('.o7U8An a')
-                        if(link) {
+						// десктопная версия
+						if (div.classList.contains('ulVbvy'))
+							var link = div.parentNode.parentNode.parentNode.querySelector('.o7U8An a')
+						// мобильная версия
+						else if (div.classList.contains('Ca1QyR'))
+							var link = div.parentNode.parentNode.parentNode
+                        if(link?.tagName === "A") {
                             var href = link.getAttribute('href');
-
                             // Сохранение текущего содержимого div
                             var oldHTML = div.innerHTML;
-
                             // Оборачивание существующего содержимого div в собственную ссылку
                             // и присвоение стиля 'cursor: pointer'
-
                             // привязка полученного href к текущему div + добавление к ссылке метки в виде трёх символов якоря, которые не удаляется из строки
-                            // div.innerHTML += `<a href="${href}###" style="display: block; width: 100%; height: 100%; cursor: pointer;">${oldHTML}></a>`;
-                            div.innerHTML = `<a href="${href}###" style="display: flex; width: 100%; height: 100%; cursor: pointer;">${oldHTML}</a>`;
-
+                            div.innerHTML = `<a href="${href}###" style="display: flex; width: 100%; height: 100%; cursor: pointer; text-decoration: none;">${oldHTML}</a>`;
                         }
                     }
                 });
