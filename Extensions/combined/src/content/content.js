@@ -277,8 +277,8 @@
 				} else {
 					NewURL = `${currentURL}&sort=score_asc`;
 				}
+				api.runtime.sendMessage({action: "redirect", url: NewURL});
 			}
-			api.runtime.sendMessage({action: "redirect", url: NewURL});
 		}
     // Ozon: Страница каталога товаров
     } else if (currentURL.includes('ozon.ru/category/') ) {
