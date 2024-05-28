@@ -2,7 +2,7 @@
 // @name         Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-05-29_04-55
+// @version      2024-05-29_04-58
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
@@ -249,6 +249,68 @@
         }, 50);
     }
 
+    // Оптимизация вида
+    function SimaLendOptimization() {
+        // Сималенд: Карточка товара: Характеристики
+        const interval_Characteristics_mini = setInterval(() => {
+            const Characteristics_mini = document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(1) > div > div > div.hb20Nd > div.gnpN7o > div.yV_RnX > div:nth-child(1)")
+
+            if (Characteristics_mini) {
+                clearInterval(interval_Characteristics_mini);
+                // Блок с: Все товары данной фирмы
+                const interval_Prices = setInterval(() => {
+                    const Prices = document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(1) > div > div > div.hb20Nd > div.gnpN7o > div.nl50DW")
+                    if (Prices) {
+                        clearInterval(interval_Prices);
+                        // Переместим узел SimilarProducts внутрь узла details в самый конец
+                        Prices.append(Characteristics_mini);
+                    }
+
+                })
+                }
+        })
+
+        // Блок с: Похожие товары; Также рекомендуем
+        let details
+        const interval_SimilarProducts_AlsoRecommend = setInterval(() => {
+            const SimilarProducts = document.querySelector('#product__root > div > div.Fa76rh > div:nth-child(2) > div > div[data-testid="similar-recommendations-ref"]')
+            const AlsoRecommend = document.querySelector('#product__root > div > div.Fa76rh > div:nth-child(2) > div > div[data-testid="related-recommendations-ref"]')
+            const SimilarProducts_AlsoRecommend = SimilarProducts || AlsoRecommend
+
+            if (SimilarProducts_AlsoRecommend && SimilarProducts_AlsoRecommend.children.length > 0) {
+
+                // Если определён только один из двух блоков - details не был создан ранее
+                if (!details) {
+                    // Создать элемент <details> и установить его в свернутом состоянии по умолчанию
+                    details = document.createElement('details');
+                    details.style.marginTop = "2em";
+                    // Создать элемент <summary> с текстом
+                    const summary = document.createElement('summary');
+                    summary.classList.add('N6SYKn');
+                    summary.textContent = 'Похожие товары + Также рекомендуем';
+                    summary.style.cursor = 'pointer';
+
+                    // Добавить элемент <summary> в <details>
+                    details.appendChild(summary);
+
+                    // Добавить созданный элемент <details> перед любым из двух блоков, который вывелся первым
+                    SimilarProducts_AlsoRecommend.insertAdjacentElement('beforebegin', details);
+                    // Переместить SimilarProducts_AlsoRecommend внутрь <details>
+                    details.appendChild(SimilarProducts_AlsoRecommend);
+                    // определён и второй блок
+                } else {
+                    clearInterval(interval_SimilarProducts_AlsoRecommend);
+                    // Переместим узел SimilarProducts внутрь узла details в самое начало
+                    if (SimilarProducts_AlsoRecommend === SimilarProducts) {
+                        details.prepend(SimilarProducts);
+                    } else if (SimilarProducts_AlsoRecommend === AlsoRecommend) {
+                        // Переместим узел SimilarProducts внутрь узла details в самый конец
+                        details.append(AlsoRecommend);
+                    }
+                }
+            }
+        }, 50);
+    }
 
 
 
@@ -418,70 +480,6 @@
         SimaLendCatalogReviews()
         window.addEventListener('load', SimaLendCatalogReviews) // в дальнейшем можно разремить при условии проверки на добавленые в div ссылки
     }
-
-    function SimaLendOptimization() {
-		// Сималенд: Карточка товара: Характеристики
-        const interval_Characteristics_mini = setInterval(() => {
-            const Characteristics_mini = document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(1) > div > div > div.hb20Nd > div.gnpN7o > div.yV_RnX > div:nth-child(1)")
-
-            if (Characteristics_mini) {
-                clearInterval(interval_Characteristics_mini);
-                // Блок с: Все товары данной фирмы
-                const interval_Prices = setInterval(() => {
-                    const Prices = document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(1) > div > div > div.hb20Nd > div.gnpN7o > div.nl50DW")
-                    if (Prices) {
-                        clearInterval(interval_Prices);
-                        // Переместим узел SimilarProducts внутрь узла details в самый конец
-                        Prices.append(Characteristics_mini);
-                    }
-
-                })
-                }
-        })
-
-        // Блок с: Похожие товары; Также рекомендуем
-        let details
-        const interval_SimilarProducts_AlsoRecommend = setInterval(() => {
-            const SimilarProducts = document.querySelector('#product__root > div > div.Fa76rh > div:nth-child(2) > div > div[data-testid="similar-recommendations-ref"]')
-            const AlsoRecommend = document.querySelector('#product__root > div > div.Fa76rh > div:nth-child(2) > div > div[data-testid="related-recommendations-ref"]')
-            const SimilarProducts_AlsoRecommend = SimilarProducts || AlsoRecommend
-
-            if (SimilarProducts_AlsoRecommend && SimilarProducts_AlsoRecommend.children.length > 0) {
-
-                // Если определён только один из двух блоков - details не был создан ранее
-                if (!details) {
-                    // Создать элемент <details> и установить его в свернутом состоянии по умолчанию
-                    details = document.createElement('details');
-                    details.style.marginTop = "2em";
-                    // Создать элемент <summary> с текстом
-                    const summary = document.createElement('summary');
-                    summary.classList.add('N6SYKn');
-                    summary.textContent = 'Похожие товары + Также рекомендуем';
-                    summary.style.cursor = 'pointer';
-
-                    // Добавить элемент <summary> в <details>
-                    details.appendChild(summary);
-
-                    // Добавить созданный элемент <details> перед любым из двух блоков, который вывелся первым
-                    SimilarProducts_AlsoRecommend.insertAdjacentElement('beforebegin', details);
-                    // Переместить SimilarProducts_AlsoRecommend внутрь <details>
-                    details.appendChild(SimilarProducts_AlsoRecommend);
-                    // определён и второй блок
-                } else {
-                    clearInterval(interval_SimilarProducts_AlsoRecommend);
-                    // Переместим узел SimilarProducts внутрь узла details в самое начало
-                    if (SimilarProducts_AlsoRecommend === SimilarProducts) {
-                        details.prepend(SimilarProducts);
-                    } else if (SimilarProducts_AlsoRecommend === AlsoRecommend) {
-                        // Переместим узел SimilarProducts внутрь узла details в самый конец
-                        details.append(AlsoRecommend);
-                    }
-                }
-            }
-        }, 50);
-    }
-
-
 
 
     // Wildberries: определение совершения перехода на карточку товара с разделом отзывов
