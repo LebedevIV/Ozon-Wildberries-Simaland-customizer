@@ -2,7 +2,7 @@
 // @name         Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-05-28_20-38
+// @version      2024-05-29_04-55
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
@@ -24,92 +24,92 @@
 
     // получаем текущий адрес страницы
     const currentURL = window.location.href
-	const config = {
-	  // advanced: false,
-	  SettingsOnOff: true,
-	};
+    const config = {
+        // advanced: false,
+        SettingsOnOff: true,
+    };
 
     // Ozon: Функция для добавления к ссылкам на страницах каталогов параметра сортировки рейтинга по возрастанию - на случай если пользователь будет вручную открывать ссылки с карточкой товара в новой вкладке
-	// Так же добавление ссылок для блоков рейтингов (звёздочек)
+    // Так же добавление ссылок для блоков рейтингов (звёздочек)
     function addOzonSortParamToLinks() {
-		if (config.SettingsOnOff) {
-			const links = document.querySelectorAll('a[href^="/product/"]:not([href*="&sort=score_asc"])');
-			links.forEach(link => {
-				const linkOrig = link.href
-				link.href += '&sort=score_asc';
-				// Проверяем, является ли родительский элемент (parentNode) div с классом 'iy6'
-				const link_parentNode = link.parentNode
-				// Привязка к блоку рейтингов (звёздочек) ссылки на рейтинги
-				// if(link_parentNode.tagName.toLowerCase() === 'div' && link_parentNode.classList.contains('iy6')) {
-				if(link_parentNode.tagName.toLowerCase() === 'div') {
+        if (config.SettingsOnOff) {
+            const links = document.querySelectorAll('a[href^="/product/"]:not([href*="&sort=score_asc"])');
+            links.forEach(link => {
+                const linkOrig = link.href
+                link.href += '&sort=score_asc';
+                // Проверяем, является ли родительский элемент (parentNode) div с классом 'iy6'
+                const link_parentNode = link.parentNode
+                // Привязка к блоку рейтингов (звёздочек) ссылки на рейтинги
+                // if(link_parentNode.tagName.toLowerCase() === 'div' && link_parentNode.classList.contains('iy6')) {
+                if(link_parentNode.tagName.toLowerCase() === 'div') {
 
-					// Определение наличия вложенного элемента, содержащего рейтинги
-					var divStars = link_parentNode.querySelector('div.tsBodyMBold');
-					if (divStars) {
-						// Сохранение текущего содержимого div
-						// let oldHTML = divStars.innerHTML;
-						// // Оборачивание существующего содержимого div в собственную ссылку
-						// // и присвоение стиля 'cursor: pointer'
-						// // привязка полученного href к текущему div + добавление к ссылке метки в виде трёх символов якоря, которые не удаляется из строки
-						let url1Base = linkOrig.match(/(^[^\?]+)/g)[0];
-						// divStars.innerHTML = `<a href="${url1Base}reviews?sort=score_asc" style="display: flex; width: 100%; height: 100%; cursor: pointer;">${oldHTML}</a>`;
+                    // Определение наличия вложенного элемента, содержащего рейтинги
+                    var divStars = link_parentNode.querySelector('div.tsBodyMBold');
+                    if (divStars) {
+                        // Сохранение текущего содержимого div
+                        // let oldHTML = divStars.innerHTML;
+                        // // Оборачивание существующего содержимого div в собственную ссылку
+                        // // и присвоение стиля 'cursor: pointer'
+                        // // привязка полученного href к текущему div + добавление к ссылке метки в виде трёх символов якоря, которые не удаляется из строки
+                        let url1Base = linkOrig.match(/(^[^\?]+)/g)[0];
+                        // divStars.innerHTML = `<a href="${url1Base}reviews?sort=score_asc" style="display: flex; width: 100%; height: 100%; cursor: pointer;">${oldHTML}</a>`;
 
-						// Создание нового узла <a>
-						let aNode = document.createElement('a');
+                        // Создание нового узла <a>
+                        let aNode = document.createElement('a');
 
-						// Установка параметров узла
-						aNode.href = `${url1Base}reviews?sort=score_asc`;
-						aNode.style.cssText = 'display: flex; width: 100%; height: 100%; cursor: pointer; text-decoration: none;';
+                        // Установка параметров узла
+                        aNode.href = `${url1Base}reviews?sort=score_asc`;
+                        aNode.style.cssText = 'display: flex; width: 100%; height: 100%; cursor: pointer; text-decoration: none;';
 
-						// Получаем родительский элемент div
-						let parentNode = divStars.parentNode;
+                        // Получаем родительский элемент div
+                        let parentNode = divStars.parentNode;
 
-						// Вставляем новый узел перед div1
-						parentNode.insertBefore(aNode, divStars);
+                        // Вставляем новый узел перед div1
+                        parentNode.insertBefore(aNode, divStars);
 
-						// Перемещаем узел div внутрь aNode
-						aNode.appendChild(divStars);
-						divStars.style.cursor = 'pointer';
+                        // Перемещаем узел div внутрь aNode
+                        aNode.appendChild(divStars);
+                        divStars.style.cursor = 'pointer';
 
-					}
-				}
-			});
-		}
+                    }
+                }
+            });
+        }
     }
 
     // Wildberries: Ожидание загружки страницы товара до появления элемента сортировки рейтинга и искусственное двойное нажатие этого элемента чтобы добиться сортировки рейтинга по возрастанию
     function sortWildberriesReviews() {
         const interval = setInterval(() => {
             // ожидание загрузки страницы до необходимого значения
-		const preloader = document.querySelector('#app > div[data-link="visible{:router.showPreview}"]')
-		if (preloader?.style.display === 'none') {
-	                const sortButton = document.querySelector("#app > div:nth-child(5) > div > section > div.product-feedbacks__main > div.user-activity__tab-content > div.product-feedbacks__sorting > ul > li:nth-child(2) > a");
-	                if (sortButton) {
-	                    // Инициируем событие на элементе
-	                    // Проверяет, содержит ли элемент класс 'sorting__selected'
-	                    if (sortButton.classList.contains('sorting__selected')) {
-	                        // Находим элемент <span> внутри найденного <a>
-	                        let span = sortButton.querySelector('span');
-	                        // Проверяем, содержит ли <span> класс 'sorting__decor--up'
-	                        // Если содержит, значит, сортировка по возрастанию уже произведена и никаких действий производить не нужно (всё равно приходится произвести два клика, так как, по-видимому, по мере загрузки происходит последующий сброс настроек) - надо отловить объект, который появляется уже после сброса, и зацепиться за него
-	                        if (span && span.classList.contains('sorting__decor--up')) {
-	                            // Первое нажатие производит сортировку по убыванию рейтинга
-	                            // sortButton.click();
-	                            // Второе нажатие производит сортировку по возрастанию рейтинга
-	                            // sortButton.click();
-	                        } else {
-	                            // Нажатие производит сортировку по возрастанию рейтинга
-	                            sortButton.click();
-	                        }
-	                    } else {
-	                        // Первое нажатие производит сортировку по убыванию рейтинга
-	                        sortButton.click();
-	                        // Второе нажатие производит сортировку по возрастанию рейтинга
-	                        sortButton.click();
-	                    }
-	                    clearInterval(interval);
-	                }
-            	}
+            const preloader = document.querySelector('#app > div[data-link="visible{:router.showPreview}"]')
+            if (preloader?.style.display === 'none') {
+                const sortButton = document.querySelector("#app > div:nth-child(5) > div > section > div.product-feedbacks__main > div.user-activity__tab-content > div.product-feedbacks__sorting > ul > li:nth-child(2) > a");
+                if (sortButton) {
+                    // Инициируем событие на элементе
+                    // Проверяет, содержит ли элемент класс 'sorting__selected'
+                    if (sortButton.classList.contains('sorting__selected')) {
+                        // Находим элемент <span> внутри найденного <a>
+                        let span = sortButton.querySelector('span');
+                        // Проверяем, содержит ли <span> класс 'sorting__decor--up'
+                        // Если содержит, значит, сортировка по возрастанию уже произведена и никаких действий производить не нужно (всё равно приходится произвести два клика, так как, по-видимому, по мере загрузки происходит последующий сброс настроек) - надо отловить объект, который появляется уже после сброса, и зацепиться за него
+                        if (span && span.classList.contains('sorting__decor--up')) {
+                            // Первое нажатие производит сортировку по убыванию рейтинга
+                            // sortButton.click();
+                            // Второе нажатие производит сортировку по возрастанию рейтинга
+                            // sortButton.click();
+                        } else {
+                            // Нажатие производит сортировку по возрастанию рейтинга
+                            sortButton.click();
+                        }
+                    } else {
+                        // Первое нажатие производит сортировку по убыванию рейтинга
+                        sortButton.click();
+                        // Второе нажатие производит сортировку по возрастанию рейтинга
+                        sortButton.click();
+                    }
+                    clearInterval(interval);
+                }
+            }
         }, 50);
     }
 
@@ -121,8 +121,8 @@
             if (aReviews) {
                 // если ссылка активна (когда отзывы есть в случае десктопной версии) или счётчик отзывов > 0 (в случае мобильной версии)
                 if ((aReviews.tagName === 'A' && aReviews.getAttribute('tabindex') === "0" && !aReviews.classList.contains('HuzmFE'))
-						|| (aReviews.tagName === 'BUTTON' && Number(aReviews.querySelector('.WKsLn3 >span.HrbHuT')?.innerText) > 0)
-				) {
+                    || (aReviews.tagName === 'BUTTON' && Number(aReviews.querySelector('.WKsLn3 >span.HrbHuT')?.innerText) > 0)
+                   ) {
                     // aReviews.addEventListener('load', addOzonSortParamToLinks)
                     aReviews?.addEventListener('click', (event) => {
                         // event.preventDefault(); // Предотвратить переход по ссылке
@@ -159,8 +159,8 @@
             if (aReviews) {
                 // если ссылка активна (когда отзывы есть в случае десктопной версии) или счётчик отзывов > 0 (в случае мобильной версии)
                 if ((aReviews.tagName === 'A' && aReviews.getAttribute('tabindex') === "0" && !aReviews.classList.contains('HuzmFE'))
-						|| (aReviews.tagName === 'BUTTON' && Number(aReviews.querySelector('.WKsLn3 >span.HrbHuT')?.innerText) > 0)
-				) {
+                    || (aReviews.tagName === 'BUTTON' && Number(aReviews.querySelector('.WKsLn3 >span.HrbHuT')?.innerText) > 0)
+                   ) {
                     aReviews?.addEventListener('click', (event) => {
 
                         const interval_appWrappers = setInterval(() => {
@@ -177,6 +177,7 @@
                                                 if (sortButtonSortingPoint) {
                                                     clearInterval(interval3);
                                                     sortButtonSortingPoint.click();
+                                                    SimaLendOptimization()
                                                 }
                                             }, 50);
                                         });
@@ -207,39 +208,39 @@
             if (aReviews) {
                 // var divs = document.querySelectorAll('.YREwlL');
                 var divs = document.querySelectorAll('.ulVbvy');
-				if (divs.length === 0) {
-					divs = document.querySelectorAll('div.Ca1QyR')
-				}
+                if (divs.length === 0) {
+                    divs = document.querySelectorAll('div.Ca1QyR')
+                }
                 // цикл по каждому div
                 divs.forEach((div) => {
                     // если ссылка ранее не была добавлена: повторное добавление после загрузки всей страницы. По каким-то причинам в конце загрузки страницы ссылки удаляются, но их добавление во время загузки необходимо чтобы пльзователь имел возможность нажимать
                     if (!div.querySelector('a')) {
-			    let link
+                        let link
                         // получение ссылки из parentnode.parentnode
-						// десктопная версия
-						if (div.classList.contains('ulVbvy')) {
-							link = div.parentNode.parentNode.parentNode.querySelector('.o7U8An a')
-						}
-						// мобильная версия
-						else if (div.classList.contains('Ca1QyR')) {
-							link = div.parentNode.parentNode.parentNode
-						}
+                        // десктопная версия
+                        if (div.classList.contains('ulVbvy')) {
+                            link = div.parentNode.parentNode.parentNode.querySelector('.o7U8An a')
+                        }
+                        // мобильная версия
+                        else if (div.classList.contains('Ca1QyR')) {
+                            link = div.parentNode.parentNode.parentNode
+                        }
                         if(link?.tagName === "A") {
                             var href = link.getAttribute('href');
 
-							// Создание нового узла <a>
-							let aNode = document.createElement('a');
+                            // Создание нового узла <a>
+                            let aNode = document.createElement('a');
 
-							// Установка параметров узла
-							aNode.href = `${href}###`;
-							aNode.style.cssText = 'display: flex; width: 100%; height: 100%; cursor: pointer; text-decoration: none;';
+                            // Установка параметров узла
+                            aNode.href = `${href}###`;
+                            aNode.style.cssText = 'display: flex; width: 100%; height: 100%; cursor: pointer; text-decoration: none;';
 
-							// Перемещаем все дочерние узлы из div1 в новый узел <a>
-							while (div.firstChild) {
-								aNode.appendChild(div.firstChild);
-							}
-							// Перемещаем узел div внутрь aNode
-							div.appendChild(aNode);
+                            // Перемещаем все дочерние узлы из div1 в новый узел <a>
+                            while (div.firstChild) {
+                                aNode.appendChild(div.firstChild);
+                            }
+                            // Перемещаем узел div внутрь aNode
+                            div.appendChild(aNode);
                         }
                     }
                 });
@@ -256,23 +257,23 @@
     if (currentURL.includes('ozon.ru/product/') && !currentURL.includes('&sort=score_asc') && !currentURL.includes('?sort=score_asc') && !currentURL.includes('&sort=score_desc') && !currentURL.includes('?sort=score_desc')) {
         // Если условия выполняются - добавляем к адресу параметр и перезагружаем страницу с новым адресом, производящим сортировку рейтингов по возрастанию
         if (config.SettingsOnOff) {
-			let NewURL
-			if (!currentURL.includes('/reviews?sort=score_asc') && !currentURL.includes('/reviews?sort=score_desc')) {
-				if (currentURL.includes('/reviews')) {
-					NewURL = currentURL.replace('/reviews', '/reviews?sort=score_asc');
-				} else {
-					NewURL = `${currentURL}&sort=score_asc`;
-				}
+            let NewURL
+            if (!currentURL.includes('/reviews?sort=score_asc') && !currentURL.includes('/reviews?sort=score_desc')) {
+                if (currentURL.includes('/reviews')) {
+                    NewURL = currentURL.replace('/reviews', '/reviews?sort=score_asc');
+                } else {
+                    NewURL = `${currentURL}&sort=score_asc`;
+                }
                 window.location.href = NewURL; // перезагрузка страницы приводит к оходу данного условия и переходу к следующим условиям
-			}
-		}
-    // Ozon: Страница карточки товара
+            }
+        }
+        // Ozon: Страница карточки товара
     } else if (currentURL.includes('ozon.ru/product/')) {
         // Если условия выполняются - добавляем к адресу параметр и перезагружаем страницу с новым адресом, производящим сортировку рейтингов по возрастанию
         if (config.SettingsOnOff) {
             // сокрытие и перестановка мешающих блоков
             // первый блок фото из отзывов - скрываем, так как он дублирует этот же блок в отзывах
-			const intervalReviewsFoto = setInterval(() => {
+            const intervalReviewsFoto = setInterval(() => {
                 const ReviewsFoto = document.querySelector("#layoutPage > div.b2 > div:nth-child(7) > div > div.container.b6 > div:nth-child(1)") // фотки из отзывов - скрыть
                 if (ReviewsFoto) {
                     ReviewsFoto.style.display = 'none'
@@ -280,60 +281,91 @@
                 }
             }, 50);
             // Блок с: Информация о продавце; Другие предложения от продавцов на Ozon.ru
-			const intervalSellers = setInterval(() => {
+            const intervalSellers = setInterval(() => {
                 const Sellers = document.querySelector("#layoutPage > div.b2 > div:nth-child(7) > div > div.container.b6 > div.d8") // инфа по продавцам
                 if (Sellers) {
                     // Другие предложения от продавцов на Ozon.ru - скрываем так как он дублирует аналогичный блок внизу страницы
                     const SellersOtherOffers = Sellers.querySelector("div > div.j6y")
                     if (SellersOtherOffers) {
-                        SellersOtherOffers.style.display = 'none'
+                        // SellersOtherOffers.style.display = 'none'
                         clearInterval(intervalSellers);
                     }
                 }
             }, 50);
             // Блок с: Похожие товары; Покупают вместе
-			const interval_AlsoRecommend_BuyTogether = setInterval(() => {
-                const AlsoRecommend_BuyTogether = document.querySelector("#layoutPage > div.b2 > div:nth-child(7) > div > div.container.b6 > div.ml6.l2n.m9l.nl0 > div:nth-child(1)")
+            const interval_AlsoRecommend_BuyTogether = setInterval(() => {
+                const AlsoRecommend_BuyTogether = document.querySelector("#layoutPage > div.b2 > div:nth-child(7) > div > div.container.b6 > div.ml6.l2n.m9l.nl0 > div:nth-child(1)") || document.querySelector("#layoutPage > div.b2.b4 > div:nth-child(10) > div > div > div.pj6")
                 if (AlsoRecommend_BuyTogether) {
                     // пока отключаю, потом буду сворачивать
-                    // AlsoRecommend_BuyTogether.style.display = 'none'
                     clearInterval(interval_AlsoRecommend_BuyTogether);
-                    // Создать элемент <details> и установить его в свернутом состоянии по умолчанию
-                    const details = document.createElement('details');
 
-                    // Создать элемент <summary> с текстом
-                    const summary = document.createElement('summary');
-                    summary.classList.add('k1y');
-                    summary.textContent = '⏵ Похожие товары + Покупают вместе';
-                    summary.style.cursor = 'pointer';
+                    let UseDetails = true
+                    const observer = new MutationObserver((mutationsList, observer) => {
+                        for (const mutation of mutationsList) {
+                            if (mutation.type === 'childList' || mutation.type === 'attributes') {
+                                console.log('Изменение содержимого div или атрибутов div обнаружено.');
 
-                    // Добавить обработчик события toggle для изменения иконки треугольника
-                    details.addEventListener('toggle', function() {
-                        if (details.open) {
-                            summary.textContent = '⏷ Похожие товары + Покупают вместе';
-                        } else {
-                            summary.textContent = '⏵ Похожие товары + Покупают вместе';
+                                // Дополнительная логика проверки:
+                                if (UseDetails) {
+                                    if (AlsoRecommend_BuyTogether.children.length === 1 && AlsoRecommend_BuyTogether.children[0].children.length === 1) {
+                                        const child = AlsoRecommend_BuyTogether.children[0].children[0];
+
+                                        const isCorrectElement =
+                                              child.tagName.toLowerCase() === 'div' &&
+                                              child.classList.contains('dn0') &&
+                                              child.getAttribute('data-widget') === 'separator';
+
+                                        if (isCorrectElement) {
+                                            console.log('Div содержит только <div class="dn0" data-widget="separator"></div> и ничего более.');
+                                        } else {
+                                            console.log('Div содержит другие элементы или не соответствует нужному элементу.');
+                                        }
+                                    } else {
+                                        // console.log('Div содержит более одного элемента.');
+                                        UseDetails = false
+                                        // Если нужно остановить наблюдение в будущем:
+                                        // Но срабатывает не мгновенно - приходится использовать флаг UseDetails
+                                        observer.disconnect();
+                                        // Создать элемент <details> и установить его в свернутом состоянии по умолчанию
+                                        const details = document.createElement('details');
+
+                                        // Создать элемент <summary> с текстом
+                                        const summary = document.createElement('summary');
+                                        summary.classList.add('tsHeadline500Medium');
+                                        summary.textContent = 'Похожие товары + Покупают вместе';
+                                        summary.style.cursor = 'pointer';
+
+
+                                        // Добавить элемент <summary> в <details>
+                                        details.appendChild(summary);
+
+                                        // Добавить созданный элемент <details> перед элементом AlsoRecommend_BuyTogether
+                                        AlsoRecommend_BuyTogether.insertAdjacentElement('beforebegin', details);
+
+                                        // Переместить существующий элемент AlsoRecommend_BuyTogether внутрь <details>
+                                        details.appendChild(AlsoRecommend_BuyTogether);
+
+                                        // details перемещаем до блока комментариев
+                                        const div_Description = document.querySelector("#comments")
+                                        div_Description.insertAdjacentElement('beforebegin', details);
+
+                                    }
+                                }
+                            }
                         }
                     });
 
-                    // Добавить элемент <summary> в <details>
-                    details.appendChild(summary);
+                    // Указываем, за какими изменениями хотим наблюдать:
+                    const config = { attributes: true, childList: true, subtree: true };
 
-                    // Добавить созданный элемент <details> перед элементом AlsoRecommend_BuyTogether
-                    AlsoRecommend_BuyTogether.insertAdjacentElement('beforebegin', details);
+                    // Начинаем наблюдение:
+                    observer.observe(AlsoRecommend_BuyTogether, config);
 
-                    // Переместить существующий элемент AlsoRecommend_BuyTogether внутрь <details>
-                    details.appendChild(AlsoRecommend_BuyTogether);
-
-                    const interval_tagList = setInterval(() => {
-                        const tagList = document.querySelector('#layoutPage > div.b2 > div:nth-child(7) > div > div.container.b6 > div.ml6.l2n.m9l.nl0 > div:nth-child(2) > div > div > div[data-widget="tagList"]')
-                        if (tagList) {
-                            clearInterval(interval_tagList);
-                            tagList.insertAdjacentElement('afterend', details);
-                        }
-                    }, 50);
+                    // Если нужно остановить наблюдение в будущем:
+                    // observer.disconnect();
                 }
             }, 50);
+
             // Блок с рекламой
             function OzonpPoductRemoveElements() {
                 document.querySelectorAll('div.j5n[data-widget="skuGrid"]').forEach(function(element) {
@@ -356,12 +388,12 @@
                 // Наблюдение за изменениями в body
                 observer.observe(document.body, config);
             });
-		}
-    // Ozon: Страница каталога товаров
+        }
+        // Ozon: Страница каталога товаров
     } else if (currentURL.includes('ozon.ru/category/') ) {
         // Если условия выполняются - добавляем к адресу параметр и перезагружаем страницу с новым адресом, производящим сортировку рейтингов по возрастанию
         if (config.SettingsOnOff) {
-			addOzonSortParamToLinks()
+            addOzonSortParamToLinks()
         }
 
 
@@ -372,6 +404,7 @@
     } else if (currentURL.match(/^https:\/\/www\.sima-land\.ru\/\d+\/.+\/$/)) {
         // } else if (/^https:\/\/www\.sima-land\.ru\/\d{7}\/.*\/$/.test(currentURL)) {
         sortSimaLendReviews();
+        SimaLendOptimization()
         // Sima-land: страница карточки товара, вызванная из каталога при нажатии ссылки рейтинга
     } else if (currentURL.match(/^https:\/\/www\.sima-land\.ru\/\d+\/.+\/###$/)) {
         // } else if (/^https:\/\/www\.sima-land\.ru\/\d{7}\/.*\/###$/.test(currentURL)) {
@@ -385,6 +418,70 @@
         SimaLendCatalogReviews()
         window.addEventListener('load', SimaLendCatalogReviews) // в дальнейшем можно разремить при условии проверки на добавленые в div ссылки
     }
+
+    function SimaLendOptimization() {
+		// Сималенд: Карточка товара: Характеристики
+        const interval_Characteristics_mini = setInterval(() => {
+            const Characteristics_mini = document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(1) > div > div > div.hb20Nd > div.gnpN7o > div.yV_RnX > div:nth-child(1)")
+
+            if (Characteristics_mini) {
+                clearInterval(interval_Characteristics_mini);
+                // Блок с: Все товары данной фирмы
+                const interval_Prices = setInterval(() => {
+                    const Prices = document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(1) > div > div > div.hb20Nd > div.gnpN7o > div.nl50DW")
+                    if (Prices) {
+                        clearInterval(interval_Prices);
+                        // Переместим узел SimilarProducts внутрь узла details в самый конец
+                        Prices.append(Characteristics_mini);
+                    }
+
+                })
+                }
+        })
+
+        // Блок с: Похожие товары; Также рекомендуем
+        let details
+        const interval_SimilarProducts_AlsoRecommend = setInterval(() => {
+            const SimilarProducts = document.querySelector('#product__root > div > div.Fa76rh > div:nth-child(2) > div > div[data-testid="similar-recommendations-ref"]')
+            const AlsoRecommend = document.querySelector('#product__root > div > div.Fa76rh > div:nth-child(2) > div > div[data-testid="related-recommendations-ref"]')
+            const SimilarProducts_AlsoRecommend = SimilarProducts || AlsoRecommend
+
+            if (SimilarProducts_AlsoRecommend && SimilarProducts_AlsoRecommend.children.length > 0) {
+
+                // Если определён только один из двух блоков - details не был создан ранее
+                if (!details) {
+                    // Создать элемент <details> и установить его в свернутом состоянии по умолчанию
+                    details = document.createElement('details');
+                    details.style.marginTop = "2em";
+                    // Создать элемент <summary> с текстом
+                    const summary = document.createElement('summary');
+                    summary.classList.add('N6SYKn');
+                    summary.textContent = 'Похожие товары + Также рекомендуем';
+                    summary.style.cursor = 'pointer';
+
+                    // Добавить элемент <summary> в <details>
+                    details.appendChild(summary);
+
+                    // Добавить созданный элемент <details> перед любым из двух блоков, который вывелся первым
+                    SimilarProducts_AlsoRecommend.insertAdjacentElement('beforebegin', details);
+                    // Переместить SimilarProducts_AlsoRecommend внутрь <details>
+                    details.appendChild(SimilarProducts_AlsoRecommend);
+                    // определён и второй блок
+                } else {
+                    clearInterval(interval_SimilarProducts_AlsoRecommend);
+                    // Переместим узел SimilarProducts внутрь узла details в самое начало
+                    if (SimilarProducts_AlsoRecommend === SimilarProducts) {
+                        details.prepend(SimilarProducts);
+                    } else if (SimilarProducts_AlsoRecommend === AlsoRecommend) {
+                        // Переместим узел SimilarProducts внутрь узла details в самый конец
+                        details.append(AlsoRecommend);
+                    }
+                }
+            }
+        }, 50);
+    }
+
+
 
 
     // Wildberries: определение совершения перехода на карточку товара с разделом отзывов
