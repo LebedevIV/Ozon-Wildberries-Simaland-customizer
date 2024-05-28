@@ -14,10 +14,10 @@
 
 Extension published (Расширение опубликовано):
 
-Chrome extention:
+Chrome extension:
 https://chromewebstore.google.com/detail/fggglphhbghphfadbjbfmmglmgjfecbo
 
-Mozilla extention:
+Mozilla extension:
 https://addons.mozilla.org/addon/ozon-wildberries-simaland-cust
 
 Userscript (Tampermonkey):
