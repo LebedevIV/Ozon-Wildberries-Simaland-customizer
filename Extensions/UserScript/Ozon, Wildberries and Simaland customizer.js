@@ -14,8 +14,8 @@
 // @match          https://*.wildberries.ru/*
 // @match          http://*.sima-land.ru/*
 // @match          https://*.sima-land.ru/*
-// @downloadURL    https://raw.githubusercontent.com/LebedevIV/Ozon-Wildberries-Simaland-customizer/main/Extensions/UserScript/Ozon%2C%20Wildberries%20and%20Simaland%20customizer.js
-// @updateURL      https://raw.githubusercontent.com/LebedevIV/Ozon-Wildberries-Simaland-customizer/main/Extensions/UserScript/Ozon%2C%20Wildberries%20and%20Simaland%20customizer.js
+// @downloadURL https://update.greasyfork.org/scripts/495412/Ozon%2C%20Wildberries%20and%20Simaland%20customizer%3A%20bad%20reviews%20first.user.js
+// @updateURL https://update.greasyfork.org/scripts/495412/Ozon%2C%20Wildberries%20and%20Simaland%20customizer%3A%20bad%20reviews%20first.meta.js
 // ==/UserScript==
 
 
@@ -263,9 +263,8 @@
 				} else {
 					NewURL = `${currentURL}&sort=score_asc`;
 				}
-				window.location.href = NewURL; // перезагрузка страницы приводит к оходу данного условия и переходу к следующим условиям
+                window.location.href = NewURL; // перезагрузка страницы приводит к оходу данного условия и переходу к следующим условиям
 			}
-			
 		}
     // Ozon: Страница карточки товара
     } else if (currentURL.includes('ozon.ru/product/')) {
@@ -349,12 +348,14 @@
                 observer.observe(document.body, config);
             });
 		}
-	    // Ozon: Страница каталога товаров
+    // Ozon: Страница каталога товаров
     } else if (currentURL.includes('ozon.ru/category/') ) {
         // Если условия выполняются - добавляем к адресу параметр и перезагружаем страницу с новым адресом, производящим сортировку рейтингов по возрастанию
         if (config.SettingsOnOff) {
 			addOzonSortParamToLinks()
-	}
+        }
+
+
         // Wildberries:
     } else if (currentURL.includes('wildberries.ru/catalog/') && currentURL.includes('/feedbacks?imtId=')) {
         sortWildberriesReviews();
