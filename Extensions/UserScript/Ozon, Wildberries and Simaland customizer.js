@@ -263,8 +263,9 @@
 				} else {
 					NewURL = `${currentURL}&sort=score_asc`;
 				}
+				window.location.href = NewURL;
 			}
-			window.location.href = NewURL;
+			
 		}
     // Ozon: Страница каталога товаров
     } else if (currentURL.includes('ozon.ru/category/') ) {
