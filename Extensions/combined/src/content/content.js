@@ -219,26 +219,30 @@
         const interval = setInterval(() => {
             // ожидание загрузки страницы до появления ссылки на отзывы
             const aReviews = document.querySelector("#category-page__root > div > div.SvXTv3.pPpF_h.Go7gld.MoKdBA.ckfJXr.elXZ47 > div.WBjroC > div.YF_0Ly > div.R4UxqH > div") || document.querySelector("div.Jweg1q")
-			
+
             if (aReviews) {
                 // var divs = document.querySelectorAll('.YREwlL');
                 var divs = document.querySelectorAll('.ulVbvy');
-				if (divs.length === 0) 
+				if (divs.length === 0) {
 					divs = document.querySelectorAll('div.Ca1QyR')
+				}
                 // цикл по каждому div
                 divs.forEach((div) => {
                     // если ссылка ранее не была добавлена: повторное добавление после загрузки всей страницы. По каким-то причинам в конце загрузки страницы ссылки удаляются, но их добавление во время загузки необходимо чтобы пльзователь имел возможность нажимать
                     if (!div.querySelector('a')) {
+			    let link
                         // получение ссылки из parentnode.parentnode
 						// десктопная версия
-						if (div.classList.contains('ulVbvy'))
-							var link = div.parentNode.parentNode.parentNode.querySelector('.o7U8An a')
+						if (div.classList.contains('ulVbvy')) {
+							link = div.parentNode.parentNode.parentNode.querySelector('.o7U8An a')
+						}
 						// мобильная версия
-						else if (div.classList.contains('Ca1QyR'))
-							var link = div.parentNode.parentNode.parentNode
+						else if (div.classList.contains('Ca1QyR')) {
+							link = div.parentNode.parentNode.parentNode
+						}
                         if(link?.tagName === "A") {
                             var href = link.getAttribute('href');
-							
+
 							// Создание нового узла <a>
 							let aNode = document.createElement('a');
 
@@ -249,9 +253,9 @@
 							// Перемещаем все дочерние узлы из div1 в новый узел <a>
 							while (div.firstChild) {
 								aNode.appendChild(div.firstChild);
-							}							
+							}
 							// Перемещаем узел div внутрь aNode
-							div.appendChild(aNode);	
+							div.appendChild(aNode);
                         }
                     }
                 });
@@ -272,7 +276,7 @@
 				if (currentURL.includes('/reviews')) {
 					NewURL = currentURL.replace('/reviews', '/reviews?sort=score_asc');
 				} else {
-					NewURL = `${currentURL}&sort=score_asc`;				
+					NewURL = `${currentURL}&sort=score_asc`;
 				}
 			}
 			api.runtime.sendMessage({action: "redirect", url: NewURL});
@@ -280,8 +284,9 @@
     // Ozon: Страница каталога товаров
     } else if (currentURL.includes('ozon.ru/category/') ) {
         // Если условия выполняются - добавляем к адресу параметр и перезагружаем страницу с новым адресом, производящим сортировку рейтингов по возрастанию
-        if (config.SettingsOnOff) 
+        if (config.SettingsOnOff) {
 			addOzonSortParamToLinks()
+	}
     // Wildberries: Страница каталога товаров
     } else if (currentURL.includes('wildberries.ru/catalog/') && currentURL.includes('/feedbacks?imtId=')) {
         sortWildberriesReviews();
