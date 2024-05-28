@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Ozon, Wildberries and Simaland customizer: bad reviews first + interface enhancements
+// @name         Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-05-28_20-23
+// @version      2024-05-28_14-49
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
@@ -306,6 +306,15 @@
                     summary.classList.add('k1y');
                     summary.textContent = '⏵ Похожие товары + Покупают вместе';
                     summary.style.cursor = 'pointer';
+
+                    // Добавить обработчик события toggle для изменения иконки треугольника
+                    details.addEventListener('toggle', function() {
+                        if (details.open) {
+                            summary.textContent = '⏷ Похожие товары + Покупают вместе';
+                        } else {
+                            summary.textContent = '⏵ Похожие товары + Покупают вместе';
+                        }
+                    });
 
                     // Добавить элемент <summary> в <details>
                     details.appendChild(summary);
