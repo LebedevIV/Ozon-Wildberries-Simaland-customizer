@@ -263,11 +263,93 @@
 				} else {
 					NewURL = `${currentURL}&sort=score_asc`;
 				}
-				window.location.href = NewURL;
+				window.location.href = NewURL; // перезагрузка страницы приводит к оходу данного условия и переходу к следующим условиям
 			}
 			
 		}
-    // Ozon: Страница каталога товаров
+    // Ozon: Страница карточки товара
+    } else if (currentURL.includes('ozon.ru/product/')) {
+        // Если условия выполняются - добавляем к адресу параметр и перезагружаем страницу с новым адресом, производящим сортировку рейтингов по возрастанию
+        if (config.SettingsOnOff) {
+            // сокрытие и перестановка мешающих блоков
+            // первый блок фото из отзывов - скрываем, так как он дублирует этот же блок в отзывах
+			const intervalReviewsFoto = setInterval(() => {
+                const ReviewsFoto = document.querySelector("#layoutPage > div.b2 > div:nth-child(7) > div > div.container.b6 > div:nth-child(1)") // фотки из отзывов - скрыть
+                if (ReviewsFoto) {
+                    ReviewsFoto.style.display = 'none'
+                    clearInterval(intervalReviewsFoto);
+                }
+            }, 50);
+            // Блок с: Информация о продавце; Другие предложения от продавцов на Ozon.ru
+			const intervalSellers = setInterval(() => {
+                const Sellers = document.querySelector("#layoutPage > div.b2 > div:nth-child(7) > div > div.container.b6 > div.d8") // инфа по продавцам
+                if (Sellers) {
+                    // Другие предложения от продавцов на Ozon.ru - скрываем так как он дублирует аналогичный блок внизу страницы
+                    const SellersOtherOffers = Sellers.querySelector("div > div.j6y")
+                    if (SellersOtherOffers) {
+                        SellersOtherOffers.style.display = 'none'
+                        clearInterval(intervalSellers);
+                    }
+                }
+            }, 50);
+            // Блок с: Похожие товары; Покупают вместе
+			const interval_AlsoRecommend_BuyTogether = setInterval(() => {
+                const AlsoRecommend_BuyTogether = document.querySelector("#layoutPage > div.b2 > div:nth-child(7) > div > div.container.b6 > div.ml6.l2n.m9l.nl0 > div:nth-child(1)")
+                if (AlsoRecommend_BuyTogether) {
+                    // пока отключаю, потом буду сворачивать
+                    // AlsoRecommend_BuyTogether.style.display = 'none'
+                    clearInterval(interval_AlsoRecommend_BuyTogether);
+                    // Создать элемент <details> и установить его в свернутом состоянии по умолчанию
+                    const details = document.createElement('details');
+
+                    // Создать элемент <summary> с текстом
+                    const summary = document.createElement('summary');
+                    summary.classList.add('k1y');
+                    summary.textContent = '⏵ Похожие товары + Покупают вместе';
+                    summary.style.cursor = 'pointer';
+
+                    // Добавить элемент <summary> в <details>
+                    details.appendChild(summary);
+
+                    // Добавить созданный элемент <details> перед элементом AlsoRecommend_BuyTogether
+                    AlsoRecommend_BuyTogether.insertAdjacentElement('beforebegin', details);
+
+                    // Переместить существующий элемент AlsoRecommend_BuyTogether внутрь <details>
+                    details.appendChild(AlsoRecommend_BuyTogether);
+
+                    const interval_tagList = setInterval(() => {
+                        const tagList = document.querySelector('#layoutPage > div.b2 > div:nth-child(7) > div > div.container.b6 > div.ml6.l2n.m9l.nl0 > div:nth-child(2) > div > div > div[data-widget="tagList"]')
+                        if (tagList) {
+                            clearInterval(interval_tagList);
+                            tagList.insertAdjacentElement('afterend', details);
+                        }
+                    }, 50);
+                }
+            }, 50);
+            // Блок с рекламой
+            function OzonpPoductRemoveElements() {
+                document.querySelectorAll('div.j5n[data-widget="skuGrid"]').forEach(function(element) {
+                    element.remove();
+                });
+            }
+            // Удаление при загрузке содержимого
+            OzonpPoductRemoveElements();
+
+            window.addEventListener('load', ()=>{
+                // Удаление при прокрутке страницы
+                window.addEventListener('scroll', OzonpPoductRemoveElements);
+
+                // Наблюдатель за изменениями в DOM
+                const observer = new MutationObserver(OzonpPoductRemoveElements);
+
+                // Настройки наблюдателя
+                const config = { childList: true, subtree: true };
+
+                // Наблюдение за изменениями в body
+                observer.observe(document.body, config);
+            });
+		}
+	    // Ozon: Страница каталога товаров
     } else if (currentURL.includes('ozon.ru/category/') ) {
         // Если условия выполняются - добавляем к адресу параметр и перезагружаем страницу с новым адресом, производящим сортировку рейтингов по возрастанию
         if (config.SettingsOnOff) {
