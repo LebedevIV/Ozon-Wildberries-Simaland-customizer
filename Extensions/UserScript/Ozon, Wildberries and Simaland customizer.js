@@ -2,7 +2,7 @@
 // @name         Ozon, Wildberries and Simaland customizer: bad reviews first
 // @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы
 // @namespace    http://tampermonkey.net/
-// @version      2024-05-26_15-05
+// @version      2024-05-28_14-03
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
@@ -24,7 +24,10 @@
 
     // получаем текущий адрес страницы
     const currentURL = window.location.href
-
+	const config = {
+	  // advanced: false,
+	  SettingsOnOff: true,
+	};
 
     // Ozon: Функция для добавления к ссылкам на страницах каталогов параметра сортировки рейтинга по возрастанию - на случай если пользователь будет вручную открывать ссылки с карточкой товара в новой вкладке
 	// Так же добавление ссылок для блоков рейтингов (звёздочек)
