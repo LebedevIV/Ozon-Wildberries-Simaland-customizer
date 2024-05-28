@@ -2,7 +2,7 @@
 // @name         Ozon, Wildberries and Simaland customizer: bad reviews first
 // @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы
 // @namespace    http://tampermonkey.net/
-// @version      2024-05-28_14-03
+// @version      2024-05-28_14-49
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
@@ -42,7 +42,7 @@
 				// Привязка к блоку рейтингов (звёздочек) ссылки на рейтинги
 				// if(link_parentNode.tagName.toLowerCase() === 'div' && link_parentNode.classList.contains('iy6')) {
 				if(link_parentNode.tagName.toLowerCase() === 'div') {
-					
+
 					// Определение наличия вложенного элемента, содержащего рейтинги
 					var divStars = link_parentNode.querySelector('div.tsBodyMBold');
 					if (divStars) {
@@ -53,7 +53,6 @@
 						// // привязка полученного href к текущему div + добавление к ссылке метки в виде трёх символов якоря, которые не удаляется из строки
 						let url1Base = linkOrig.match(/(^[^\?]+)/g)[0];
 						// divStars.innerHTML = `<a href="${url1Base}reviews?sort=score_asc" style="display: flex; width: 100%; height: 100%; cursor: pointer;">${oldHTML}</a>`;
-					
 
 						// Создание нового узла <a>
 						let aNode = document.createElement('a');
@@ -61,23 +60,23 @@
 						// Установка параметров узла
 						aNode.href = `${url1Base}reviews?sort=score_asc`;
 						aNode.style.cssText = 'display: flex; width: 100%; height: 100%; cursor: pointer; text-decoration: none;';
-												
+
 						// Получаем родительский элемент div
-						let parentNode = divStars.parentNode;		
+						let parentNode = divStars.parentNode;
 
 						// Вставляем новый узел перед div1
 						parentNode.insertBefore(aNode, divStars);
 
 						// Перемещаем узел div внутрь aNode
-						aNode.appendChild(divStars);	
+						aNode.appendChild(divStars);
 						divStars.style.cursor = 'pointer';
 
 					}
-				}					
+				}
 			});
 		}
     }
-	
+
     // Wildberries: Ожидание загружки страницы товара до появления элемента сортировки рейтинга и искусственное двойное нажатие этого элемента чтобы добиться сортировки рейтинга по возрастанию
     function sortWildberriesReviews() {
         const interval = setInterval(() => {
@@ -110,7 +109,7 @@
 	                    }
 	                    clearInterval(interval);
 	                }
-            	}	
+            	}
         }, 50);
     }
 
