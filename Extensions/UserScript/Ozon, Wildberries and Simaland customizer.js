@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
+// @name         Ozon, Wildberries and Simaland customizer: bad reviews first + interface enhancements
 // @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
 // @version      2024-05-28_14-49
