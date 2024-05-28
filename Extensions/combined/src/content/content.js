@@ -320,7 +320,16 @@
                     summary.classList.add('k1y');
                     summary.textContent = '⏵ Похожие товары + Покупают вместе';
                     summary.style.cursor = 'pointer';
-
+			
+                    // Добавить обработчик события toggle для изменения иконки треугольника
+                    details.addEventListener('toggle', function() {
+                        if (details.open) {
+                            summary.textContent = '⏷ Похожие товары + Покупают вместе';
+                        } else {
+                            summary.textContent = '⏵ Похожие товары + Покупают вместе';
+                        }
+                    });
+			
                     // Добавить элемент <summary> в <details>
                     details.appendChild(summary);
 
