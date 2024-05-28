@@ -2,7 +2,7 @@
 // @license        GPL-3.0-or-later
 
 
-(function() {
+(() => {
     'use strict'
 
 	const api = getBrowser();
