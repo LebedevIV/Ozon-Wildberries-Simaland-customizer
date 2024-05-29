@@ -113,7 +113,7 @@
         }, 50);
     }
 
-
+    // Sima-lend: Ожидание фрейма с отзывами и его обработка
     function clickLinkReviews() {
         // event.preventDefault(); // Предотвратить переход по ссылке
         const interval2 = setInterval(() => {
