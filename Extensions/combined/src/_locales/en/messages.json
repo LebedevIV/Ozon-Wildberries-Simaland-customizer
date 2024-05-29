@@ -1,6 +1,6 @@
 {
    "extensionName": {
-      "message": "Ozon, Wildberries and Simaland: Bad reviews first",
+      "message": "Ozon, Wildberries and Simaland: Bad reviews first + enhancement",
 	  "description": "Name"
    },
    "extensionDesc": {
@@ -8,7 +8,7 @@
 	  "description": "Description"
    },
    "extensionDefaultTitle": {
-      "message": "Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating"
+      "message": "Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating + enhancement"
    },
    "extensionWebsite": {
       "message": "Go to site"
