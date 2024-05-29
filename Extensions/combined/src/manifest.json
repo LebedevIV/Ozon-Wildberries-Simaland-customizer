@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "version": "24.5.26.0",
-  "minimum_chrome_version": "121",
+  "minimum_chrome_version": "109",
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDesc__",
   "default_locale": "ru",
@@ -11,7 +11,7 @@
 	  "tabs"
   ],
   "background": {
-    "scripts": ["background.js"]
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
@@ -31,7 +31,6 @@
     "default_icon": {
       "16": "./images/icon_color-16.png",
       "48": "./images/icon_color-48.png",
-	  "96": "./images/logo_color.svg",
       "128": "./images/icon_color-128.png"
     },
 	"js": [
@@ -45,13 +44,6 @@
   "icons": {
     "16": "./images/icon_color-16.png",
     "48": "./images/icon_color-48.png",
-	"96": "./images/logo_color.svg",	
     "128": "./images/icon_color-128.png"
-  },
-	"browser_specific_settings": {
-	  "gecko": {
-		"id": "ozon-wildberries-simaland-customizer@firefox.com",
-		"strict_min_version": "121.0"
-	  }
-	}  
+  }
 }

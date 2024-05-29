@@ -1126,3 +1126,16 @@ label[for=checkboxPrivacyPolicyAccept]{
     /* margin-bottom: 15px; */
     margin-top: 10px;
 }
+.a_sites {
+  display: block; 
+  margin: 5px 0 5px 0;
+  text-decoration: none; 
+  color: inherit;
+}
+.a_sites_div {
+	background-position: center top;
+	height: 60px;
+	background-repeat: no-repeat;
+	transition-duration: 0.15s;
+	transition-timing-function: ease-in-out;	
+}

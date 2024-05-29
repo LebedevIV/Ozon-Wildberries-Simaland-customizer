@@ -64,6 +64,18 @@ document.addEventListener('DOMContentLoaded', function() {
 		// buttonLinkDonate.style.transform = 'scale(1)';
 	});
 
+	// Визуальные эффекты кнопки Пожертвований
+	const buttonsSites = document.querySelectorAll('.a_sites_div');
+	buttonsSites.forEach((element)=>{
+		element.addEventListener('mouseover', () => {
+			element.style.transform = 'scale(1.1)';
+		});
+		element.addEventListener('mouseleave', () => {
+			element.style.transform = 'scale(1)';
+		});	
+	});
+
+
 
 	ShowViews("divSettings")
 	initConfig()
