@@ -13,6 +13,9 @@
    "extensionWebsite": {
       "message": "Перейти на сайт"
    },   
+   "GoToSites": {
+      "message": "Перейти на сайты:"
+   },   
     "legendDonate": {
       "message": "Пожертвовать на развитие"
    },

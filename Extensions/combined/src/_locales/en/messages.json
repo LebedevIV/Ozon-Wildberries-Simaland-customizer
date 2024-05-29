@@ -12,7 +12,10 @@
    },
    "extensionWebsite": {
       "message": "Go to site"
-   },   
+   },
+   "GoToSites": {
+      "message": "Go to sites:"
+   },     
     "legendDonate": {
       "message": "Donate"
    },
