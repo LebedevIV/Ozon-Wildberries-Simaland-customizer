@@ -249,7 +249,7 @@
         }, 50);
     }
 
-    // Оптимизация вида
+    // Simaland: Оптимизация вида
     function SimaLendOptimization() {
         // Сималенд: Карточка товара: Характеристики
         const interval_Characteristics_mini = setInterval(() => {
