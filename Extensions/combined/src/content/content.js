@@ -190,8 +190,10 @@
                                                 const sortButtonSortingPoint = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > div > div > div.os-padding > div > div > div:nth-child(4)") || document.querySelector("#product__root > div.lPxD1I > div > div > div.os-host.os-host-foreign.os-theme-dark.os-host-resize-disabled.os-host-scrollbar-horizontal-hidden.VV8J6y.XTXFkP.os-host-flexbox.os-host-scrollbar-vertical-hidden.os-host-transition > div.os-padding > div > div > div > div > button:nth-child(4)");
                                                 if (sortButtonSortingPoint) {
                                                     clearInterval(interval3);
-													if (config.SettingsOnOff)
+													if (config.SettingsOnOff) {
 														sortButtonSortingPoint.click();
+														SimaLendOptimization()
+													}
                                                 }
                                             }, 50);
                                         });
@@ -263,6 +265,70 @@
         }, 50);
     }
 
+    // Simaland: Оптимизация вида
+    function SimaLendOptimization() {
+        // Сималенд: Карточка товара: Характеристики
+        const interval_Characteristics_mini = setInterval(() => {
+            const Characteristics_mini = document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(1) > div > div > div.hb20Nd > div.gnpN7o > div.yV_RnX > div:nth-child(1)")
+
+            if (Characteristics_mini) {
+                clearInterval(interval_Characteristics_mini);
+                // Блок с: Все товары данной фирмы
+                const interval_Prices = setInterval(() => {
+                    const Prices = document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(1) > div > div > div.hb20Nd > div.gnpN7o > div.nl50DW")
+                    if (Prices) {
+                        clearInterval(interval_Prices);
+                        // Переместим узел SimilarProducts внутрь узла details в самый конец
+                        Prices.append(Characteristics_mini);
+                    }
+
+                })
+                }
+        })
+
+        // Блок с: Похожие товары; Также рекомендуем
+        let details
+        const interval_SimilarProducts_AlsoRecommend = setInterval(() => {
+            const SimilarProducts = document.querySelector('#product__root > div > div.Fa76rh > div:nth-child(2) > div > div[data-testid="similar-recommendations-ref"]')
+            const AlsoRecommend = document.querySelector('#product__root > div > div.Fa76rh > div:nth-child(2) > div > div[data-testid="related-recommendations-ref"]')
+            const SimilarProducts_AlsoRecommend = SimilarProducts || AlsoRecommend
+
+            if (SimilarProducts_AlsoRecommend && SimilarProducts_AlsoRecommend.children.length > 0) {
+
+                // Если определён только один из двух блоков - details не был создан ранее
+                if (!details) {
+                    // Создать элемент <details> и установить его в свернутом состоянии по умолчанию
+                    details = document.createElement('details');
+                    details.style.marginTop = "2em";
+                    // Создать элемент <summary> с текстом
+                    const summary = document.createElement('summary');
+                    summary.classList.add('N6SYKn');
+                    summary.textContent = 'Похожие товары + Также рекомендуем';
+                    summary.style.cursor = 'pointer';
+
+                    // Добавить элемент <summary> в <details>
+                    details.appendChild(summary);
+
+                    // Добавить созданный элемент <details> перед любым из двух блоков, который вывелся первым
+                    SimilarProducts_AlsoRecommend.insertAdjacentElement('beforebegin', details);
+                    // Переместить SimilarProducts_AlsoRecommend внутрь <details>
+                    details.appendChild(SimilarProducts_AlsoRecommend);
+                    // определён и второй блок
+                } else {
+                    clearInterval(interval_SimilarProducts_AlsoRecommend);
+                    // Переместим узел SimilarProducts внутрь узла details в самое начало
+                    if (SimilarProducts_AlsoRecommend === SimilarProducts) {
+                        details.prepend(SimilarProducts);
+                    } else if (SimilarProducts_AlsoRecommend === AlsoRecommend) {
+                        // Переместим узел SimilarProducts внутрь узла details в самый конец
+                        details.append(AlsoRecommend);
+                    }
+                }
+            }
+        }, 50);
+    }
+
+	
 	initConfig()
 
     // Проверка, является ли страница карточкой товара, содержащей отзывы, и если да - сортировка отзывов по возрастанию рейтинга. В случае Simalend важна последовательность
@@ -280,13 +346,13 @@
 				api.runtime.sendMessage({action: "redirect", url: NewURL}); // перезагрузка страницы приводит к оходу данного условия и переходу к следующим условиям
 			}
 		}
-    // Ozon: Страница карточки товара
+            // Ozon: Страница карточки товара
     } else if (currentURL.includes('ozon.ru/product/')) {
         // Если условия выполняются - добавляем к адресу параметр и перезагружаем страницу с новым адресом, производящим сортировку рейтингов по возрастанию
         if (config.SettingsOnOff) {
             // сокрытие и перестановка мешающих блоков
             // первый блок фото из отзывов - скрываем, так как он дублирует этот же блок в отзывах
-			const intervalReviewsFoto = setInterval(() => {
+            const intervalReviewsFoto = setInterval(() => {
                 const ReviewsFoto = document.querySelector("#layoutPage > div.b2 > div:nth-child(7) > div > div.container.b6 > div:nth-child(1)") // фотки из отзывов - скрыть
                 if (ReviewsFoto) {
                     ReviewsFoto.style.display = 'none'
@@ -294,60 +360,91 @@
                 }
             }, 50);
             // Блок с: Информация о продавце; Другие предложения от продавцов на Ozon.ru
-			const intervalSellers = setInterval(() => {
+            const intervalSellers = setInterval(() => {
                 const Sellers = document.querySelector("#layoutPage > div.b2 > div:nth-child(7) > div > div.container.b6 > div.d8") // инфа по продавцам
                 if (Sellers) {
                     // Другие предложения от продавцов на Ozon.ru - скрываем так как он дублирует аналогичный блок внизу страницы
                     const SellersOtherOffers = Sellers.querySelector("div > div.j6y")
                     if (SellersOtherOffers) {
-                        SellersOtherOffers.style.display = 'none'
+                        // SellersOtherOffers.style.display = 'none'
                         clearInterval(intervalSellers);
                     }
                 }
             }, 50);
             // Блок с: Похожие товары; Покупают вместе
-			const interval_AlsoRecommend_BuyTogether = setInterval(() => {
-                const AlsoRecommend_BuyTogether = document.querySelector("#layoutPage > div.b2 > div:nth-child(7) > div > div.container.b6 > div.ml6.l2n.m9l.nl0 > div:nth-child(1)")
+            const interval_AlsoRecommend_BuyTogether = setInterval(() => {
+                const AlsoRecommend_BuyTogether = document.querySelector("#layoutPage > div.b2 > div:nth-child(7) > div > div.container.b6 > div.ml6.l2n.m9l.nl0 > div:nth-child(1)") || document.querySelector("#layoutPage > div.b2.b4 > div:nth-child(10) > div > div > div.pj6")
                 if (AlsoRecommend_BuyTogether) {
                     // пока отключаю, потом буду сворачивать
-                    // AlsoRecommend_BuyTogether.style.display = 'none'
                     clearInterval(interval_AlsoRecommend_BuyTogether);
-                    // Создать элемент <details> и установить его в свернутом состоянии по умолчанию
-                    const details = document.createElement('details');
 
-                    // Создать элемент <summary> с текстом
-                    const summary = document.createElement('summary');
-                    summary.classList.add('k1y');
-                    summary.textContent = '⏵ Похожие товары + Покупают вместе';
-                    summary.style.cursor = 'pointer';
-			
-                    // Добавить обработчик события toggle для изменения иконки треугольника
-                    details.addEventListener('toggle', function() {
-                        if (details.open) {
-                            summary.textContent = '⏷ Похожие товары + Покупают вместе';
-                        } else {
-                            summary.textContent = '⏵ Похожие товары + Покупают вместе';
+                    let UseDetails = true
+                    const observer = new MutationObserver((mutationsList, observer) => {
+                        for (const mutation of mutationsList) {
+                            if (mutation.type === 'childList' || mutation.type === 'attributes') {
+                                console.log('Изменение содержимого div или атрибутов div обнаружено.');
+
+                                // Дополнительная логика проверки:
+                                if (UseDetails) {
+                                    if (AlsoRecommend_BuyTogether.children.length === 1 && AlsoRecommend_BuyTogether.children[0].children.length === 1) {
+                                        const child = AlsoRecommend_BuyTogether.children[0].children[0];
+
+                                        const isCorrectElement =
+                                              child.tagName.toLowerCase() === 'div' &&
+                                              child.classList.contains('dn0') &&
+                                              child.getAttribute('data-widget') === 'separator';
+
+                                        if (isCorrectElement) {
+                                            console.log('Div содержит только <div class="dn0" data-widget="separator"></div> и ничего более.');
+                                        } else {
+                                            console.log('Div содержит другие элементы или не соответствует нужному элементу.');
+                                        }
+                                    } else {
+                                        // console.log('Div содержит более одного элемента.');
+                                        UseDetails = false
+                                        // Если нужно остановить наблюдение в будущем:
+                                        // Но срабатывает не мгновенно - приходится использовать флаг UseDetails
+                                        observer.disconnect();
+                                        // Создать элемент <details> и установить его в свернутом состоянии по умолчанию
+                                        const details = document.createElement('details');
+
+                                        // Создать элемент <summary> с текстом
+                                        const summary = document.createElement('summary');
+                                        summary.classList.add('tsHeadline500Medium');
+                                        summary.textContent = 'Похожие товары + Покупают вместе';
+                                        summary.style.cursor = 'pointer';
+
+
+                                        // Добавить элемент <summary> в <details>
+                                        details.appendChild(summary);
+
+                                        // Добавить созданный элемент <details> перед элементом AlsoRecommend_BuyTogether
+                                        AlsoRecommend_BuyTogether.insertAdjacentElement('beforebegin', details);
+
+                                        // Переместить существующий элемент AlsoRecommend_BuyTogether внутрь <details>
+                                        details.appendChild(AlsoRecommend_BuyTogether);
+
+                                        // details перемещаем до блока комментариев
+                                        const div_Description = document.querySelector("#comments")
+                                        div_Description.insertAdjacentElement('beforebegin', details);
+
+                                    }
+                                }
+                            }
                         }
                     });
-			
-                    // Добавить элемент <summary> в <details>
-                    details.appendChild(summary);
 
-                    // Добавить созданный элемент <details> перед элементом AlsoRecommend_BuyTogether
-                    AlsoRecommend_BuyTogether.insertAdjacentElement('beforebegin', details);
+                    // Указываем, за какими изменениями хотим наблюдать:
+                    const config = { attributes: true, childList: true, subtree: true };
 
-                    // Переместить существующий элемент AlsoRecommend_BuyTogether внутрь <details>
-                    details.appendChild(AlsoRecommend_BuyTogether);
+                    // Начинаем наблюдение:
+                    observer.observe(AlsoRecommend_BuyTogether, config);
 
-                    const interval_tagList = setInterval(() => {
-                        const tagList = document.querySelector('#layoutPage > div.b2 > div:nth-child(7) > div > div.container.b6 > div.ml6.l2n.m9l.nl0 > div:nth-child(2) > div > div > div[data-widget="tagList"]')
-                        if (tagList) {
-                            clearInterval(interval_tagList);
-                            tagList.insertAdjacentElement('afterend', details);
-                        }
-                    }, 50);
+                    // Если нужно остановить наблюдение в будущем:
+                    // observer.disconnect();
                 }
             }, 50);
+
             // Блок с рекламой
             function OzonpPoductRemoveElements() {
                 document.querySelectorAll('div.j5n[data-widget="skuGrid"]').forEach(function(element) {
@@ -370,7 +467,7 @@
                 // Наблюдение за изменениями в body
                 observer.observe(document.body, config);
             });
-		}
+        }
 	    // Ozon: Страница каталога товаров
     } else if (currentURL.includes('ozon.ru/category/') ) {
         // Если условия выполняются - добавляем к адресу параметр и перезагружаем страницу с новым адресом, производящим сортировку рейтингов по возрастанию
@@ -383,6 +480,7 @@
     // Sima-land: страница карточки товара
     } else if (currentURL.match(/^https:\/\/www\.sima-land\.ru\/\d+\/.+\/$/)) {
         sortSimaLendReviews();
+	SimaLendOptimization()
     // Sima-land: страница карточки товара, вызванная из каталога при нажатии ссылки рейтинга
     } else if (currentURL.match(/^https:\/\/www\.sima-land\.ru\/\d+\/.+\/###$/)) {
         // приходится ждать загруки страницы так, иначе не подвязываются необходиме функции обработки клика по ссылке рейтинга
