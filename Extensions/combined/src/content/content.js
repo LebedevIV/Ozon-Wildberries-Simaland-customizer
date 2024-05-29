@@ -114,6 +114,41 @@
         }, 50);
     }
 
+    // Sima-lend: Ожидание фрейма с отзывами и его обработка
+    function clickLinkReviews() {
+        // event.preventDefault(); // Предотвратить переход по ссылке
+        const interval2 = setInterval(() => {
+            // отключаем динамический выезд
+            // const frameWithReviews = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div.dfZ2S8")
+            // if (frameWithReviews) {
+            // frameWithReviews.style.transition = 'transform 0s';
+            // }
+            // ожидание дозагрузки страницы до появления ссылки открытия списка сортировки
+            // const divGpksVe = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div.GpksVe")
+            // if (divGpksVe)
+            // divGpksVe.style.setProperty("--transition-duration", "0ms");
+            const sortButton = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > a") || document.querySelector("button.vuz3sk");
+            if (sortButton) {
+                sortButton?.addEventListener('click', (event) => {
+                    const interval3 = setInterval(() => {
+                        // ожидание дозагрузки страницы до раскрытия списка сортировки ипоявления пункта сортировки по возрастанию рейтинга
+                        const sortButtonSortingPoint = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > div > div > div.os-padding > div > div > div:nth-child(4)") || document.querySelector("#product__root > div.lPxD1I > div > div > div.os-host.os-host-foreign.os-theme-dark.os-host-resize-disabled.os-host-scrollbar-horizontal-hidden.VV8J6y.XTXFkP.os-host-flexbox.os-host-scrollbar-vertical-hidden.os-host-transition > div.os-padding > div > div > div > div > button:nth-child(4)");
+                        if (sortButtonSortingPoint) {
+                            clearInterval(interval3);
+                            if (config.SettingsOnOff) {
+                                sortButtonSortingPoint.click();
+                            }
+                        }
+                    }, 50);
+                });
+                clearInterval(interval2);
+                if (config.SettingsOnOff) {
+                    sortButton.click();
+                }
+            }
+        }, 50);
+    }
+
     // Sima-lend: Ожидание загружки страницы товара до появления элемента сортировки рейтинга и искусственное нажатие этого элемента чтобы добиться сортировки рейтинга по возрастанию
     function sortSimaLendReviews() {
         const interval = setInterval(() => {
@@ -122,96 +157,152 @@
             if (aReviews) {
                 // если ссылка активна (когда отзывы есть в случае десктопной версии) или счётчик отзывов > 0 (в случае мобильной версии)
                 if ((aReviews.tagName === 'A' && aReviews.getAttribute('tabindex') === "0" && !aReviews.classList.contains('HuzmFE'))
-						|| (aReviews.tagName === 'BUTTON' && Number(aReviews.querySelector('.WKsLn3 >span.HrbHuT')?.innerText) > 0)
-				) {
-                    aReviews.addEventListener('click', (event) => {
-                        // event.preventDefault(); // Предотвратить переход по ссылке
-                        const interval2 = setInterval(() => {
-							// отключаем динамический выезд
-							// const frameWithReviews = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div.dfZ2S8")
-							// if (frameWithReviews) {
-								// frameWithReviews.style.transition = 'transform 0s';
-							// }						
-                            // ожидание дозагрузки страницы до появления ссылки открытия списка сортировки
-							// const divGpksVe = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div.GpksVe")
-							// if (divGpksVe)
-								// divGpksVe.style.setProperty("--transition-duration", "0ms");
-                            const sortButton = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > a") || document.querySelector("button.vuz3sk");
-                            if (sortButton) {
-                                sortButton?.addEventListener('click', (event) => {
-                                    const interval3 = setInterval(() => {
-                                        // ожидание дозагрузки страницы до раскрытия списка сортировки ипоявления пункта сортировки по возрастанию рейтинга
-                                        const sortButtonSortingPoint = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > div > div > div.os-padding > div > div > div:nth-child(4)") || document.querySelector("#product__root > div.lPxD1I > div > div > div.os-host.os-host-foreign.os-theme-dark.os-host-resize-disabled.os-host-scrollbar-horizontal-hidden.VV8J6y.XTXFkP.os-host-flexbox.os-host-scrollbar-vertical-hidden.os-host-transition > div.os-padding > div > div > div > div > button:nth-child(4)");
-                                        if (sortButtonSortingPoint) {
-                                            clearInterval(interval3);
-											if (config.SettingsOnOff)
-												sortButtonSortingPoint.click();
-                                        }
-                                    }, 50);
-                                });
-                                clearInterval(interval2);
-								if (config.SettingsOnOff)
-									sortButton.click();
-                            }
-                        }, 50);
+                    || (aReviews.tagName === 'BUTTON' && Number(aReviews.querySelector('.WKsLn3 >span.HrbHuT')?.innerText) > 0)
+                   ) {
+                    // aReviews.addEventListener('load', addOzonSortParamToLinks)
+                    aReviews?.addEventListener('click', (event) => {
+                        clickLinkReviews()
                     });
                 }
                 clearInterval(interval);
             }
         }, 50);
+        // Ссылка на отзывы внизу страницы Все отзывы - появляется только при прокрутке вниз и более не исчезает
+        const intervalAllReviewsBottom = setInterval(() => {
+            // ожидание загрузки страницы до появления ссылки на отзывы: второй элемент из-за влияния подгружаемого блока (в дальнейшем найти более надёжную привязку)
+            const AllReviewsBottom = document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(2) > div > div:nth-child(5) > div > div.D5cu9p > div.M0Dw8o > a") || document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(2) > div > div:nth-child(6) > div > div.D5cu9p > div.M0Dw8o > a")
+            if (AllReviewsBottom) {
+                // если ссылка активна (когда отзывы есть в случае десктопной версии) или счётчик отзывов > 0 (в случае мобильной версии)
+                if (AllReviewsBottom.tagName === 'A' && AllReviewsBottom.getAttribute('tabindex') === "0" && AllReviewsBottom.role === 'button') {
+                    AllReviewsBottom.addEventListener('click', (event) => {
+                        clickLinkReviews()
+                    });
+                }
+                clearInterval(intervalAllReviewsBottom);
+            }
+        }, 50);
+
+//         // Создаем экземпляр обсерватора с указанием коллбэк-функции
+//         const observer = new MutationObserver(callback);
+
+//         // Начинаем наблюдение за целевым узлом с переданными опциями
+//         observer.observe(targetNode, configObserver);
+        SimaLendAllReviewsPanelTop()
+
     }
 
-    // Sima-lend: Ожидание загружки страницы товара до появления элемента рейтинга и искусственное нажатие этого элемента
+        // Ссылка на отзывы на панели вверху страницы - появляется только при прокрутке вниз и исчезает при прокрутке вверх
+    function SimaLendAllReviewsPanelTop() {
+        // Выбираем элемент, внутри которого будем отслеживать изменения
+        const targetNode = document.body;
+
+        // Опции для обсерватора (какие именно изменения нужно отслеживать)
+        const configObserver = {
+            childList: true,
+            subtree: true
+        };
+        // Функция-коллбэк, которая будет вызвана при изменениях
+        const callback = function(mutationsList, observer) {
+            for (let mutation of mutationsList) {
+                // Если произошло добавление узла
+                if (mutation.type === 'childList') {
+                    mutation.addedNodes.forEach(node => {
+                        if (node.nodeType === Node.ELEMENT_NODE && node.matches('div.M4Ud_g')) {
+                            // console.log('Элемент <a role="button"> появился на странице:', node);
+                            const AllReviewsPanelTop = document.querySelector("#product__root > div > div.M4Ud_g > div > div > div > div.xx8J2G > div > div.pQ3PLI > a:nth-child(2)")
+                            if (AllReviewsPanelTop) {
+                                // если ссылка активна (когда отзывы есть в случае десктопной версии) или счётчик отзывов > 0 (в случае мобильной версии)
+                                if (AllReviewsPanelTop.tagName === 'A' && AllReviewsPanelTop.getAttribute('tabindex') === "0" && AllReviewsPanelTop.role === 'button') {
+                                    AllReviewsPanelTop.addEventListener('click', (event) => {
+                                        clickLinkReviews()
+                                    });
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        };
+
+        // Создаем экземпляр обсерватора с указанием коллбэк-функции
+        const observer = new MutationObserver(callback);
+
+        // Начинаем наблюдение за целевым узлом с переданными опциями
+        observer.observe(targetNode, configObserver);
+    }
+
+    // Sima-lend: Ожидание загрузки страницы товара до появления элемента рейтинга и искусственное нажатие этого элемента
     function SimaLendCatalogReviewsOpen() {
+        function clickLinkReviews(){
+            const interval_appWrappers = setInterval(() => {
+                let appWrappers = document.querySelectorAll('[data-testid="app-wrapper"]');
+                if (appWrappers) {
+                    const interval2 = setInterval(() => {
+                        // ожидание дозагрузки страницы до появления ссылки открытия списка сортировки
+                        const sortButton = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > a") || document.querySelector("button.vuz3sk");
+                        if (sortButton) {
+                            sortButton?.addEventListener('click', (event) => {
+                                const interval3 = setInterval(() => {
+                                    // ожидание дозагрузки страницы до раскрытия списка сортировки ипоявления пункта сортировки по возрастанию рейтинга
+                                    const sortButtonSortingPoint = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > div > div > div.os-padding > div > div > div:nth-child(4)") || document.querySelector("#product__root > div.lPxD1I > div > div > div.os-host.os-host-foreign.os-theme-dark.os-host-resize-disabled.os-host-scrollbar-horizontal-hidden.VV8J6y.XTXFkP.os-host-flexbox.os-host-scrollbar-vertical-hidden.os-host-transition > div.os-padding > div > div > div > div > button:nth-child(4)");
+                                    if (sortButtonSortingPoint) {
+                                        clearInterval(interval3);
+                                        if (config.SettingsOnOff) {
+                                            sortButtonSortingPoint.click();
+                                            SimaLendOptimization()
+                                        }
+                                    }
+                                }, 50);
+                            });
+                            clearInterval(interval2);
+                            if (config.SettingsOnOff) {
+                                sortButton.click();
+                            }
+                        }
+                    }, 50);
+                    clearInterval(interval_appWrappers);
+                }
+            }, 50);
+        }
         const interval = setInterval(() => {
-			// отключаем динамический выезд
-			const frameWithReviews = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div.dfZ2S8")
-			if (frameWithReviews) {
-				frameWithReviews.style.transition = 'transform 0s';
-			}			
+            // отключаем динамический выезд
+            const frameWithReviews = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div.dfZ2S8")
+            if (frameWithReviews) {
+                frameWithReviews.style.transition = 'transform 0s';
+            }
             // ожидание загрузки страницы до появления ссылки на отзывы
             const aReviews = document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(1) > div > div > div.hb20Nd > div.bcg7Pf > div > div > div.RB0Z2S.vZiVTa > a") || document.querySelector("#product__root > div > div.k41rqL > div:nth-child(10) > button")
             if (aReviews) {
                 // если ссылка активна (когда отзывы есть в случае десктопной версии) или счётчик отзывов > 0 (в случае мобильной версии)
                 if ((aReviews.tagName === 'A' && aReviews.getAttribute('tabindex') === "0" && !aReviews.classList.contains('HuzmFE'))
-						|| (aReviews.tagName === 'BUTTON' && Number(aReviews.querySelector('.WKsLn3 >span.HrbHuT')?.innerText) > 0)
-				) {
+                    || (aReviews.tagName === 'BUTTON' && Number(aReviews.querySelector('.WKsLn3 >span.HrbHuT')?.innerText) > 0)
+                   ) {
                     aReviews.addEventListener('click', (event) => {
-                        const interval_appWrappers = setInterval(() => {
-                            let appWrappers = document.querySelectorAll('[data-testid="app-wrapper"]');
-                            if (appWrappers) {
-                                const interval2 = setInterval(() => {
-                                    // ожидание дозагрузки страницы до появления ссылки открытия списка сортировки
-                                    const sortButton = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > a") || document.querySelector("button.vuz3sk");
-                                    if (sortButton) {
-                                        sortButton?.addEventListener('click', (event) => {
-                                            const interval3 = setInterval(() => {
-                                                // ожидание дозагрузки страницы до раскрытия списка сортировки ипоявления пункта сортировки по возрастанию рейтинга
-                                                const sortButtonSortingPoint = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > div > div > div.os-padding > div > div > div:nth-child(4)") || document.querySelector("#product__root > div.lPxD1I > div > div > div.os-host.os-host-foreign.os-theme-dark.os-host-resize-disabled.os-host-scrollbar-horizontal-hidden.VV8J6y.XTXFkP.os-host-flexbox.os-host-scrollbar-vertical-hidden.os-host-transition > div.os-padding > div > div > div > div > button:nth-child(4)");
-                                                if (sortButtonSortingPoint) {
-                                                    clearInterval(interval3);
-													if (config.SettingsOnOff) {
-														sortButtonSortingPoint.click();
-														SimaLendOptimization()
-													}
-                                                }
-                                            }, 50);
-                                        });
-                                        clearInterval(interval2);
-										if (config.SettingsOnOff)
-											sortButton.click();
-                                    }
-                                }, 50);
-                                clearInterval(interval_appWrappers);
-                            }
-                        }, 50);
+                        clickLinkReviews()
                     });
-					if (config.SettingsOnOff)
-						aReviews.click();
+                    if (config.SettingsOnOff) {
+                        aReviews.click();
+                    }
                 }
                 clearInterval(interval);
             }
         }, 50);
+        // Ссылка на отзывы внизу страницы Все отзывы - появляется только при прокрутке вниз и более не исчезает
+        const intervalAllReviewsBottom = setInterval(() => {
+            // ожидание загрузки страницы до появления ссылки на отзывы
+            const AllReviewsBottom = document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(2) > div > div:nth-child(5) > div > div.D5cu9p > div.M0Dw8o > a")
+            if (AllReviewsBottom) {
+                // если ссылка активна (когда отзывы есть в случае десктопной версии) или счётчик отзывов > 0 (в случае мобильной версии)
+                if (AllReviewsBottom.tagName === 'A' && AllReviewsBottom.getAttribute('tabindex') === "0" && AllReviewsBottom.role === 'button') {
+                    AllReviewsBottom.addEventListener('click', (event) => {
+                        clickLinkReviews()
+                    });
+                }
+                clearInterval(intervalAllReviewsBottom);
+            }
+        }, 50);
+        SimaLendAllReviewsPanelTop()
+
     }
 
     // Sima-lend: Ожидание загружки страницы каталога привязка к рейтингам ссылок на страницы товара
@@ -224,39 +315,39 @@
             if (aReviews) {
                 // var divs = document.querySelectorAll('.YREwlL');
                 var divs = document.querySelectorAll('.ulVbvy');
-				if (divs.length === 0) {
-					divs = document.querySelectorAll('div.Ca1QyR')
-				}
+                if (divs.length === 0) {
+                    divs = document.querySelectorAll('div.Ca1QyR')
+                }
                 // цикл по каждому div
                 divs.forEach((div) => {
                     // если ссылка ранее не была добавлена: повторное добавление после загрузки всей страницы. По каким-то причинам в конце загрузки страницы ссылки удаляются, но их добавление во время загузки необходимо чтобы пльзователь имел возможность нажимать
                     if (!div.querySelector('a')) {
-			    let link
+                        let link
                         // получение ссылки из parentnode.parentnode
-						// десктопная версия
-						if (div.classList.contains('ulVbvy')) {
-							link = div.parentNode.parentNode.parentNode.querySelector('.o7U8An a')
-						}
-						// мобильная версия
-						else if (div.classList.contains('Ca1QyR')) {
-							link = div.parentNode.parentNode.parentNode
-						}
+                        // десктопная версия
+                        if (div.classList.contains('ulVbvy')) {
+                            link = div.parentNode.parentNode.parentNode.querySelector('.o7U8An a')
+                        }
+                        // мобильная версия
+                        else if (div.classList.contains('Ca1QyR')) {
+                            link = div.parentNode.parentNode.parentNode
+                        }
                         if(link?.tagName === "A") {
                             var href = link.getAttribute('href');
 
-							// Создание нового узла <a>
-							let aNode = document.createElement('a');
+                            // Создание нового узла <a>
+                            let aNode = document.createElement('a');
 
-							// Установка параметров узла
-							aNode.href = `${href}###`;
-							aNode.style.cssText = 'display: flex; width: 100%; height: 100%; cursor: pointer; text-decoration: none;';
+                            // Установка параметров узла
+                            aNode.href = `${href}###`;
+                            aNode.style.cssText = 'display: flex; width: 100%; height: 100%; cursor: pointer; text-decoration: none;';
 
-							// Перемещаем все дочерние узлы из div1 в новый узел <a>
-							while (div.firstChild) {
-								aNode.appendChild(div.firstChild);
-							}
-							// Перемещаем узел div внутрь aNode
-							div.appendChild(aNode);
+                            // Перемещаем все дочерние узлы из div1 в новый узел <a>
+                            while (div.firstChild) {
+                                aNode.appendChild(div.firstChild);
+                            }
+                            // Перемещаем узел div внутрь aNode
+                            div.appendChild(aNode);
                         }
                     }
                 });
@@ -427,7 +518,6 @@
                                         // details перемещаем до блока комментариев
                                         const div_Description = document.querySelector("#comments")
                                         div_Description.insertAdjacentElement('beforebegin', details);
-
                                     }
                                 }
                             }
