@@ -537,7 +537,7 @@
 
             // Блок с рекламой
             function OzonpPoductRemoveElements() {
-                document.querySelectorAll('div.j5n[data-widget="skuGrid"]').forEach(function(element) {
+                document.querySelectorAll('div[data-widget="skuGrid"]').forEach(function(element) {
                     element.remove();
                 });
             }
