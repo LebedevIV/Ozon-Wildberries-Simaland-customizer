@@ -2,7 +2,7 @@
 // @name         Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-06-21_20-49
+// @version      2024-06-22_04-35
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
@@ -741,7 +741,9 @@
 
 
         // Wildberries: карточка товара
-    } else if (currentURL.includes('wildberries.ru/catalog/') && currentURL.includes('/feedbacks?imtId=')) {
+    // } else if (currentURL.includes('wildberries.ru/catalog/') && currentURL.includes('/feedbacks?imtId=')) {
+    } else if (currentURL.includes('wildberries.ru/catalog/') && currentURL.includes('/feedbacks')) {
+
         sortWildberriesReviews();
         // Wildberries: каталоги
     } else if (currentURL.includes('wildberries.ru/')) {
@@ -773,7 +775,9 @@
     // перехват событияй истории (кнопок назад-вперёд)
     window.onpopstate = () => {
         // получаем текущий адрес страницы
-        if (new URL(window.location.href).pathname.startsWith('/catalog/') && window.location.href.includes('feedbacks?imtId=')) {
+        // if (new URL(window.location.href).pathname.startsWith('/catalog/') && window.location.href.includes('feedbacks?imtId=')) {
+        if (new URL(window.location.href).pathname.startsWith('/catalog/') && window.location.href.includes('/feedbacks')) {
+
             sortWildberriesReviews();
         }
     };
@@ -837,7 +841,9 @@
         // событие изменения адреса данной вкладки
         api.runtime.onMessage.addListener((request, sender, sendResponse) => {
             // получаем текущий адрес страницы
-            if (new URL(request.url).pathname.startsWith('/catalog/') && request.url.includes('feedbacks?imtId=')) {
+            // if (new URL(request.url).pathname.startsWith('/catalog/') && request.url.includes('feedbacks?imtId=')) {
+            if (new URL(request.url).pathname.startsWith('/catalog/') && request.url.includes('/feedbacks')) {
+
                 sortWildberriesReviews();
             }
         });
