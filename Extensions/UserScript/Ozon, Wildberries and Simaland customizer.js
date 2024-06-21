@@ -2,7 +2,7 @@
 // @name         Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-06-22_04-35
+// @version      2024-06-22_04-58
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
@@ -31,6 +31,7 @@
     };
     let api
 
+    // определение среды выполнения скрипта: как пользовательский или в составе расширения
     function isRunningAsExtension() {
         const isChromeExtension = typeof chrome !== 'undefined' && chrome.runtime && typeof chrome.runtime.id !== 'undefined';
         const isBrowserExtension = typeof browser !== 'undefined' && browser.runtime && typeof browser.runtime.id !== 'undefined';
@@ -49,6 +50,7 @@
         config.isRunningAsExtension = false
     }
 
+    // опредлеение типа браузера
     function getBrowser() {
         if (typeof chrome !== "undefined" && typeof chrome.runtime !== "undefined") {
             return chrome
@@ -68,7 +70,7 @@
 
 
     // Ozon: Функция для добавления к ссылкам на страницах каталогов параметра сортировки рейтинга по возрастанию - на случай если пользователь будет вручную открывать ссылки с карточкой товара в новой вкладке
-    // Так же добавление ссылок для блоков рейтингов (звёздочек)
+    // Так же добавление ссылок на отзывы для блоков рейтингов (звёздочек)
     function addOzonSortParamToLinks() {
         if (config.SettingsOnOff) {
             const links = document.querySelectorAll('a[href^="/product/"]:not([href*="&sort=score_asc"])');
@@ -84,13 +86,7 @@
                     // Определение наличия вложенного элемента, содержащего рейтинги
                     var divStars = link_parentNode.querySelector('div.tsBodyMBold') || link_parentNode.querySelector('div.tsCaptionBold');
                     if (divStars) {
-                        // Сохранение текущего содержимого div
-                        // let oldHTML = divStars.innerHTML;
-                        // // Оборачивание существующего содержимого div в собственную ссылку
-                        // // и присвоение стиля 'cursor: pointer'
-                        // // привязка полученного href к текущему div + добавление к ссылке метки в виде трёх символов якоря, которые не удаляется из строки
                         let url1Base = linkOrig.match(/(^[^\?]+)/g)[0];
-                        // divStars.innerHTML = `<a href="${url1Base}reviews?sort=score_asc" style="display: flex; width: 100%; height: 100%; cursor: pointer;">${oldHTML}</a>`;
 
                         // Создание нового узла <a>
                         let aNode = document.createElement('a');
@@ -226,9 +222,8 @@
 
 
 
-    // Sima-lend: Ожидание фрейма с отзывами и его обработка
+    // Simaland: Ожидание фрейма с отзывами и его обработка
     function clickLinkReviews() {
-        // event.preventDefault(); // Предотвратить переход по ссылке
         const interval2 = setInterval(() => {
             // отключаем динамический выезд (пока не получается)
             // const frameWithReviews = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div.dfZ2S8")
@@ -254,12 +249,8 @@
                         sortButtonSortingPoint.click();
                     } else {
                         const programmaticClickEvent = new CustomEvent('customClick', { detail: { isProgrammatic: true } });
-                        // let isProgrammatic = false;
                         sortButton?.addEventListener('customClick', (event) => {
                             if (event.detail && event.detail.isProgrammatic) {
-                                // if (isProgrammatic) {
-                                // isProgrammatic = false; // Сбрасываем флаг
-                                // console.log('Button was clicked programmatically.');
                                 sortButton.click();
                                 const interval3 = setInterval(() => {
                                     // ожидание дозагрузки страницы до раскрытия списка сортировки ипоявления пункта сортировки по возрастанию рейтинга
@@ -278,7 +269,6 @@
                             }
 
                         });
-                        // isProgrammatic = true;
                         sortButton.dispatchEvent(programmaticClickEvent);
                     }
                 }
@@ -286,8 +276,8 @@
         }, 50);
     }
 
-    // Sima-lend: Ожидание загружки страницы товара до появления элемента сортировки рейтинга и искусственное нажатие этого элемента чтобы добиться сортировки рейтинга по возрастанию
-    function sortSimaLendReviews() {
+    // Simaland: Ожидание загружки страницы товара до появления элемента сортировки рейтинга и искусственное нажатие этого элемента чтобы добиться сортировки рейтинга по возрастанию
+    function sortSimaLandReviews() {
         const interval = setInterval(() => {
             // ожидание загрузки страницы до появления ссылки на отзывы: соответствено для десктопной или мобильной версии
             const aReviews =
@@ -300,7 +290,6 @@
                 if ((aReviews.tagName === 'A' && aReviews.getAttribute('tabindex') === "0" && !aReviews.classList.contains('HuzmFE'))
                     || (aReviews.tagName === 'BUTTON' && Number(aReviews.querySelector('.WKsLn3 >span.HrbHuT')?.innerText) > 0)
                    ) {
-                    // aReviews.addEventListener('load', addOzonSortParamToLinks)
                     aReviews?.addEventListener('click', (event) => {
                         clickLinkReviews()
                     });
@@ -324,17 +313,12 @@
             }
         }, 50);
 
-        //         // Создаем экземпляр обсерватора с указанием коллбэк-функции
-        //         const observer = new MutationObserver(callback);
-
-        //         // Начинаем наблюдение за целевым узлом с переданными опциями
-        //         observer.observe(targetNode, configObserver);
-        SimaLendAllReviewsPanelTop()
+        SimaLandAllReviewsPanelTop()
 
     }
 
     // Ссылка на отзывы на панели вверху страницы - появляется только при прокрутке вниз и исчезает при прокрутке вверх
-    function SimaLendAllReviewsPanelTop() {
+    function SimaLandAllReviewsPanelTop() {
         // Выбираем элемент, внутри которого будем отслеживать изменения
         const targetNode = document.body;
 
@@ -373,9 +357,9 @@
         observer.observe(targetNode, configObserver);
     }
 
-    // Sima-land: страница карточки товара, вызванная из каталога при нажатии ссылки рейтинга
-    // Sima-lend: Ожидание загрузки страницы товара до появления элемента рейтинга и искусственное нажатие этого элемента
-    function SimaLendCatalogReviewsOpen() {
+    // Simaland: страница карточки товара, вызванная из каталога при нажатии ссылки рейтинга
+    // Simaland: Ожидание загрузки страницы товара до появления элемента рейтинга и искусственное нажатие этого элемента
+    function SimaLandCatalogReviewsOpen() {
         function clickLinkReviews_appWrappers(){
             const interval_appWrappers = setInterval(() => {
                 let appWrappers = document.querySelectorAll('[data-testid="app-wrapper"]');
@@ -424,12 +408,12 @@
                 }
             }
         }, 50);
-        SimaLendAllReviewsPanelTop()
-        SimaLendOptimization()
+        SimaLandAllReviewsPanelTop()
+        SimaLandOptimization()
     }
 
     // Sima-lend: Ожидание загружки страницы каталога привязка к рейтингам ссылок на страницы товара
-    function SimaLendCatalogReviews() {
+    function SimaLandCatalogReviews() {
         // выбор всех Рейтинги на странице каталога: div с классом 'YREwlL'
         const interval = setInterval(() => {
             // ожидание загрузки страницы до появления ссылки на отзывы: десктопная и мобильная версии
@@ -484,7 +468,7 @@
     }
 
     // Simaland: Оптимизация вида
-    function SimaLendOptimization() {
+    function SimaLandOptimization() {
         // Сималенд: Карточка товара: Характеристики
         const interval_Characteristics_mini = setInterval(() => {
             const Characteristics_mini = document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(1) > div > div > div.hb20Nd > div.gnpN7o > div.yV_RnX > div:nth-child(1)")
@@ -548,7 +532,7 @@
 
 
 
-    // Проверка, является ли страница карточкой товара, содержащей отзывы, и если да - сортировка отзывов по возрастанию рейтинга. В случае Simalend важна последовательность
+    // Проверка, является ли страница карточкой товара, содержащей отзывы, и если да - сортировка отзывов по возрастанию рейтинга. В случае Simaland важна последовательность
     // Ozon: начинается ли адрес страницы со 'https://www.ozon.ru/product/' и не содержит ли он уже '&sort=score_asc' и прочие варианты сортировки
     if (currentURL.includes('ozon.ru/product/') && !currentURL.includes('&sort=score_asc') && !currentURL.includes('?sort=score_asc') && !currentURL.includes('&sort=score_desc') && !currentURL.includes('?sort=score_desc')) {
         // Если условия выполняются - добавляем к адресу параметр и перезагружаем страницу с новым адресом, производящим сортировку рейтингов по возрастанию
@@ -714,7 +698,6 @@
                 document.querySelectorAll('div.q3j_23[data-widget="skuScroll"]').forEach(function(element) {
                     element.remove();
                 });
-
             }
             // Удаление при загрузке содержимого
             OzonpPoductRemoveElements();
@@ -739,9 +722,7 @@
             addOzonSortParamToLinks()
         }
 
-
         // Wildberries: карточка товара
-    // } else if (currentURL.includes('wildberries.ru/catalog/') && currentURL.includes('/feedbacks?imtId=')) {
     } else if (currentURL.includes('wildberries.ru/catalog/') && currentURL.includes('/feedbacks')) {
 
         sortWildberriesReviews();
@@ -751,23 +732,23 @@
 
             window.addEventListener('load', addWildberriesSortParamToLinks)
         }
-        // Sima-land: страница карточки товара
+        // Simaland: страница карточки товара
     } else if (currentURL.match(/^https:\/\/www\.sima-land\.ru\/\d+\/.+\/$/)) {
         // } else if (/^https:\/\/www\.sima-land\.ru\/\d{7}\/.*\/$/.test(currentURL)) {
-        sortSimaLendReviews();
-        SimaLendOptimization()
-        // Sima-land: страница карточки товара, вызванная из каталога при нажатии ссылки рейтинга
+        sortSimaLandReviews();
+        SimaLandOptimization()
+        // Simaland: страница карточки товара, вызванная из каталога при нажатии ссылки рейтинга
     } else if (currentURL.match(/^https:\/\/www\.sima-land\.ru\/\d+\/.+\/###$/)) {
         // } else if (/^https:\/\/www\.sima-land\.ru\/\d{7}\/.*\/###$/.test(currentURL)) {
-        // SimaLendCatalogReviews();
+        // SimaLandCatalogReviews();
         // приходится ждать загруки страницы так, иначе не подвязываются необходиме функции обработки клика по ссылке рейтинга
-        window.addEventListener('load', SimaLendCatalogReviewsOpen)
-        // SimaLendCatalogReviewsOpen()
+        window.addEventListener('load', SimaLandCatalogReviewsOpen)
+        // SimaLandCatalogReviewsOpen()
         // Страница каталога товаров
     } else if (currentURL.match(/^https:\/\/www\.sima-land\.ru\/.+\/(.*)$/)) {
         // } else if (/^https:\/\/www\.sima-land\.ru\/.+\/$/.test(currentURL)) {
-        SimaLendCatalogReviews()
-        window.addEventListener('load', SimaLendCatalogReviews) // в дальнейшем можно разремить при условии проверки на добавленые в div ссылки
+        SimaLandCatalogReviews()
+        window.addEventListener('load', SimaLandCatalogReviews) // в дальнейшем можно разремить при условии проверки на добавленые в div ссылки
     }
 
 
@@ -775,32 +756,10 @@
     // перехват событияй истории (кнопок назад-вперёд)
     window.onpopstate = () => {
         // получаем текущий адрес страницы
-        // if (new URL(window.location.href).pathname.startsWith('/catalog/') && window.location.href.includes('feedbacks?imtId=')) {
         if (new URL(window.location.href).pathname.startsWith('/catalog/') && window.location.href.includes('/feedbacks')) {
-
             sortWildberriesReviews();
         }
     };
-
-    // перехват события обновления адреса страницы другим скриптом без перезагрузки страницы
-    //     const originalHistoryMethods = {
-    //         pushState: history.pushState,
-    //         replaceState: history.replaceState
-    //     };
-
-    //     history.pushState = function(state, ...rest) {
-    //         if (typeof history.onpushstate === "function") {
-    //             history.onpushstate({state});
-    //         }
-    //         return originalHistoryMethods.pushState.apply(history, [state, ...rest]);
-    //     };
-
-    //     history.replaceState = function(state, ...rest) {
-    //         if (typeof history.onreplacestate === "function") {
-    //             history.onreplacestate({state});
-    //         }
-    //         return originalHistoryMethods.replaceState.apply(history, [state, ...rest]);
-    //     };
 
     const originalPushState = history.pushState;
     history.pushState = function (state, ...args) {
@@ -808,27 +767,6 @@
         // Вызываем функцию сортировки после пуша состояния
         sortWildberriesReviews();
     };
-
-    // const originalReplaceState = history.replaceState;
-    // history.replaceState = function (state, ...args) {
-    //     originalReplaceState.apply(this, [state, ...args]);
-    //     // Вызываем функцию сортировки после замены состояния
-    //     sortWildberriesReviews();
-    // };
-
-    //     window.history.onpushstate = () => {
-    //         // if (new URL(window.location.href).pathname.startsWith('/catalog/') && window.location.search.includes('feedbacks?imtId=')) {
-    //         if (new URL(window.location.href).pathname.startsWith('/catalog/') ) {
-    //             sortWildberriesReviews();
-    //         }
-    //     };
-
-    //     history.pushState = new Proxy(history.pushState, {
-    //         apply: function(target, thisArg, argArray) {
-    //             target.apply(thisArg, argArray);
-    //             sortWildberriesReviews();
-    //         }
-    //     });
 
     history.replaceState = new Proxy(history.replaceState, {
         apply: function(target, thisArg, argArray) {
@@ -841,9 +779,7 @@
         // событие изменения адреса данной вкладки
         api.runtime.onMessage.addListener((request, sender, sendResponse) => {
             // получаем текущий адрес страницы
-            // if (new URL(request.url).pathname.startsWith('/catalog/') && request.url.includes('feedbacks?imtId=')) {
             if (new URL(request.url).pathname.startsWith('/catalog/') && request.url.includes('/feedbacks')) {
-
                 sortWildberriesReviews();
             }
         });
