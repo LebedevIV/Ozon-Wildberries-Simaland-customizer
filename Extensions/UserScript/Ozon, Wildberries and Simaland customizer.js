@@ -2,7 +2,7 @@
 // @name         Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-05-29_18-19
+// @version      2024-06-21_19-38
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
@@ -44,7 +44,7 @@
                 if(link_parentNode.tagName.toLowerCase() === 'div') {
 
                     // Определение наличия вложенного элемента, содержащего рейтинги
-                    var divStars = link_parentNode.querySelector('div.tsBodyMBold');
+                    var divStars = link_parentNode.querySelector('div.tsBodyMBold') || link_parentNode.querySelector('div.tsCaptionBold');
                     if (divStars) {
                         // Сохранение текущего содержимого div
                         // let oldHTML = divStars.innerHTML;
@@ -77,7 +77,7 @@
         }
     }
 
-    // Wildberries: Ожидание загружки страницы товара до появления элемента сортировки рейтинга и искусственное двойное нажатие этого элемента чтобы добиться сортировки рейтинга по возрастанию
+    // Wildberries: Ожидание загрузки страницы товара до появления элемента сортировки рейтинга и искусственное двойное нажатие этого элемента чтобы добиться сортировки рейтинга по возрастанию
     function sortWildberriesReviews() {
         const interval = setInterval(() => {
             // ожидание загрузки страницы до необходимого значения
@@ -114,11 +114,85 @@
         }, 50);
     }
 
+    // Wildberries: добавление ссылок для блоков рейтингов (звёздочек)
+    function addWildberriesSortParamToLinks() {
+        if (config.SettingsOnOff) {
+
+            // Функция для выполнения действий с новыми элементами
+            function handleNewElement(element) {
+
+                const interval_main_page__content = setInterval(() => {
+                    // проверка загрузки блока с визитками товаров
+                    const main_page__content = document.querySelector('div.main-page__content');
+                    if (main_page__content) {
+                        clearInterval(interval_main_page__content)
+                        const rating_wraps = document.querySelectorAll('p.product-card__rating-wrap');
+                        rating_wraps.forEach(rating_wrap => {
+                            // ссылка на карточку товара
+                            const outerLink = rating_wrap.parentNode.parentNode.querySelector('a')
+                            // получение ссылки на отзывы
+                            const linkReviews = outerLink.href.replace('/detail.aspx', '/feedbacks')
+
+
+                            const rating_wrap_parentNode = rating_wrap.parentNode
+                            // Привязка к блоку рейтингов (звёздочек) ссылки на рейтинги
+                            if(rating_wrap_parentNode.tagName.toLowerCase() === 'div') {
+
+
+                                // Создание нового узла <a>
+                                let aNode = document.createElement('a');
+
+                                // Установка параметров узла
+                                aNode.href = linkReviews
+                                aNode.style.cssText = 'display: flex; width: 100%; height: 100%; cursor: pointer; text-decoration: none; z-index: 4;'; // z-index: 4 - должен быть больше чем z-index у внешней ссылки для всей визитки (z-index: 3)
+
+                                // Вставляем новый узел aNode перед rating_wrap
+                                rating_wrap_parentNode.insertBefore(aNode, rating_wrap);
+
+                                // Перемещаем узел rating_wrap внутрь aNode
+                                aNode.appendChild(rating_wrap);
+
+                                rating_wrap.style.cursor = 'pointer';
+
+                            }
+                        });
+                    }
+                });
+            }
+
+            // Настройка MutationObserver
+            const observer = new MutationObserver((mutationsList) => {
+                outerLoop: for (let mutation of mutationsList) {
+                    // изменения всего блока визиток товаров
+                    if (mutation.type === 'childList' && mutation.target.className === 'main-page__content-wrapper') {
+                        // муткация где происходит вставка сразу всех нод - можно сразу выходит из цикла
+                        for (let node of mutation.addedNodes) {
+                            // if (node.nodeType === Node.ELEMENT_NODE && node.matches('p.product-card__rating-wrap')) {
+                            if (node.nodeType === Node.ELEMENT_NODE) {
+                                handleNewElement(node);
+                                break outerLoop;
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Указываем, за какими изменениями наблюдать
+            observer.observe(document.body, {
+                childList: true,       // Наблюдаем за добавлением/удалением детей
+                subtree: true         // Также отслеживаем все поддеревья
+            });
+
+        }
+    }
+
+
+
     // Sima-lend: Ожидание фрейма с отзывами и его обработка
     function clickLinkReviews() {
         // event.preventDefault(); // Предотвратить переход по ссылке
         const interval2 = setInterval(() => {
-            // отключаем динамический выезд
+            // отключаем динамический выезд (пока не получается)
             // const frameWithReviews = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div.dfZ2S8")
             // if (frameWithReviews) {
             // frameWithReviews.style.transition = 'transform 0s';
@@ -127,26 +201,33 @@
             // const divGpksVe = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div.GpksVe")
             // if (divGpksVe)
             // divGpksVe.style.setProperty("--transition-duration", "0ms");
-            const sortButton = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > a") || document.querySelector("button.vuz3sk");
+            const sortButton =
+                  document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > a") ||
+                  document.querySelector("button.vuz3sk");
             if (sortButton) {
                 clearInterval(interval2);
 
                 if (config.SettingsOnOff) {
                     // проверка что список уже не раскрыт (Сайт Сималенд этот список может раскрывать заранее)
-                    const sortButtonSortingPoint = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > div > div > div.os-padding > div > div > div:nth-child(4)") || document.querySelector("#product__root > div.lPxD1I > div > div > div.os-host.os-host-foreign.os-theme-dark.os-host-resize-disabled.os-host-scrollbar-horizontal-hidden.VV8J6y.XTXFkP.os-host-flexbox.os-host-scrollbar-vertical-hidden.os-host-transition > div.os-padding > div > div > div > div > button:nth-child(4)");
+                    const sortButtonSortingPoint =
+                          document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > div > div > div.os-padding > div > div > div:nth-child(4)") ||
+                          document.querySelector("#product__root > div.lPxD1I > div > div > div.os-host.os-host-foreign.os-theme-dark.os-host-resize-disabled.os-host-scrollbar-horizontal-hidden.VV8J6y.XTXFkP.os-host-flexbox.os-host-scrollbar-vertical-hidden.os-host-transition > div.os-padding > div > div > div > div > button:nth-child(4)");
                     if (sortButtonSortingPoint) {
                         sortButtonSortingPoint.click();
                     } else {
-                        // const programmaticClickEvent = new CustomEvent('click', { detail: { isProgrammatic: true } });
-                        let isProgrammatic = false;
-                        sortButton?.addEventListener('click', (event) => {
-                            // if (event.detail && event.detail.isProgrammatic) {
-                            if (isProgrammatic) {
-                                isProgrammatic = false; // Сбрасываем флаг
+                        const programmaticClickEvent = new CustomEvent('customClick', { detail: { isProgrammatic: true } });
+                        // let isProgrammatic = false;
+                        sortButton?.addEventListener('customClick', (event) => {
+                            if (event.detail && event.detail.isProgrammatic) {
+                                // if (isProgrammatic) {
+                                // isProgrammatic = false; // Сбрасываем флаг
                                 // console.log('Button was clicked programmatically.');
+                                sortButton.click();
                                 const interval3 = setInterval(() => {
                                     // ожидание дозагрузки страницы до раскрытия списка сортировки ипоявления пункта сортировки по возрастанию рейтинга
-                                    const sortButtonSortingPoint = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > div > div > div.os-padding > div > div > div:nth-child(4)") || document.querySelector("#product__root > div.lPxD1I > div > div > div.os-host.os-host-foreign.os-theme-dark.os-host-resize-disabled.os-host-scrollbar-horizontal-hidden.VV8J6y.XTXFkP.os-host-flexbox.os-host-scrollbar-vertical-hidden.os-host-transition > div.os-padding > div > div > div > div > button:nth-child(4)");
+                                    const sortButtonSortingPoint =
+                                          document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > div > div > div.os-padding > div > div > div:nth-child(4)") ||
+                                          document.querySelector("#product__root > div.lPxD1I > div > div > div.os-host.os-host-foreign.os-theme-dark.os-host-resize-disabled.os-host-scrollbar-horizontal-hidden.VV8J6y.XTXFkP.os-host-flexbox.os-host-scrollbar-vertical-hidden.os-host-transition > div.os-padding > div > div > div > div > button:nth-child(4)");
                                     if (sortButtonSortingPoint) {
                                         clearInterval(interval3);
                                         if (config.SettingsOnOff) {
@@ -159,9 +240,8 @@
                             }
 
                         });
-                        isProgrammatic = true;
-                        sortButton.click();
-                        // sortButton.dispatchEvent(programmaticClickEvent);
+                        // isProgrammatic = true;
+                        sortButton.dispatchEvent(programmaticClickEvent);
                     }
                 }
             }
@@ -172,7 +252,10 @@
     function sortSimaLendReviews() {
         const interval = setInterval(() => {
             // ожидание загрузки страницы до появления ссылки на отзывы: соответствено для десктопной или мобильной версии
-            const aReviews = document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(1) > div > div > div.hb20Nd > div.bcg7Pf > div > div > div.RB0Z2S.vZiVTa > a") || document.querySelector("#product__root > div > div.k41rqL > div:nth-child(9) > button");
+            const aReviews =
+                  document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(1) > div > div > div.hb20Nd > div.bcg7Pf > div > div > div.RB0Z2S.vZiVTa > a") ||
+                  document.querySelector("button[data-testid='reviews-button']");
+
             if (aReviews) {
                 clearInterval(interval);
                 // если ссылка активна (когда отзывы есть в случае десктопной версии) или счётчик отзывов > 0 (в случае мобильной версии)
@@ -189,7 +272,9 @@
         // Ссылка на отзывы внизу страницы Все отзывы - появляется только при прокрутке вниз и более не исчезает
         const intervalAllReviewsBottom = setInterval(() => {
             // ожидание загрузки страницы до появления ссылки на отзывы: второй элемент из-за влияния подгружаемого блока (в дальнейшем найти более надёжную привязку)
-            const AllReviewsBottom = document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(2) > div > div:nth-child(5) > div > div.D5cu9p > div.M0Dw8o > a") || document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(2) > div > div:nth-child(6) > div > div.D5cu9p > div.M0Dw8o > a")
+            const AllReviewsBottom =
+                  document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(2) > div > div:nth-child(5) > div > div.D5cu9p > div.M0Dw8o > a") ||
+                  document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(2) > div > div:nth-child(6) > div > div.D5cu9p > div.M0Dw8o > a")
             if (AllReviewsBottom) {
                 clearInterval(intervalAllReviewsBottom);
                 // если ссылка активна (когда отзывы есть в случае десктопной версии) или счётчик отзывов > 0 (в случае мобильной версии)
@@ -258,29 +343,6 @@
                 let appWrappers = document.querySelectorAll('[data-testid="app-wrapper"]');
                 if (appWrappers) {
                     clearInterval(interval_appWrappers);
-                    // const interval2 = setInterval(() => {
-                    //     // ожидание дозагрузки страницы до появления ссылки открытия списка сортировки
-                    //     const sortButton = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > a") || document.querySelector("button.vuz3sk");
-                    //     if (sortButton) {
-                    //         sortButton?.addEventListener('click', (event) => {
-                    //             const interval3 = setInterval(() => {
-                    //                 // ожидание дозагрузки страницы до раскрытия списка сортировки ипоявления пункта сортировки по возрастанию рейтинга
-                    //                 const sortButtonSortingPoint = document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > div > div > div.os-padding > div > div > div:nth-child(4)") || document.querySelector("#product__root > div.lPxD1I > div > div > div.os-host.os-host-foreign.os-theme-dark.os-host-resize-disabled.os-host-scrollbar-horizontal-hidden.VV8J6y.XTXFkP.os-host-flexbox.os-host-scrollbar-vertical-hidden.os-host-transition > div.os-padding > div > div > div > div > button:nth-child(4)");
-                    //                 if (sortButtonSortingPoint) {
-                    //                     clearInterval(interval3);
-                    //                     if (config.SettingsOnOff) {
-                    //                         sortButtonSortingPoint.click();
-                    //                         //SimaLendOptimization()
-                    //                     }
-                    //                 }
-                    //             }, 50);
-                    //         });
-                    //         clearInterval(interval2);
-                    //         if (config.SettingsOnOff) {
-                    //             sortButton.click();
-                    //         }
-                    //     }
-                    // }, 50);
                     clickLinkReviews()
                 }
             }, 50);
@@ -292,7 +354,9 @@
                 frameWithReviews.style.transition = 'transform 0s';
             }
             // ожидание загрузки страницы до появления ссылки на отзывы
-            const aReviews = document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(1) > div > div > div.hb20Nd > div.bcg7Pf > div > div > div.RB0Z2S.vZiVTa > a") || document.querySelector("#product__root > div > div.k41rqL > div:nth-child(10) > button")
+            const aReviews =
+                  document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(1) > div > div > div.hb20Nd > div.bcg7Pf > div > div > div.RB0Z2S.vZiVTa > a") ||
+                  document.querySelector("#product__root > div > div.k41rqL > div:nth-child(10) > button")
             if (aReviews) {
                 clearInterval(interval);
                 // если ссылка активна (когда отзывы есть в случае десктопной версии) или счётчик отзывов > 0 (в случае мобильной версии)
@@ -330,13 +394,17 @@
     function SimaLendCatalogReviews() {
         // выбор всех Рейтинги на странице каталога: div с классом 'YREwlL'
         const interval = setInterval(() => {
-            // ожидание загрузки страницы до появления ссылки на отзывы
-            const aReviews = document.querySelector("#category-page__root > div > div.SvXTv3.pPpF_h.Go7gld.MoKdBA.ckfJXr.elXZ47 > div.WBjroC > div.YF_0Ly > div.R4UxqH > div") || document.querySelector("div.Jweg1q")
+            // ожидание загрузки страницы до появления ссылки на отзывы: десктопная и мобильная версии
+            const aReviews =
+                  document.querySelector("#category-page__root > div > div.SvXTv3.pPpF_h.Go7gld.MoKdBA.ckfJXr.elXZ47 > div.WBjroC > div.YF_0Ly > div.R4UxqH > div") ||
+                  document.querySelector("div.Jweg1q")
 
             if (aReviews) {
                 clearInterval(interval);
                 // var divs = document.querySelectorAll('.YREwlL');
+                // десктопная версия
                 var divs = document.querySelectorAll('.ulVbvy');
+                // или мобильная
                 if (divs.length === 0) {
                     divs = document.querySelectorAll('div.Ca1QyR')
                 }
@@ -586,9 +654,15 @@
 
             // Блок с рекламой
             function OzonpPoductRemoveElements() {
+                // десктопная версия
                 document.querySelectorAll('div[data-widget="skuGrid"]').forEach(function(element) {
                     element.remove();
                 });
+                // мобильная версия
+                document.querySelectorAll('div.q3j_23[data-widget="skuScroll"]').forEach(function(element) {
+                    element.remove();
+                });
+
             }
             // Удаление при загрузке содержимого
             OzonpPoductRemoveElements();
@@ -609,15 +683,20 @@
         }
         // Ozon: Страница каталога товаров
     } else if (currentURL.includes('ozon.ru/category/') ) {
-        // Если условия выполняются - добавляем к адресу параметр и перезагружаем страницу с новым адресом, производящим сортировку рейтингов по возрастанию
         if (config.SettingsOnOff) {
             addOzonSortParamToLinks()
         }
 
 
-        // Wildberries:
+        // Wildberries: карточка товара
     } else if (currentURL.includes('wildberries.ru/catalog/') && currentURL.includes('/feedbacks?imtId=')) {
         sortWildberriesReviews();
+        // Wildberries: каталоги
+    } else if (currentURL.includes('wildberries.ru/')) {
+        if (config.SettingsOnOff) {
+
+            window.addEventListener('load', addWildberriesSortParamToLinks)
+        }
         // Sima-land: страница карточки товара
     } else if (currentURL.match(/^https:\/\/www\.sima-land\.ru\/\d+\/.+\/$/)) {
         // } else if (/^https:\/\/www\.sima-land\.ru\/\d{7}\/.*\/$/.test(currentURL)) {
