@@ -2,7 +2,7 @@
 // @name         Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-06-21_19-38
+// @version      2024-06-21_20-49
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
@@ -27,7 +27,45 @@
     const config = {
         // advanced: false,
         SettingsOnOff: true,
+        isRunningAsExtension: false,
     };
+    let api
+
+    function isRunningAsExtension() {
+        const isChromeExtension = typeof chrome !== 'undefined' && chrome.runtime && typeof chrome.runtime.id !== 'undefined';
+        const isBrowserExtension = typeof browser !== 'undefined' && browser.runtime && typeof browser.runtime.id !== 'undefined';
+
+        const currentScript = document.currentScript;
+        const isInlineScript = currentScript && currentScript.src && currentScript.src.startsWith('chrome-extension://');
+
+        return isChromeExtension || isBrowserExtension || isInlineScript;
+    }
+
+    if (isRunningAsExtension()) {
+        // console.log('Script is running as a browser extension.');
+        config.isRunningAsExtension = true
+    } else {
+        // console.log('Script is running independently.');
+        config.isRunningAsExtension = false
+    }
+
+    function getBrowser() {
+        if (typeof chrome !== "undefined" && typeof chrome.runtime !== "undefined") {
+            return chrome
+        } else if (
+            typeof browser !== "undefined" &&
+            typeof browser.runtime !== "undefined"
+        ) {
+            return browser
+        }
+        else {
+            console.log("browser is not supported");
+            return false
+        }
+    }
+
+    if (config.isRunningAsExtension === true) api = getBrowser()
+
 
     // Ozon: Функция для добавления к ссылкам на страницах каталогов параметра сортировки рейтинга по возрастанию - на случай если пользователь будет вручную открывать ссылки с карточкой товара в новой вкладке
     // Так же добавление ссылок для блоков рейтингов (звёздочек)
@@ -522,7 +560,11 @@
                 } else {
                     NewURL = `${currentURL}&sort=score_asc`;
                 }
-                window.location.href = NewURL; // перезагрузка страницы приводит к оходу данного условия и переходу к следующим условиям
+                if (config.isRunningAsExtension) {
+                    api.runtime.sendMessage({action: "redirect", url: NewURL}); // перезагрузка страницы приводит к оходу данного условия и переходу к следующим условиям
+                } else {
+                    window.location.href = NewURL; // перезагрузка страницы приводит к оходу данного условия и переходу к следующим условиям
+                }
             }
         }
         // Ozon: Страница карточки товара
@@ -580,11 +622,11 @@
                                               child.classList.contains('dn0') &&
                                               child.getAttribute('data-widget') === 'separator';
 
-                                        if (isCorrectElement) {
-                                            console.log('Div содержит только <div class="dn0" data-widget="separator"></div> и ничего более.');
-                                        } else {
-                                            console.log('Div содержит другие элементы или не соответствует нужному элементу.');
-                                        }
+                                        // if (isCorrectElement) {
+                                        //     console.log('Div содержит только <div class="dn0" data-widget="separator"></div> и ничего более.');
+                                        // } else {
+                                        //     console.log('Div содержит другие элементы или не соответствует нужному элементу.');
+                                        // }
                                     } else {
                                         // console.log('Div содержит более одного элемента.');
                                         UseDetails = false
@@ -781,12 +823,61 @@
         }
     });
 
-
+    if (config.isRunningAsExtension) {
+        // событие изменения адреса данной вкладки
+        api.runtime.onMessage.addListener((request, sender, sendResponse) => {
+            // получаем текущий адрес страницы
+            if (new URL(request.url).pathname.startsWith('/catalog/') && request.url.includes('feedbacks?imtId=')) {
+                sortWildberriesReviews();
+            }
+        });
+    }
 
     // Ozon: Замена ссылок на странице на случай если пользователь захочет открыть ссылку карточки товара в новой вкладке. Отработает позднее, после загрузки. Не обязательное действие.
     // Вызываем функцию сразу после загрузки страницы
     if (currentURL.startsWith('https://www.ozon.ru/')) {
         window.addEventListener('load', addOzonSortParamToLinks)
+    }
+
+
+
+    // For extentions
+    function initConfig() {
+        initializeSettingsOnOff();
+    }
+
+    // получение значения при загрузке popup
+    function initializeSettingsOnOff() {
+        api.storage.local.get(["SettingsOnOff"], (res) => {
+            if ("SettingsOnOff" in res){
+                handleSettingsOnOffChangeEvent(res.SettingsOnOff)
+            }else{
+                handleSettingsOnOffChangeEvent(true);
+                api.storage.local.set({ SettingsOnOff: true })
+            }
+        });
+    }
+
+    //если в хранилище произошли изменения соответствующего параметра...
+    function storageChangeHandler(changes, area) {
+        if (area === 'local') {
+            if (changes.SettingsOnOff !== undefined) {
+                // if (changes.SettingsOnOff?.newValue) {
+                handleSettingsOnOffChangeEvent(
+                    changes.SettingsOnOff.newValue
+                )
+            }
+
+        }
+    }
+    //... происходит установка значения конфига и контрола
+    function handleSettingsOnOffChangeEvent(value) {
+        config.SettingsOnOff = value;
+    }
+
+    if (config.isRunningAsExtension) {
+        //добавление прослушивания события изменения хранилища
+        api.storage.onChanged.addListener(storageChangeHandler)
     }
 
 
