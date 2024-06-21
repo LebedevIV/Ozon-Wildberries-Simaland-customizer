@@ -596,7 +596,17 @@
             const interval_AlsoRecommend_BuyTogether = setInterval(() => {
                 // const AlsoRecommend_BuyTogether = document.querySelector("#layoutPage > div.b2 > div:nth-child(7) > div > div.container.b6 > div.ml6.l2n.m9l.nl0 > div:nth-child(1)") || document.querySelector("#layoutPage > div.b2.b4 > div:nth-child(10) > div > div > div.pj6")
                 // десктопная версия
-                const AlsoRecommend_BuyTogether = document.querySelector("#layoutPage > div.b3 > div:nth-child(7) > div > div.container.b7 > div.n3l_27.lo_27.ln7_27.l8n_27 > div:nth-child(1)")
+                let AlsoRecommend_BuyTogether
+                const AlsoRecommend_BuyTogether_ParentStable = document.querySelector("#layoutPage > div.b3 > div:nth-child(7) > div > div.container.b7")
+                // AlsoRecommend_BuyTogether_ParentStable?.children.forEach(element => {
+                if (AlsoRecommend_BuyTogether_ParentStable) {
+                    for (const child of AlsoRecommend_BuyTogether_ParentStable.children) {
+                        let classList = child.className.split(' ');
+                        if (classList.length === 4) {
+                            AlsoRecommend_BuyTogether = child.querySelector("div:nth-child(1)")
+                        }
+                    }
+                }
 
                 // мобильная версия
                 const AlsoRecommend_BuyTogether_mobile_Divs = document.querySelectorAll('div[data-widget="skuScroll"]')
