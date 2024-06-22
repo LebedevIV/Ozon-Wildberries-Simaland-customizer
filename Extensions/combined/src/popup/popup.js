@@ -12,6 +12,9 @@ const config = {
    donate: "https://sites.google.com/view/facts-and-fakes/ru/donate",
     donate_YooMoney: "https://yoomoney.ru/to/4100117799116116",	//	https://sobe.ru/na/facts_and_fakes
     donate_Crypto: "../popup/crypto.html",
+	website_ozon: "https://www.ozon.ru/",	
+	website_wildberries: "https://www.wildberries.ru/",	
+	website_simaland: "https://www.sima-land.ru/",	
   }
 };
 
@@ -47,7 +50,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	createLink(config.links.donate_YooMoney, "link_donate_YooMoney")
 	createLink(config.links.donate_Crypto, "link_donate_Crypto")
 	createLink(config.links.website_install, "ext")
-
+	createLink(config.links.website_ozon, "div_GoToSites_Ozon")
+	createLink(config.links.website_wildberries, "div_GoToSites_Wildberries")
+	createLink(config.links.website_simaland, "div_GoToSites_Simaland")
 
 	// Визуальные эффекты кнопки Пожертвований
 	const buttonLinkDonate = document.querySelector('#button_Donate');
@@ -177,9 +182,6 @@ function localizeHtmlPage() {
         console.error('Localization API not available.');
     }
 }
-
-// Call the function on page load
-document.addEventListener('DOMContentLoaded', localizeHtmlPage);
 
 // Call the function on page load
 document.addEventListener('DOMContentLoaded', localizeHtmlPage);
