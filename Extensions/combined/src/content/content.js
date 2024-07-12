@@ -2,7 +2,7 @@
 // @name         Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-06-22_04-58
+// @version      2024-07-12_22-48
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
@@ -14,8 +14,8 @@
 // @match          https://*.wildberries.ru/*
 // @match          http://*.sima-land.ru/*
 // @match          https://*.sima-land.ru/*
-// @downloadURL https://update.greasyfork.org/scripts/495412/Ozon%2C%20Wildberries%20and%20Simaland%20customizer%3A%20bad%20reviews%20first.user.js
-// @updateURL https://update.greasyfork.org/scripts/495412/Ozon%2C%20Wildberries%20and%20Simaland%20customizer%3A%20bad%20reviews%20first.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/495412/Ozon%2C%20Wildberries%20and%20Simaland%20customizer%3A%20bad%20reviews%20first%20%2B%20interface%20improvements.user.js
+// @updateURL https://update.greasyfork.org/scripts/495412/Ozon%2C%20Wildberries%20and%20Simaland%20customizer%3A%20bad%20reviews%20first%20%2B%20interface%20improvements.meta.js
 // ==/UserScript==
 
 
@@ -580,17 +580,9 @@
             const interval_AlsoRecommend_BuyTogether = setInterval(() => {
                 // const AlsoRecommend_BuyTogether = document.querySelector("#layoutPage > div.b2 > div:nth-child(7) > div > div.container.b6 > div.ml6.l2n.m9l.nl0 > div:nth-child(1)") || document.querySelector("#layoutPage > div.b2.b4 > div:nth-child(10) > div > div > div.pj6")
                 // десктопная версия
-                let AlsoRecommend_BuyTogether
-                const AlsoRecommend_BuyTogether_ParentStable = document.querySelector("#layoutPage > div.b3 > div:nth-child(7) > div > div.container.b7")
-                // AlsoRecommend_BuyTogether_ParentStable?.children.forEach(element => {
-                if (AlsoRecommend_BuyTogether_ParentStable) {
-                    for (const child of AlsoRecommend_BuyTogether_ParentStable.children) {
-                        let classList = child.className.split(' ');
-                        if (classList.length === 4) {
-                            AlsoRecommend_BuyTogether = child.querySelector("div:nth-child(1)")
-                        }
-                    }
-                }
+                const AlsoRecommend_BuyTogether = document.querySelector('div[data-widget="skuShelfGoods"]') // всего два таких лемента, на достаточно выбрать первый
+                let AlsoRecommend_BuyTogether_Full
+                if (AlsoRecommend_BuyTogether) AlsoRecommend_BuyTogether_Full = AlsoRecommend_BuyTogether.parentNode.parentNode
 
                 // мобильная версия
                 const AlsoRecommend_BuyTogether_mobile_Divs = document.querySelectorAll('div[data-widget="skuScroll"]')
@@ -607,22 +599,9 @@
 
                                 // Дополнительная логика проверки:
                                 if (UseDetails) {
-                                    if ((AlsoRecommend_BuyTogether && AlsoRecommend_BuyTogether.children.length === 1 && AlsoRecommend_BuyTogether.children[0].children.length === 1) ||
-                                        (!AlsoRecommend_BuyTogether && AlsoRecommend_BuyTogether_mobile_Divs.length === 0)) {
-                                        const child = AlsoRecommend_BuyTogether.children[0].children[0];
-
-                                        const isCorrectElement =
-                                              child.tagName.toLowerCase() === 'div' &&
-                                              child.classList.contains('dn0') &&
-                                              child.getAttribute('data-widget') === 'separator';
-
-                                        // if (isCorrectElement) {
-                                        //     console.log('Div содержит только <div class="dn0" data-widget="separator"></div> и ничего более.');
-                                        // } else {
-                                        //     console.log('Div содержит другие элементы или не соответствует нужному элементу.');
-                                        // }
-                                    } else {
-                                        // console.log('Div содержит более одного элемента.');
+                                    // if ((AlsoRecommend_BuyTogether && AlsoRecommend_BuyTogether.children.length === 1 && AlsoRecommend_BuyTogether.children[0].children.length === 1) ||
+                                    //     (!AlsoRecommend_BuyTogether && AlsoRecommend_BuyTogether_mobile_Divs.length === 0)) {
+                                    if (AlsoRecommend_BuyTogether || AlsoRecommend_BuyTogether_mobile_Divs.length > 0) {
                                         UseDetails = false
                                         // Если нужно остановить наблюдение в будущем:
                                         // Но срабатывает не мгновенно - приходится использовать флаг UseDetails
@@ -642,11 +621,11 @@
                                         // десктопная версия
                                         if (AlsoRecommend_BuyTogether) {
                                             // Добавить созданный элемент <details> перед элементом AlsoRecommend_BuyTogether
-                                            AlsoRecommend_BuyTogether.insertAdjacentElement('beforebegin', details);
+                                            AlsoRecommend_BuyTogether_Full.insertAdjacentElement('beforebegin', details);
 
                                             // Переместить существующий элемент AlsoRecommend_BuyTogether внутрь <details>
 
-                                            details.appendChild(AlsoRecommend_BuyTogether);
+                                            details.appendChild(AlsoRecommend_BuyTogether_Full);
                                             // details перемещаем до блока комментариев
                                             const div_Description = document.querySelector("#comments")
                                             if (div_Description) div_Description.insertAdjacentElement('beforebegin', details);
@@ -676,7 +655,7 @@
 
                     // Начинаем наблюдение:
                     if (AlsoRecommend_BuyTogether) {
-                        observer.observe(AlsoRecommend_BuyTogether, config);
+                        observer.observe(AlsoRecommend_BuyTogether_Full, config);
                     } else if (AlsoRecommend_BuyTogether_mobile_Divs.length > 0) {
                         observer.observe(AlsoRecommend_BuyTogether_mobile_Divs[0], config)
                     }
