@@ -2,7 +2,7 @@
 // @name         Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-07-12_22-48
+// @version      2024-07-22_20-48
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
@@ -235,7 +235,8 @@
             // if (divGpksVe)
             // divGpksVe.style.setProperty("--transition-duration", "0ms");
             const sortButton =
-                  document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > a") ||
+                  // document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > a") ||
+                  document.querySelector('a[role="button"][data-testid="sort"]') ||
                   document.querySelector("button.vuz3sk");
             if (sortButton) {
                 clearInterval(interval2);
@@ -243,8 +244,8 @@
                 if (config.SettingsOnOff) {
                     // проверка что список уже не раскрыт (Сайт Сималенд этот список может раскрывать заранее)
                     const sortButtonSortingPoint =
-                          document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > div > div > div.os-padding > div > div > div:nth-child(4)") ||
-                          document.querySelector("#product__root > div.lPxD1I > div > div > div.os-host.os-host-foreign.os-theme-dark.os-host-resize-disabled.os-host-scrollbar-horizontal-hidden.VV8J6y.XTXFkP.os-host-flexbox.os-host-scrollbar-vertical-hidden.os-host-transition > div.os-padding > div > div > div > div > button:nth-child(4)");
+                          document.querySelector('div[data-overlayscrollbars-viewport="scrollbarHidden overflowXHidden overflowYHidden"] > div:nth-child(4)')
+                          document.querySelector('div[data-overlayscrollbars-viewport="scrollbarHidden overflowXHidden overflowYHidden"] > div > div > button:nth-child(4)');
                     if (sortButtonSortingPoint) {
                         sortButtonSortingPoint.click();
                     } else {
@@ -255,8 +256,8 @@
                                 const interval3 = setInterval(() => {
                                     // ожидание дозагрузки страницы до раскрытия списка сортировки ипоявления пункта сортировки по возрастанию рейтинга
                                     const sortButtonSortingPoint =
-                                          document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > div > div > div.os-padding > div > div > div:nth-child(4)") ||
-                                          document.querySelector("#product__root > div.lPxD1I > div > div > div.os-host.os-host-foreign.os-theme-dark.os-host-resize-disabled.os-host-scrollbar-horizontal-hidden.VV8J6y.XTXFkP.os-host-flexbox.os-host-scrollbar-vertical-hidden.os-host-transition > div.os-padding > div > div > div > div > button:nth-child(4)");
+                                          document.querySelector('div[data-overlayscrollbars-viewport="scrollbarHidden overflowXHidden overflowYHidden"] > div:nth-child(4)') ||
+                                          document.querySelector('div[data-overlayscrollbars-viewport="scrollbarHidden overflowXHidden overflowYHidden"] > div > div > button:nth-child(4)');
                                     if (sortButtonSortingPoint) {
                                         clearInterval(interval3);
                                         if (config.SettingsOnOff) {
