@@ -2,7 +2,7 @@
 // @name         Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-07-31_04-38
+// @version      2024-07-31_04-56
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
@@ -84,8 +84,9 @@
                 if(link_parentNode.tagName.toLowerCase() === 'div') {
 
                     // Определение наличия вложенного элемента, содержащего рейтинги
-                    var divStars = link_parentNode.querySelector('div.tsBodyMBold') || link_parentNode.querySelector('div.tsCaptionBold');
-                    if (divStars) {
+                    const divStars = link_parentNode.querySelector('div.tsBodyMBold') || link_parentNode.querySelector('div.tsCaptionBold')
+                    // + проверка что ссылка уже не была назначена ранее - почему-то происходит двойное срабатывание скрипта
+                    if (divStars && divStars.parentNode.nodeName !== 'A') {
                         let url1Base = linkOrig.match(/(^[^\?]+)/g)[0];
 
                         // Создание нового узла <a>
