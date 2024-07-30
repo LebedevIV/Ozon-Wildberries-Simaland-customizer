@@ -2,7 +2,7 @@
 // @name         Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-07-12_22-48
+// @version      2024-07-31_04-56
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
@@ -84,8 +84,9 @@
                 if(link_parentNode.tagName.toLowerCase() === 'div') {
 
                     // Определение наличия вложенного элемента, содержащего рейтинги
-                    var divStars = link_parentNode.querySelector('div.tsBodyMBold') || link_parentNode.querySelector('div.tsCaptionBold');
-                    if (divStars) {
+                    const divStars = link_parentNode.querySelector('div.tsBodyMBold') || link_parentNode.querySelector('div.tsCaptionBold')
+                    // + проверка что ссылка уже не была назначена ранее - почему-то происходит двойное срабатывание скрипта
+                    if (divStars && divStars.parentNode.nodeName !== 'A') {
                         let url1Base = linkOrig.match(/(^[^\?]+)/g)[0];
 
                         // Создание нового узла <a>
@@ -235,7 +236,7 @@
             // if (divGpksVe)
             // divGpksVe.style.setProperty("--transition-duration", "0ms");
             const sortButton =
-                  document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > a") ||
+                  document.querySelector('a[role="button"][data-testid="sort"]') ||
                   document.querySelector("button.vuz3sk");
             if (sortButton) {
                 clearInterval(interval2);
@@ -243,8 +244,8 @@
                 if (config.SettingsOnOff) {
                     // проверка что список уже не раскрыт (Сайт Сималенд этот список может раскрывать заранее)
                     const sortButtonSortingPoint =
-                          document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > div > div > div.os-padding > div > div > div:nth-child(4)") ||
-                          document.querySelector("#product__root > div.lPxD1I > div > div > div.os-host.os-host-foreign.os-theme-dark.os-host-resize-disabled.os-host-scrollbar-horizontal-hidden.VV8J6y.XTXFkP.os-host-flexbox.os-host-scrollbar-vertical-hidden.os-host-transition > div.os-padding > div > div > div > div > button:nth-child(4)");
+                          document.querySelector('div[data-overlayscrollbars-viewport="scrollbarHidden overflowXHidden overflowYHidden"] > div:nth-child(4)')
+                    document.querySelector('div[data-overlayscrollbars-viewport="scrollbarHidden overflowXHidden overflowYHidden"] > div > div > button:nth-child(4)');
                     if (sortButtonSortingPoint) {
                         sortButtonSortingPoint.click();
                     } else {
@@ -255,8 +256,8 @@
                                 const interval3 = setInterval(() => {
                                     // ожидание дозагрузки страницы до раскрытия списка сортировки ипоявления пункта сортировки по возрастанию рейтинга
                                     const sortButtonSortingPoint =
-                                          document.querySelector("#product__root > div > div.Fa76rh > div.iOZqnu > div:nth-child(2) > div > div > div.BucAGq > div.HnQBoO > div > div > div > div.os-padding > div > div > div:nth-child(4)") ||
-                                          document.querySelector("#product__root > div.lPxD1I > div > div > div.os-host.os-host-foreign.os-theme-dark.os-host-resize-disabled.os-host-scrollbar-horizontal-hidden.VV8J6y.XTXFkP.os-host-flexbox.os-host-scrollbar-vertical-hidden.os-host-transition > div.os-padding > div > div > div > div > button:nth-child(4)");
+                                          document.querySelector('div[data-overlayscrollbars-viewport="scrollbarHidden overflowXHidden overflowYHidden"] > div:nth-child(4)') ||
+                                          document.querySelector('div[data-overlayscrollbars-viewport="scrollbarHidden overflowXHidden overflowYHidden"] > div > div > button:nth-child(4)');
                                     if (sortButtonSortingPoint) {
                                         clearInterval(interval3);
                                         if (config.SettingsOnOff) {
@@ -276,7 +277,7 @@
         }, 50);
     }
 
-    // Simaland: Ожидание загружки страницы товара до появления элемента сортировки рейтинга и искусственное нажатие этого элемента чтобы добиться сортировки рейтинга по возрастанию
+    // Simaland: Ожидание загрузки страницы товара до появления элемента сортировки рейтинга и искусственное нажатие этого элемента чтобы добиться сортировки рейтинга по возрастанию
     function sortSimaLandReviews() {
         const interval = setInterval(() => {
             // ожидание загрузки страницы до появления ссылки на отзывы: соответствено для десктопной или мобильной версии
@@ -700,6 +701,43 @@
         if (config.SettingsOnOff) {
             addOzonSortParamToLinks()
         }
+        // Ozon: Страница главная
+    } else if (currentURL==='https://www.ozon.ru/' ) {
+        if (config.SettingsOnOff) {
+            // Добавление кнопки "Реклама"
+            const EspeciallyForYou = CreateEspeciallyForYou()
+            // let EspeciallyForYou_factView = false // факт вывода раскрывающегося блока рекламы
+            // вырезание верхнего баннера
+            const targetNode = document.querySelector('div[data-widget="advBanner"]')
+            // targetNode?.remove()
+            function Add_targetNode_into_EspeciallyForYou(targetNode) {
+                if (targetNode && targetNode.parentNode !== EspeciallyForYou) {
+                    if (!targetNode.parentNode.contains(EspeciallyForYou)) {
+                        targetNode.parentNode.insertBefore(EspeciallyForYou, targetNode)
+                    }
+                    targetNode.style.marginTop = '0.3rem'
+                    EspeciallyForYou?.appendChild(targetNode)
+                }
+            }
+            Add_targetNode_into_EspeciallyForYou(targetNode)
+            // Настраиваем наблюдение за изменениями в документе
+            const observer = new MutationObserver((mutationsList, observer) => {
+                for (let mutation of mutationsList) {
+                    if (mutation.type === 'childList') {
+                        mutation.addedNodes.forEach(node => {
+                            if (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'DIV') {
+                                if (node.dataset.widget === "advBanner") {
+                                    Add_targetNode_into_EspeciallyForYou(node)
+                                }
+                            }
+                        });
+
+                    }
+                }
+            });
+            const observer_config = { attributes: true, childList: true, subtree: true };
+            observer.observe(document.querySelector('div#__ozon'), observer_config);
+        }
 
         // Wildberries: карточка товара
     } else if (currentURL.includes('wildberries.ru/catalog/') && currentURL.includes('/feedbacks')) {
@@ -811,5 +849,83 @@
         api.storage.onChanged.addListener(storageChangeHandler)
     }
 
+    // Добавлекние раскрывающегося блока "Реклама"
+    function CreateEspeciallyForYou() {
+        // Создание стилей с помощью JavaScript
+        const style = document.createElement("style")
+        style.textContent = `
+                details {
+                    // display: none;
+                    font-family: Arial, sans-serif;
+                    font-size: 18px;
+                    color: #333;
+                    position: relative;
+                    padding: 10px;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                    background-color: #fff;
+                    max-height: 50vh;
+                    overflow-y: auto;
+                }
+                summary {
+                    cursor: pointer;
+                    outline: none;
+                    position: relative;
+                    z-index: 1;
+                    color: #df0f70; /* Изменение цвета текста на красный */
+                }
+                .shimmer {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
+                    animation: shimmer 60s linear infinite;
+                    pointer-events: none;
+                }
+                @keyframes shimmer {
+                    0% {
+                        transform: translateX(-100%);
+                    }
+                    100% {
+                        transform: translateX(100%);
+                    }
+                }
+            `;
+        document.head.appendChild(style);
+
+        // Создание элемента details
+        const details = document.createElement("details");
+        // Добавляем класс my-details-class к элементу <details>
+        details.classList.add('details_EspeciallyForYou');
+
+        // Определение языка браузера
+        const browserLanguage = navigator.language || navigator.userLanguage;
+        let messageSpecialOffer = 'Реклама'
+
+        switch (browserLanguage) {
+            case "uken":
+                messageSpecialOffer = 'Реклама'
+                break;
+            default:
+                messageSpecialOffer = 'Реклама'
+        }
+        const summary = document.createElement("summary");
+        summary.textContent = messageSpecialOffer;
+
+        const shimmer = document.createElement("div");
+        shimmer.className = "shimmer";
+
+        // const content = document.createElement("p");
+        // content.textContent = "Содержимое деталей...";
+
+        details.appendChild(summary);
+        details.appendChild(shimmer);
+        // details.appendChild(content);
+
+        // document.body.appendChild(details);
+        return details
+    }
 
 })();
