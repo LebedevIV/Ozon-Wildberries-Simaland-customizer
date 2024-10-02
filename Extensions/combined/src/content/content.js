@@ -2,7 +2,7 @@
 // @name         Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-07-31_04-56
+// @version      2024-10-02_16-13
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
@@ -10,6 +10,8 @@
 // @icon         https://raw.githubusercontent.com/LebedevIV/Ozon-Wildberries-Simaland-customizer/main/icons/logo_color.svg
 // @match          http://*.ozon.ru/*
 // @match          https://*.ozon.ru/*
+// @match          http://*.ozon.com/*
+// @match          https://*.ozon.com/*
 // @match          http://*.wildberries.ru/*
 // @match          https://*.wildberries.ru/*
 // @match          http://*.sima-land.ru/*
@@ -419,32 +421,32 @@
         const interval = setInterval(() => {
             // ожидание загрузки страницы до появления ссылки на отзывы: десктопная и мобильная версии
             const aReviews =
-                  document.querySelector("#category-page__root > div > div.SvXTv3.pPpF_h.Go7gld.MoKdBA.ckfJXr.elXZ47 > div.WBjroC > div.YF_0Ly > div.R4UxqH > div") ||
-                  document.querySelector("div.Jweg1q")
+                  // document.querySelector("#category-page__root > div > div.SvXTv3.pPpF_h.Go7gld.MoKdBA.ckfJXr.elXZ47 > div.WBjroC > div.YF_0Ly > div.R4UxqH > div") ||
+                  document.querySelector("div.catalog") ||
+                  // document.querySelector("div.Jweg1q")
+                  document.querySelector('div[data-testid="items-list"]')
 
             if (aReviews) {
                 clearInterval(interval);
                 // var divs = document.querySelectorAll('.YREwlL');
                 // десктопная версия
-                var divs = document.querySelectorAll('.ulVbvy');
+                // var divs = document.querySelectorAll('.ulVbvy')
+                // var divs = document.querySelectorAll('div[data-testid="feedback-side-bar:count-comments"]')
+                var divs = document.querySelectorAll('div[data-testid="rating-counter"]') // для десктопной и мобильной версий одновременно
                 // или мобильная
-                if (divs.length === 0) {
+                if (divs.length === 0) { // устарело, на всякий случай
                     divs = document.querySelectorAll('div.Ca1QyR')
                 }
                 // цикл по каждому div
                 divs.forEach((div) => {
                     // если ссылка ранее не была добавлена: повторное добавление после загрузки всей страницы. По каким-то причинам в конце загрузки страницы ссылки удаляются, но их добавление во время загузки необходимо чтобы пльзователь имел возможность нажимать
                     if (!div.querySelector('a')) {
-                        let link
-                        // получение ссылки из parentnode.parentnode
-                        // десктопная версия
-                        if (div.classList.contains('ulVbvy')) {
-                            link = div.parentNode.parentNode.parentNode.querySelector('.o7U8An a')
-                        }
-                        // мобильная версия
-                        else if (div.classList.contains('Ca1QyR')) {
-                            link = div.parentNode.parentNode.parentNode
-                        }
+                        // div.parentNode.parentNode.parentNode.querySelector('div[data-testid="item-name"] a')
+                        // десктопная и мобильная версии
+                        const div_itemName = div.closest('div:has(div[data-testid="item-name"] a)') || div.closest('div[data-testid="catalog-item:row"] a')
+                        if (!div_itemName) return
+                        let link = div_itemName.querySelector('a')
+
                         if(link?.tagName === "A") {
                             var href = link.getAttribute('href');
 
