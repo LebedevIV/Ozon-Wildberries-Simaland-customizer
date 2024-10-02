@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "version": "24.7.31.4",
+  "version": "24.10.02.16",
   "minimum_chrome_version": "107",
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDesc__",
@@ -16,9 +16,11 @@
   "content_scripts": [
     {
       "matches": [
+	    "*://*.ozon.com/*",
  		"*://*.ozon.ru/*",
  		"*://*.wildberries.ru/*",
- 		"*://*.sima-land.ru/*"
+		"*://*.sima-land.com/*",
+ 		"*://*.sima-land.ru/*"	
      ],
 	"js": [
 		"./content/content.js"
