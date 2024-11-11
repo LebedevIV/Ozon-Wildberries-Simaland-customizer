@@ -2,7 +2,7 @@
 // @name         Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-10-02_16-13
+// @version      2024-11-12_4-31
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
@@ -20,6 +20,7 @@
 // @updateURL https://update.greasyfork.org/scripts/495412/Ozon%2C%20Wildberries%20and%20Simaland%20customizer%3A%20bad%20reviews%20first%20%2B%20interface%20improvements.meta.js
 // ==/UserScript==
 
+/* global GM_config */
 
 (() => {
     'use strict'
@@ -151,7 +152,43 @@
         }, 50);
     }
 
-    // Wildberries: добавление ссылок для блоков рейтингов (звёздочек)
+    // Wildberries: Показать блок "Характеристики и описание" и разместить под фото товара()
+    function Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара() {
+        let popup_product_details = document.querySelector('div.popup-product-details')
+
+        // Перенос Характеристик и описания из вызываемого всплывающего блока под блок товара
+        function popup_product_details_Replace() {
+            const popup__content = popup_product_details.querySelector('div.popup__content')
+            const product_page__grid = document.querySelector('div.product-page__grid')
+            if (popup__content && product_page__grid) {
+                product_page__grid.insertAdjacentElement('afterend', popup__content)
+            }
+            popup_product_details.remove()
+        }
+
+        if (popup_product_details) {
+            popup_product_details_Replace()
+        }
+        else {
+            const interval = setInterval(() => {
+                // ожидание загрузки страницы до необходимого значения
+                const preloader = document.querySelector('#app button.product-page__btn-detail')
+                if (preloader) {
+                    clearInterval(interval)
+                    preloader.click()
+                    const interval_popup_product_details = setInterval(() => {
+                        popup_product_details = document.querySelector('div.popup-product-details')
+                        if (popup_product_details) {
+                            clearInterval(interval_popup_product_details)
+                            popup_product_details_Replace()
+                        }
+                    }, 50);
+                }
+            }, 50);
+        }
+    }
+
+    // Wildberries: каталог: добавление ссылок для блоков рейтингов (звёздочек)
     function addWildberriesSortParamToLinks() {
         if (config.SettingsOnOff) {
 
@@ -745,6 +782,7 @@
     } else if (currentURL.includes('wildberries.ru/catalog/') && currentURL.includes('/feedbacks')) {
 
         sortWildberriesReviews();
+        Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
         // Wildberries: каталоги
     } else if (currentURL.includes('wildberries.ru/')) {
         if (config.SettingsOnOff) {
@@ -777,6 +815,7 @@
         // получаем текущий адрес страницы
         if (new URL(window.location.href).pathname.startsWith('/catalog/') && window.location.href.includes('/feedbacks')) {
             sortWildberriesReviews();
+            Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
         }
     };
 
@@ -785,12 +824,14 @@
         originalPushState.apply(this, [state, ...args]);
         // Вызываем функцию сортировки после пуша состояния
         sortWildberriesReviews();
+        Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
     };
 
     history.replaceState = new Proxy(history.replaceState, {
         apply: function(target, thisArg, argArray) {
             target.apply(thisArg, argArray);
             sortWildberriesReviews();
+            Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
         }
     });
 
@@ -800,6 +841,7 @@
             // получаем текущий адрес страницы
             if (new URL(request.url).pathname.startsWith('/catalog/') && request.url.includes('/feedbacks')) {
                 sortWildberriesReviews();
+                Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
             }
         });
     }
