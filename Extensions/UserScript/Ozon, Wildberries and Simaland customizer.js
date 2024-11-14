@@ -2,7 +2,7 @@
 // @name         Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-11-12_4-31
+// @version      2024-11-14_14-03
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
@@ -154,37 +154,89 @@
 
     // Wildberries: Показать блок "Характеристики и описание" и разместить под фото товара()
     function Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара() {
-        let popup_product_details = document.querySelector('div.popup-product-details')
+        let popup__content = document.querySelector('div.popup-product-details > div.popup__content') // Всплывающий блок с описанием уже присутствует на загружаемой странице - это маловероятно
+        let product_params__table = document.querySelector('div.popup__content > div.product-details > div.product-params > table.product-params__table')
+        let factClick_button_product_page__btn_detail = false // факт программного нажатия button_product_page__btn_detail
+        let button_product_page__btn_detail // кнопка вызова блока Характеристикаи и описание
 
-        // Перенос Характеристик и описания из вызываемого всплывающего блока под блок товара
-        function popup_product_details_Replace() {
-            const popup__content = popup_product_details.querySelector('div.popup__content')
-            const product_page__grid = document.querySelector('div.product-page__grid')
-            if (popup__content && product_page__grid) {
-                product_page__grid.insertAdjacentElement('afterend', popup__content)
-            }
-            popup_product_details.remove()
-        }
-
-        if (popup_product_details) {
+        if (product_params__table) { // Всплывающий блок присутствует на загружаемой странице - это маловероятно
             popup_product_details_Replace()
         }
-        else {
-            const interval = setInterval(() => {
-                // ожидание загрузки страницы до необходимого значения
-                const preloader = document.querySelector('#app button.product-page__btn-detail')
-                if (preloader) {
-                    clearInterval(interval)
-                    preloader.click()
-                    const interval_popup_product_details = setInterval(() => {
-                        popup_product_details = document.querySelector('div.popup-product-details')
-                        if (popup_product_details) {
-                            clearInterval(interval_popup_product_details)
-                            popup_product_details_Replace()
+        else { // Всплывающий блок отсутствует
+            // Создаем новый экземпляр MutationObserver
+            const observer = new MutationObserver((mutationsList, observer) => {
+                // Проходимся по списку изменений
+                for (let mutation of mutationsList) {
+                    // Проверяем, добавлены ли новые узлы
+                    if (mutation.type === 'childList') {
+                        // Проходимся по списку добавленных узлов
+                        for (let node of mutation.addedNodes) {
+                            if (node.nodeType === 1) {
+                                // Проверяем, является ли узел элементом <div> с классом popup-product-details
+                                if (!button_product_page__btn_detail &&
+                                    node.matches('button.product-page__btn-detail')) {
+                                    button_product_page__btn_detail = node // произошёл вывод кнокпи вызова всплывающего блока Характеристики и описания
+                                    button_product_page__btn_detail_click()
+                                }
+                                // Программное нажатие button_product_page__btn_detail: Последующий вызов всплывающего блока с заполненными Характеристики и описания
+                                else if (factClick_button_product_page__btn_detail &&
+                                         node.matches('div.popup-product-details')) {
+                                    // Выведен полноценный заполненный блок
+                                    if (node.querySelector('div.popup__content > div.product-details > div.product-params > table.product-params__table')) {
+                                        // Прерываем наблюдение
+                                        observer.disconnect()
+                                        popup__content = node.querySelector('div.popup__content')
+                                        popup_product_details_Replace()
+                                        break
+                                    }
+                                    // Блок ещё не заполнен: такое происходит при навигации по сайту и открытию карточек товара
+                                    else {
+                                        node.remove()
+                                        factClick_button_product_page__btn_detail = false
+                                        setTimeout(function() {
+                                            button_product_page__btn_detail_click()
+                                        }, 1000);
+
+                                    }
+
+                                }
+                            }
                         }
-                    }, 50);
+                    }
                 }
-            }, 50);
+            });
+
+            // Начинаем наблюдение за изменениями внутри элемента <body>
+            observer.observe(document.body, { childList: true })
+            button_product_page__btn_detail_click()
+
+        }
+
+        // Программное нажатие кнопки вызов всплывающего блока Характеристик и описания
+        function button_product_page__btn_detail_click() {
+            if (!button_product_page__btn_detail) // Если не успело определиться в обсервере
+                button_product_page__btn_detail = document.querySelector('#app button.product-page__btn-detail') // Кнокпа вызова всплывающего блока Характеристики и описания
+            if (button_product_page__btn_detail && !factClick_button_product_page__btn_detail) { // Если в обсервере не произошёл факт нажатия
+                factClick_button_product_page__btn_detail = true
+                button_product_page__btn_detail.click() // вызов всплывающего блока Характеристик и описания
+            }
+        }
+        // Перенос Характеристик и описания из вызываемого всплывающего блока под блок товара
+        function popup_product_details_Replace() {
+            if (factClick_button_product_page__btn_detail) // при програмном нажатии
+                popup__content.parentNode.remove() // удаление вызванного всплывающего блока
+
+            const product_page__grid = document.querySelector('div.product-page__grid')
+            if (product_page__grid) {
+                product_page__grid.parentNode.querySelectorAll('div.popup__content').forEach(function(element) { // удаление всех ранее внедрённых блоков popup__content, которые сохраняются на страинце при навигации
+                    element.remove();
+                });
+            }
+            if (popup__content && product_page__grid) {
+                popup__content?.querySelector('div.popup__footer')?.remove() // Удаление лишней информации и элементов из подваала вспывающего блока
+                product_page__grid.insertAdjacentElement('afterend', popup__content)
+            }
+            document.body.classList.remove('body--overflow') // при выводе всплывающего блока добавляется вредный класс body--overflow, скрывающий полосы прокрутки, и при программном закрытии всплывающего блока класс body--overflow не удаляется.
         }
     }
 
@@ -782,7 +834,8 @@
     } else if (currentURL.includes('wildberries.ru/catalog/') && currentURL.includes('/feedbacks')) {
 
         sortWildberriesReviews();
-        Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
+        if (currentURL.endsWith('/detail.aspx'))
+            Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
         // Wildberries: каталоги
     } else if (currentURL.includes('wildberries.ru/')) {
         if (config.SettingsOnOff) {
@@ -815,7 +868,8 @@
         // получаем текущий адрес страницы
         if (new URL(window.location.href).pathname.startsWith('/catalog/') && window.location.href.includes('/feedbacks')) {
             sortWildberriesReviews();
-            Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
+            if (new URL(window.location.href).pathname.endsWith('/detail.aspx'))
+                Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
         }
     };
 
@@ -824,14 +878,16 @@
         originalPushState.apply(this, [state, ...args]);
         // Вызываем функцию сортировки после пуша состояния
         sortWildberriesReviews();
-        Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
+        // if (new URL(window.location.href).pathname.endsWith('/detail.aspx'))
+        //     Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
     };
 
     history.replaceState = new Proxy(history.replaceState, {
         apply: function(target, thisArg, argArray) {
             target.apply(thisArg, argArray);
             sortWildberriesReviews();
-            Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
+            if (new URL(window.location.href).pathname.endsWith('/detail.aspx'))
+                Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
         }
     });
 
@@ -841,7 +897,8 @@
             // получаем текущий адрес страницы
             if (new URL(request.url).pathname.startsWith('/catalog/') && request.url.includes('/feedbacks')) {
                 sortWildberriesReviews();
-                Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
+                if (new URL(window.location.href).pathname.endsWith('/detail.aspx'))
+                    Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
             }
         });
     }
