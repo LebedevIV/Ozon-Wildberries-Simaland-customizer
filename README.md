@@ -19,7 +19,7 @@ Mozilla extension:
 https://addons.mozilla.org/addon/ozon-wildberries-simaland-cust
 
 Userscript (для Tampermonkey):
-https://greasyfork.org/en/scripts/495412-ozon-wildberries-and-simaland-customizer-sorting-reviews-by-ascending-rating
+https://greasyfork.org/scripts/495412-ozon-wildberries-and-simaland-customizer-bad-reviews-first-interface-improvements
 
 ************
 
