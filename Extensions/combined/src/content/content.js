@@ -2,7 +2,7 @@
 // @name         Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-11-14_15-36
+// @version      2024-11-30_5-36
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
@@ -632,7 +632,12 @@
             let NewURL
             if (!currentURL.includes('/reviews?sort=score_asc') && !currentURL.includes('/reviews?sort=score_desc')) {
                 if (currentURL.includes('/reviews')) {
-                    NewURL = currentURL.replace('/reviews', '/reviews?sort=score_asc');
+                    // if (currentURL.includes('/reviews/?__rr=')) {
+                    //     NewURL = currentURL.replace(/\/reviews\/\?__rr=.*/, '/reviews?sort=score_asc')
+                    // } else {
+                    //     NewURL = currentURL.replace('/reviews', '/reviews?sort=score_asc')
+                    // }
+                    NewURL = currentURL.replace(/\/reviews.*/, '/reviews?sort=score_asc')
                 } else {
                     NewURL = `${currentURL}&sort=score_asc`;
                 }
@@ -647,6 +652,35 @@
     } else if (currentURL.includes('ozon.ru/product/')) {
         // Если условия выполняются - добавляем к адресу параметр и перезагружаем страницу с новым адресом, производящим сортировку рейтингов по возрастанию
         if (config.SettingsOnOff) {
+            // Удаление предложения перейти на мобильную версию
+            const webToAppBanner = document.querySelector('div[data-widget="webToAppBanner"]')
+            if (webToAppBanner)
+                webToAppBanner.style.display = 'none'
+            const interval_webToAppBanner = setInterval(() => {
+                webToAppBanner = document.querySelector('div[data-widget="webToAppBanner"]')
+                if (webToAppBanner)
+                    webToAppBanner.style.display = 'none'
+            }, 200)
+            // Настраиваем наблюдение за изменениями в документе
+            const observer = new MutationObserver((mutationsList, observer) => {
+                clearInterval(interval_webToAppBanner)
+                for (let mutation of mutationsList) {
+                    if (mutation.type === 'childList') {
+                        mutation.addedNodes.forEach(node => {
+                            if (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'DIV') {
+                                // Удаление предложения перейти на мобильную версию
+                                if (node.dataset.widget === "webToAppBanner") {
+                                    node.style.display = 'none'
+                                }
+                            }
+                        });
+
+                    }
+                }
+            });
+            const observer_config = { attributes: true, childList: true, subtree: true }
+            observer.observe(document.querySelector('div#__ozon'), observer_config)
+
             // сокрытие и перестановка мешающих блоков
             // первый блок фото из отзывов - скрываем, так как он дублирует этот же блок в отзывах
             const intervalReviewsFoto = setInterval(() => {
@@ -801,7 +835,7 @@
             // Добавление кнопки "Реклама"
             const EspeciallyForYou = CreateEspeciallyForYou()
             // let EspeciallyForYou_factView = false // факт вывода раскрывающегося блока рекламы
-            // вырезание верхнего баннера
+            // Перенос верхнего баннера в блок Реклама
             const targetNode = document.querySelector('div[data-widget="advBanner"]')
             // targetNode?.remove()
             function Add_targetNode_into_EspeciallyForYou(targetNode) {
@@ -814,14 +848,26 @@
                 }
             }
             Add_targetNode_into_EspeciallyForYou(targetNode)
+            // Удаление предложения перейти на мобильную версию
+            document.querySelector('div[data-widget="webToAppBanner"]')?.parentNode.remove()
+            const interval_webToAppBanner = setInterval(() => {
+                document.querySelector('div[data-widget="webToAppBanner"]')?.parentNode.remove()
+            }, 200)
+
             // Настраиваем наблюдение за изменениями в документе
             const observer = new MutationObserver((mutationsList, observer) => {
+                clearInterval(interval_webToAppBanner)
                 for (let mutation of mutationsList) {
                     if (mutation.type === 'childList') {
                         mutation.addedNodes.forEach(node => {
                             if (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'DIV') {
+                                // Перенос верхнего баннера в блок Реклама
                                 if (node.dataset.widget === "advBanner") {
                                     Add_targetNode_into_EspeciallyForYou(node)
+                                }
+                                // Удаление предложения перейти на мобильную версию
+                                else if (node.dataset.widget === "webToAppBanner") {
+                                    node.parentNode.remove()
                                 }
                             }
                         });
@@ -832,7 +878,55 @@
             const observer_config = { attributes: true, childList: true, subtree: true };
             observer.observe(document.querySelector('div#__ozon'), observer_config);
         }
+        // Любая другая страница Ozon
+    } else if (currentURL.includes('ozon.ru/')) {
+        if (config.SettingsOnOff) {
+            // Добавление кнопки "Реклама"
+            const EspeciallyForYou = CreateEspeciallyForYou()
+            // let EspeciallyForYou_factView = false // факт вывода раскрывающегося блока рекламы
+            // Перенос верхнего баннера в блок Реклама
+            const targetNode = document.querySelector('div[data-widget="advBanner"]')
+            // targetNode?.remove()
+            function Add_targetNode_into_EspeciallyForYou(targetNode) {
+                if (targetNode && targetNode.parentNode !== EspeciallyForYou) {
+                    if (!targetNode.parentNode.contains(EspeciallyForYou)) {
+                        targetNode.parentNode.insertBefore(EspeciallyForYou, targetNode)
+                    }
+                    targetNode.style.marginTop = '0.3rem'
+                    EspeciallyForYou?.appendChild(targetNode)
+                }
+            }
+            Add_targetNode_into_EspeciallyForYou(targetNode)
+            // Удаление предложения перейти на мобильную версию
+            document.querySelector('div[data-widget="webToAppBanner"]')?.parentNode.remove()
+            const interval_webToAppBanner = setInterval(() => {
+                document.querySelector('div[data-widget="webToAppBanner"]')?.parentNode.remove()
+            }, 200)
 
+            // Настраиваем наблюдение за изменениями в документе
+            const observer = new MutationObserver((mutationsList, observer) => {
+                clearInterval(interval_webToAppBanner)
+                for (let mutation of mutationsList) {
+                    if (mutation.type === 'childList') {
+                        mutation.addedNodes.forEach(node => {
+                            if (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'DIV') {
+                                // Перенос верхнего баннера в блок Реклама
+                                if (node.dataset.widget === "advBanner") {
+                                    Add_targetNode_into_EspeciallyForYou(node)
+                                }
+                                // Удаление предложения перейти на мобильную версию
+                                else if (node.dataset.widget === "webToAppBanner") {
+                                    node.parentNode.remove()
+                                }
+                            }
+                        });
+
+                    }
+                }
+            });
+            const observer_config = { attributes: true, childList: true, subtree: true };
+            observer.observe(document.querySelector('div#__ozon'), observer_config);
+        }
         // Wildberries: карточка товара
     } else if (currentURL.includes('wildberries.ru/catalog/') && currentURL.includes('/feedbacks')) {
 
