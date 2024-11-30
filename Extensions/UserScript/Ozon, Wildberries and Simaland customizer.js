@@ -1,9 +1,11 @@
 // ==UserScript==
 // @name         Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
+// @name:en      Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-11-30_5-36
+// @version      2024-11-30_12-48
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
+// @description:en  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
 // @license        GPL-3.0-or-later
