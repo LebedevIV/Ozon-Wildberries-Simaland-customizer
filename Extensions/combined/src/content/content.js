@@ -3,7 +3,7 @@
 // @name:en      Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-11-30_12-48
+// @version      2024-12-03_6-25
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:en  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
@@ -18,6 +18,8 @@
 // @match          https://*.wildberries.ru/*
 // @match          http://*.sima-land.ru/*
 // @match          https://*.sima-land.ru/*
+// @match          http://*.market.yandex.ru/*
+// @match          https://*.market.yandex.ru/*
 // @downloadURL https://update.greasyfork.org/scripts/495412/Ozon%2C%20Wildberries%20and%20Simaland%20customizer%3A%20bad%20reviews%20first%20%2B%20interface%20improvements.user.js
 // @updateURL https://update.greasyfork.org/scripts/495412/Ozon%2C%20Wildberries%20and%20Simaland%20customizer%3A%20bad%20reviews%20first%20%2B%20interface%20improvements.meta.js
 // ==/UserScript==
@@ -626,11 +628,107 @@
 
 
 
-    // Проверка, является ли страница карточкой товара, содержащей отзывы, и если да - сортировка отзывов по возрастанию рейтинга. В случае Simaland важна последовательность
-    // Ozon: начинается ли адрес страницы со 'https://www.ozon.ru/product/' и не содержит ли он уже '&sort=score_asc' и прочие варианты сортировки
-    if (currentURL.includes('ozon.ru/product/') && !currentURL.includes('&sort=score_asc') && !currentURL.includes('?sort=score_asc') && !currentURL.includes('&sort=score_desc') && !currentURL.includes('?sort=score_desc')) {
-        // Если условия выполняются - добавляем к адресу параметр и перезагружаем страницу с новым адресом, производящим сортировку рейтингов по возрастанию
-        if (config.SettingsOnOff) {
+
+    // Яндекс.Маркет: Показать блок "Характеристики и описание" и разместить под фото товара()
+    function Яндекс_Маркет__Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара() {
+        let popup__content = document.querySelector('div.popup-product-details > div.popup__content') // Всплывающий блок с описанием уже присутствует на загружаемой странице - это маловероятно
+        let product_params__table = document.querySelector('div.popup__content > div.product-details > div.product-params > table.product-params__table')
+        let factClick_button_product_page__btn_detail = false // факт программного нажатия button_product_page__btn_detail
+        let button_product_page__btn_detail // кнопка вызова блока Характеристикаи и описание
+
+        if (product_params__table) { // Всплывающий блок присутствует на загружаемой странице - это маловероятно
+            popup_product_details_Replace()
+        }
+        else { // Всплывающий блок отсутствует
+            // Создаем новый экземпляр MutationObserver
+            const observer = new MutationObserver((mutationsList, observer) => {
+                // Проходимся по списку изменений
+                for (let mutation of mutationsList) {
+                    // Проверяем, добавлены ли новые узлы
+                    if (mutation.type === 'childList') {
+                        // Проходимся по списку добавленных узлов
+                        for (let node of mutation.addedNodes) {
+                            if (node.nodeType === 1) {
+                                // Проверяем, является ли узел элементом <div> с классом popup-product-details
+                                if (!button_product_page__btn_detail &&
+                                    node.matches('button.product-page__btn-detail')) {
+                                    button_product_page__btn_detail = node // произошёл вывод кнокпи вызова всплывающего блока Характеристики и описания
+                                    button_product_page__btn_detail_click()
+                                }
+                                // Программное нажатие button_product_page__btn_detail: Последующий вызов всплывающего блока с заполненными Характеристики и описания
+                                else if (factClick_button_product_page__btn_detail &&
+                                         node.matches('div.popup-product-details')) {
+                                    // Выведен полноценный заполненный блок
+                                    if (node.querySelector('div.popup__content > div.product-details > div.product-params > table.product-params__table')) {
+                                        // Прерываем наблюдение
+                                        observer.disconnect()
+                                        popup__content = node.querySelector('div.popup__content')
+                                        popup_product_details_Replace()
+                                        break
+                                    }
+                                    // Блок ещё не заполнен: такое происходит при навигации по сайту и открытию карточек товара
+                                    else {
+                                        node.remove()
+                                        factClick_button_product_page__btn_detail = false
+                                        setTimeout(function() {
+                                            button_product_page__btn_detail_click()
+                                        }, 1000);
+
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Начинаем наблюдение за изменениями внутри элемента <body>
+            observer.observe(document.body, { childList: true })
+            button_product_page__btn_detail_click()
+
+        }
+
+        // Программное нажатие кнопки вызов всплывающего блока Характеристик и описания
+        function button_product_page__btn_detail_click() {
+            if (!button_product_page__btn_detail) // Если не успело определиться в обсервере
+                button_product_page__btn_detail = document.querySelector('#app button.product-page__btn-detail') // Кнокпа вызова всплывающего блока Характеристики и описания
+            if (button_product_page__btn_detail && !factClick_button_product_page__btn_detail) { // Если в обсервере не произошёл факт нажатия
+                factClick_button_product_page__btn_detail = true
+                button_product_page__btn_detail.click() // вызов всплывающего блока Характеристик и описания
+            }
+        }
+        // Перенос Характеристик и описания из вызываемого всплывающего блока под блок товара
+        function popup_product_details_Replace() {
+            if (factClick_button_product_page__btn_detail) // при програмном нажатии
+                popup__content.parentNode.remove() // удаление вызванного всплывающего блока
+
+            const product_page__grid = document.querySelector('div.product-page__grid')
+            if (product_page__grid) {
+                product_page__grid.parentNode.querySelectorAll('div.popup__content').forEach(function(element) { // удаление всех ранее внедрённых блоков popup__content, которые сохраняются на страинце при навигации
+                    element.remove();
+                });
+            }
+            if (popup__content && product_page__grid) {
+                popup__content?.querySelector('div.popup__footer')?.remove() // Удаление лишней информации и элементов из подваала вспывающего блока
+                product_page__grid.insertAdjacentElement('afterend', popup__content)
+            }
+            document.body.classList.remove('body--overflow') // при выводе всплывающего блока добавляется вредный класс body--overflow, скрывающий полосы прокрутки, и при программном закрытии всплывающего блока класс body--overflow не удаляется.
+        }
+    }
+
+
+
+
+
+
+
+    if (config.SettingsOnOff) {
+
+        // Проверка, является ли страница карточкой товара, содержащей отзывы, и если да - сортировка отзывов по возрастанию рейтинга. В случае Simaland важна последовательность
+        // Ozon: начинается ли адрес страницы со 'https://www.ozon.ru/product/' и не содержит ли он уже '&sort=score_asc' и прочие варианты сортировки
+        if (currentURL.includes('ozon.ru/product/') && !currentURL.includes('&sort=score_asc') && !currentURL.includes('?sort=score_asc') && !currentURL.includes('&sort=score_desc') && !currentURL.includes('?sort=score_desc')) {
+            // Если условия выполняются - добавляем к адресу параметр и перезагружаем страницу с новым адресом, производящим сортировку рейтингов по возрастанию
             let NewURL
             if (!currentURL.includes('/reviews?sort=score_asc') && !currentURL.includes('/reviews?sort=score_desc')) {
                 if (currentURL.includes('/reviews')) {
@@ -651,10 +749,10 @@
             }
         }
         // Ozon: Страница карточки товара
-    } else if (currentURL.includes('ozon.ru/product/')) {
-        // Если условия выполняются - добавляем к адресу параметр и перезагружаем страницу с новым адресом, производящим сортировку рейтингов по возрастанию
-        if (config.SettingsOnOff) {
-            // Удаление предложения перейти на мобильную версию
+        else if (currentURL.includes('ozon.ru/product/')) {
+            // Если условия выполняются - добавляем к адресу параметр и перезагружаем страницу с новым адресом, производящим сортировку рейтингов по возрастанию
+            // Мобильная версия
+            // Удаление предложения перейти на мобильное приложение
             const webToAppBanner = document.querySelector('div[data-widget="webToAppBanner"]')
             if (webToAppBanner)
                 webToAppBanner.style.display = 'none'
@@ -670,7 +768,8 @@
                     if (mutation.type === 'childList') {
                         mutation.addedNodes.forEach(node => {
                             if (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'DIV') {
-                                // Удаление предложения перейти на мобильную версию
+                                // Мобильная версия
+                                // Удаление предложения перейти на мобильное приложение
                                 if (node.dataset.widget === "webToAppBanner") {
                                     node.style.display = 'none'
                                 }
@@ -825,15 +924,11 @@
                 // Наблюдение за изменениями в body
                 observer.observe(document.body, config);
             });
-        }
-        // Ozon: Страница каталога товаров
-    } else if (currentURL.includes('ozon.ru/category/') ) {
-        if (config.SettingsOnOff) {
+            // Ozon: Страница каталога товаров
+        } else if (currentURL.includes('ozon.ru/category/') ) {
             addOzonSortParamToLinks()
-        }
-        // Ozon: Страница главная
-    } else if (currentURL==='https://www.ozon.ru/' ) {
-        if (config.SettingsOnOff) {
+            // Ozon: Страница главная
+        } else if (currentURL==='https://www.ozon.ru/' ) {
             // Добавление кнопки "Реклама"
             const EspeciallyForYou = CreateEspeciallyForYou()
             // let EspeciallyForYou_factView = false // факт вывода раскрывающегося блока рекламы
@@ -850,7 +945,8 @@
                 }
             }
             Add_targetNode_into_EspeciallyForYou(targetNode)
-            // Удаление предложения перейти на мобильную версию
+            // Мобильная версия
+            // Удаление предложения перейти на мобильное приложение
             document.querySelector('div[data-widget="webToAppBanner"]')?.parentNode.remove()
             const interval_webToAppBanner = setInterval(() => {
                 document.querySelector('div[data-widget="webToAppBanner"]')?.parentNode.remove()
@@ -867,7 +963,8 @@
                                 if (node.dataset.widget === "advBanner") {
                                     Add_targetNode_into_EspeciallyForYou(node)
                                 }
-                                // Удаление предложения перейти на мобильную версию
+                                // Мобильная версия
+                                // Удаление предложения перейти на мобильное приложение
                                 else if (node.dataset.widget === "webToAppBanner") {
                                     node.parentNode.remove()
                                 }
@@ -879,10 +976,8 @@
             });
             const observer_config = { attributes: true, childList: true, subtree: true };
             observer.observe(document.querySelector('div#__ozon'), observer_config);
-        }
-        // Любая другая страница Ozon
-    } else if (currentURL.includes('ozon.ru/')) {
-        if (config.SettingsOnOff) {
+            // Любая другая страница Ozon
+        } else if (currentURL.includes('ozon.ru/')) {
             // Добавление кнопки "Реклама"
             const EspeciallyForYou = CreateEspeciallyForYou()
             // let EspeciallyForYou_factView = false // факт вывода раскрывающегося блока рекламы
@@ -899,7 +994,8 @@
                 }
             }
             Add_targetNode_into_EspeciallyForYou(targetNode)
-            // Удаление предложения перейти на мобильную версию
+            // Мобильная версия
+            // Удаление предложения перейти на мобильное приложение
             document.querySelector('div[data-widget="webToAppBanner"]')?.parentNode.remove()
             const interval_webToAppBanner = setInterval(() => {
                 document.querySelector('div[data-widget="webToAppBanner"]')?.parentNode.remove()
@@ -916,7 +1012,8 @@
                                 if (node.dataset.widget === "advBanner") {
                                     Add_targetNode_into_EspeciallyForYou(node)
                                 }
-                                // Удаление предложения перейти на мобильную версию
+                                // Мобильная версия
+                                // Удаление предложения перейти на мобильное приложение
                                 else if (node.dataset.widget === "webToAppBanner") {
                                     node.parentNode.remove()
                                 }
@@ -928,47 +1025,149 @@
             });
             const observer_config = { attributes: true, childList: true, subtree: true };
             observer.observe(document.querySelector('div#__ozon'), observer_config);
-        }
-        // Wildberries: карточка товара
-    } else if (currentURL.includes('wildberries.ru/catalog/') && currentURL.includes('/feedbacks')) {
+            // Wildberries: карточка товара
+        } else if (currentURL.includes('wildberries.ru/catalog/') && currentURL.includes('/feedbacks')) {
 
-        sortWildberriesReviews();
-        if (currentURL.endsWith('/detail.aspx'))
-            Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
-        // Wildberries: каталоги
-    } else if (currentURL.includes('wildberries.ru/')) {
-        if (config.SettingsOnOff) {
-
+            sortWildberriesReviews();
+            if (currentURL.endsWith('/detail.aspx'))
+                Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
+            // Wildberries: каталоги
+        } else if (currentURL.includes('wildberries.ru/')) {
             window.addEventListener('load', addWildberriesSortParamToLinks)
+            // Simaland: страница карточки товара
+        } else if (currentURL.match(/^https:\/\/www\.sima-land\.ru\/\d+\/.+\/$/)) {
+            // } else if (/^https:\/\/www\.sima-land\.ru\/\d{7}\/.*\/$/.test(currentURL)) {
+            sortSimaLandReviews();
+            SimaLandOptimization()
+            // Simaland: страница карточки товара, вызванная из каталога при нажатии ссылки рейтинга
+        } else if (currentURL.match(/^https:\/\/www\.sima-land\.ru\/\d+\/.+\/###$/)) {
+            // } else if (/^https:\/\/www\.sima-land\.ru\/\d{7}\/.*\/###$/.test(currentURL)) {
+            // SimaLandCatalogReviews();
+            // приходится ждать загруки страницы так, иначе не подвязываются необходиме функции обработки клика по ссылке рейтинга
+            window.addEventListener('load', SimaLandCatalogReviewsOpen)
+            // SimaLandCatalogReviewsOpen()
+            // Страница каталога товаров
+        } else if (currentURL.match(/^https:\/\/www\.sima-land\.ru\/.+\/(.*)$/)) {
+            // } else if (/^https:\/\/www\.sima-land\.ru\/.+\/$/.test(currentURL)) {
+            SimaLandCatalogReviews()
+            window.addEventListener('load', SimaLandCatalogReviews) // в дальнейшем можно разремить при условии проверки на добавленые в div ссылки
         }
-        // Simaland: страница карточки товара
-    } else if (currentURL.match(/^https:\/\/www\.sima-land\.ru\/\d+\/.+\/$/)) {
-        // } else if (/^https:\/\/www\.sima-land\.ru\/\d{7}\/.*\/$/.test(currentURL)) {
-        sortSimaLandReviews();
-        SimaLandOptimization()
-        // Simaland: страница карточки товара, вызванная из каталога при нажатии ссылки рейтинга
-    } else if (currentURL.match(/^https:\/\/www\.sima-land\.ru\/\d+\/.+\/###$/)) {
-        // } else if (/^https:\/\/www\.sima-land\.ru\/\d{7}\/.*\/###$/.test(currentURL)) {
-        // SimaLandCatalogReviews();
-        // приходится ждать загруки страницы так, иначе не подвязываются необходиме функции обработки клика по ссылке рейтинга
-        window.addEventListener('load', SimaLandCatalogReviewsOpen)
-        // SimaLandCatalogReviewsOpen()
-        // Страница каталога товаров
-    } else if (currentURL.match(/^https:\/\/www\.sima-land\.ru\/.+\/(.*)$/)) {
-        // } else if (/^https:\/\/www\.sima-land\.ru\/.+\/$/.test(currentURL)) {
-        SimaLandCatalogReviews()
-        window.addEventListener('load', SimaLandCatalogReviews) // в дальнейшем можно разремить при условии проверки на добавленые в div ссылки
-    }
+        // Яндекс.Маркет: Страница карточки товара
+        // else if (currentURL.pathname.startsWith('/product--') && currentURL.includes('&uniqueId=') && currentURL.includes('&do-waremd5=')) {
+        else if (currentURL.includes('market.yandex.ru/product--') && currentURL.includes('&uniqueId=') && currentURL.includes('&do-waremd5=')) {
+            // Если условия выполняются - добавляем к адресу параметр и перезагружаем страницу с новым адресом, производящим сортировку рейтингов по возрастанию
+            // Мобильная версия
+            // Удаление предложения перейти на мобильное приложение
+            function УдалениеБаннеров() {
+                let webToAppBanner = document.getElementById('/content/header/headerAppDistributionBanner') || document.getElementById('HeaderAppDistributionBanner')
+                if (webToAppBanner)
+                    // webToAppBanner.style.display = 'none'
+                    webToAppBanner.remove()
+                // Баннер верхний
+                document.getElementById('/content/header/headerPromo')?.remove()
+                // Десктопная версия: баннер справа
+                document.getElementById('/content/page/fancyPage/defaultPage/heroBannerCarousel')?.remove()
+            }
+            УдалениеБаннеров()
 
+            const interval_УдалениеБаннеров = setInterval(() => {
+                УдалениеБаннеров()
+            }, 200)
+
+            // Настраиваем наблюдение за изменениями в документе
+            const observer = new MutationObserver((mutationsList, observer) => {
+                clearInterval(interval_УдалениеБаннеров)
+                for (let mutation of mutationsList) {
+                    if (mutation.type === 'childList') {
+                        mutation.addedNodes.forEach(node => {
+                            if (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'DIV') {
+                                // Удаление предложения перейти на мобильное приложение
+                                if (node.id === '/content/header/headerAppDistributionBanner' || node.id === 'headerAppDistributionBanner') {
+                                    // node.style.display = 'none'
+                                    node.remove()
+                                }
+                                // Баннер верхний
+                                else if (node.id === '/content/header/headerPromo') {
+                                    node.remove()
+                                }
+                                // Десктопная версия: баннер справа
+                                else if (node.id === '/content/page/fancyPage/defaultPage/heroBannerCarousel') {
+                                    node.remove()
+                                }                            }
+                        });
+
+                    }
+                }
+            });
+            const observer_config = { attributes: true, childList: true, subtree: true }
+            observer.observe(document.querySelector('div.page'), observer_config)
+
+            // сокрытие и перестановка мешающих блоков
+            // Блок с: Ещё может подойти; Вам может понравиться
+            const interval_ЕщёМожетПодойти_ВамМожетПонравиться = setInterval(() => {
+                // Ещё может подойти
+                // десктопная версия или мобильная версия
+                const ЕщёМожетПодойти = document.getElementById('/content/page/fancyPage/defaultPage/kkmCarousel') || document.getElementById('/content/page/fancyPage/defaultPage/kkmCommon/kkmRecommendations/kkmCarousel/content')
+                // Вам может понравиться
+                const ВамМожетПонравиться = document.getElementById('/content/page/fancyPage/defaultPage/madvIncutWrapper')
+
+                if (ЕщёМожетПодойти || ВамМожетПонравиться) {
+                    // пока отключаю, потом буду сворачивать
+                    clearInterval(interval_ЕщёМожетПодойти_ВамМожетПонравиться);
+
+                    let UseDetails = true
+
+                    // Дополнительная логика проверки:
+                    if (UseDetails) {
+                        UseDetails = false
+                        // Если нужно остановить наблюдение в будущем:
+                        // Но срабатывает не мгновенно - приходится использовать флаг UseDetails
+                        // Создать элемент <details> и установить его в свернутом состоянии по умолчанию
+                        const details = document.createElement('details')
+
+                        // Создать элемент <summary> с текстом
+                        const summary = document.createElement('summary')
+                        // summary.classList.add('tsHeadline500Medium')
+                        summary.textContent = 'Ещё может подойти + Вам может понравиться'
+                        summary.style.cursor = 'pointer'
+
+
+                        // Добавить элемент <summary> в <details>
+                        details.appendChild(summary);
+
+                        const div_Отзывы = document.getElementById('/content/page/fancyPage/defaultPage/reviewBlock') || document.querySelector('div[data-auto="product-card-ugc-section"]')
+                        // Добавить созданный элемент <details> перед элементом div_Отзывы
+                        div_Отзывы.insertAdjacentElement('beforebegin', details)
+
+                        // Переместить существующий элемент ЕщёМожетПодойти внутрь <details>
+                        if (ЕщёМожетПодойти)
+                            details.appendChild(ЕщёМожетПодойти)
+                        // Переместить существующий элемент ВамМожетПонравиться внутрь <details>
+                        if (ВамМожетПонравиться)
+                            details.appendChild(ВамМожетПонравиться)
+                    }
+
+                }
+
+            }, 200);
+
+        }
+    }
 
     // Wildberries: определение совершения перехода на карточку товара с разделом отзывов
     // перехват событияй истории (кнопок назад-вперёд)
     window.onpopstate = () => {
         // получаем текущий адрес страницы
+        // Wildberries
         if (new URL(window.location.href).pathname.startsWith('/catalog/') && window.location.href.includes('/feedbacks')) {
             sortWildberriesReviews();
             if (new URL(window.location.href).pathname.endsWith('/detail.aspx'))
                 Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
+        }
+        // Яндекс.Маркет
+        else if (new URL(window.location.href).pathname.startsWith('/product--') && window.location.href.includes('&uniqueId=') && window.location.href.includes('&do-waremd5=')) {
+            // Сортировать на карточке товара нет возможсноти и смысла - отзывы по полезности вполне объективны
+            Яндекс_Маркет__Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
         }
     };
 
@@ -994,10 +1193,16 @@
         // событие изменения адреса данной вкладки
         api.runtime.onMessage.addListener((request, sender, sendResponse) => {
             // получаем текущий адрес страницы
+            // Wildberries
             if (new URL(request.url).pathname.startsWith('/catalog/') && request.url.includes('/feedbacks')) {
                 sortWildberriesReviews();
                 if (new URL(window.location.href).pathname.endsWith('/detail.aspx'))
                     Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
+            }
+            // Яндекс.Маркет
+            else if (new URL(window.location.href).pathname.startsWith('/product--') && window.location.href.includes('&uniqueId=') && window.location.href.includes('&do-waremd5=')) {
+                // Сортировать на карточке товара нет возможсноти и смысла - отзывы по полезности вполне объективны
+                Яндекс_Маркет__Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
             }
         });
     }
