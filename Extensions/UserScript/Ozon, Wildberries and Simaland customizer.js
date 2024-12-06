@@ -3,7 +3,7 @@
 // @name:en      Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-12-03_6-25
+// @version      2024-12-06_7-8
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:en  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
@@ -1054,7 +1054,9 @@
         }
         // Яндекс.Маркет: Страница карточки товара
         // else if (currentURL.pathname.startsWith('/product--') && currentURL.includes('&uniqueId=') && currentURL.includes('&do-waremd5=')) {
-        else if (currentURL.includes('market.yandex.ru/product--') && currentURL.includes('&uniqueId=') && currentURL.includes('&do-waremd5=')) {
+        // else if (currentURL.includes('market.yandex.ru/product--') && currentURL.includes('&uniqueId=') && currentURL.includes('&do-waremd5=')) {
+        else if (window.location.host === 'market.yandex.ru') {
+            let факт_УдалениеБаннеров = false
             // Если условия выполняются - добавляем к адресу параметр и перезагружаем страницу с новым адресом, производящим сортировку рейтингов по возрастанию
             // Мобильная версия
             // Удаление предложения перейти на мобильное приложение
@@ -1068,20 +1070,18 @@
                 // Десктопная версия: баннер справа
                 document.getElementById('/content/page/fancyPage/defaultPage/heroBannerCarousel')?.remove()
             }
-            УдалениеБаннеров()
-
-            const interval_УдалениеБаннеров = setInterval(() => {
-                УдалениеБаннеров()
-            }, 200)
 
             // Настраиваем наблюдение за изменениями в документе
             const observer = new MutationObserver((mutationsList, observer) => {
-                clearInterval(interval_УдалениеБаннеров)
+                if (!факт_УдалениеБаннеров) {
+                    факт_УдалениеБаннеров = true
+                    УдалениеБаннеров()
+                }
                 for (let mutation of mutationsList) {
                     if (mutation.type === 'childList') {
                         mutation.addedNodes.forEach(node => {
                             if (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'DIV') {
-                                // Удаление предложения перейти на мобильное приложение
+                                // Удаление предложения перейти на мобильное приложение: на всякий случай любой из блоков
                                 if (node.id === '/content/header/headerAppDistributionBanner' || node.id === 'headerAppDistributionBanner') {
                                     // node.style.display = 'none'
                                     node.remove()
@@ -1093,7 +1093,8 @@
                                 // Десктопная версия: баннер справа
                                 else if (node.id === '/content/page/fancyPage/defaultPage/heroBannerCarousel') {
                                     node.remove()
-                                }                            }
+                                }
+                            }
                         });
 
                     }
@@ -1102,55 +1103,114 @@
             const observer_config = { attributes: true, childList: true, subtree: true }
             observer.observe(document.querySelector('div.page'), observer_config)
 
-            // сокрытие и перестановка мешающих блоков
-            // Блок с: Ещё может подойти; Вам может понравиться
-            const interval_ЕщёМожетПодойти_ВамМожетПонравиться = setInterval(() => {
-                // Ещё может подойти
-                // десктопная версия или мобильная версия
-                const ЕщёМожетПодойти = document.getElementById('/content/page/fancyPage/defaultPage/kkmCarousel') || document.getElementById('/content/page/fancyPage/defaultPage/kkmCommon/kkmRecommendations/kkmCarousel/content')
-                // Вам может понравиться
-                const ВамМожетПонравиться = document.getElementById('/content/page/fancyPage/defaultPage/madvIncutWrapper')
+            // Страница карточки товара
+            if (currentURL.includes('&uniqueId=') && currentURL.includes('&do-waremd5=')) {
+                // сокрытие и перестановка мешающих блоков
+                // Блок с: Ещё может подойти; Вам может понравиться
+                const interval_ЕщёМожетПодойти_ВамМожетПонравиться = setInterval(() => {
+                    // Ещё может подойти
+                    // десктопная версия или мобильная версия
+                    const ЕщёМожетПодойти = document.getElementById('/content/page/fancyPage/defaultPage/kkmCarousel') || document.getElementById('/content/page/fancyPage/defaultPage/kkmCommon/kkmRecommendations/kkmCarousel/content')
+                    // Вам может понравиться
+                    const ВамМожетПонравиться = document.getElementById('/content/page/fancyPage/defaultPage/madvIncutWrapper')
 
-                if (ЕщёМожетПодойти || ВамМожетПонравиться) {
-                    // пока отключаю, потом буду сворачивать
-                    clearInterval(interval_ЕщёМожетПодойти_ВамМожетПонравиться);
+                    if (ЕщёМожетПодойти || ВамМожетПонравиться) {
+                        // пока отключаю, потом буду сворачивать
+                        clearInterval(interval_ЕщёМожетПодойти_ВамМожетПонравиться);
 
-                    let UseDetails = true
+                        let UseDetails = true
 
-                    // Дополнительная логика проверки:
-                    if (UseDetails) {
-                        UseDetails = false
-                        // Если нужно остановить наблюдение в будущем:
-                        // Но срабатывает не мгновенно - приходится использовать флаг UseDetails
-                        // Создать элемент <details> и установить его в свернутом состоянии по умолчанию
-                        const details = document.createElement('details')
+                        // Дополнительная логика проверки:
+                        if (UseDetails) {
+                            UseDetails = false
+                            // Если нужно остановить наблюдение в будущем:
+                            // Но срабатывает не мгновенно - приходится использовать флаг UseDetails
+                            // Создать элемент <details> и установить его в свернутом состоянии по умолчанию
+                            const details = document.createElement('details')
 
-                        // Создать элемент <summary> с текстом
-                        const summary = document.createElement('summary')
-                        // summary.classList.add('tsHeadline500Medium')
-                        summary.textContent = 'Ещё может подойти + Вам может понравиться'
-                        summary.style.cursor = 'pointer'
+                            // Создать элемент <summary> с текстом
+                            const summary = document.createElement('summary')
+                            // summary.classList.add('tsHeadline500Medium')
+                            summary.textContent = 'Ещё может подойти + Вам может понравиться'
+                            summary.style.cursor = 'pointer'
 
 
-                        // Добавить элемент <summary> в <details>
-                        details.appendChild(summary);
+                            // Добавить элемент <summary> в <details>
+                            details.appendChild(summary);
 
-                        const div_Отзывы = document.getElementById('/content/page/fancyPage/defaultPage/reviewBlock') || document.querySelector('div[data-auto="product-card-ugc-section"]')
-                        // Добавить созданный элемент <details> перед элементом div_Отзывы
-                        div_Отзывы.insertAdjacentElement('beforebegin', details)
+                            const div_Отзывы = document.getElementById('/content/page/fancyPage/defaultPage/reviewBlock') || document.querySelector('div[data-auto="product-card-ugc-section"]')
+                            // Добавить созданный элемент <details> перед элементом div_Отзывы
+                            div_Отзывы.insertAdjacentElement('beforebegin', details)
 
-                        // Переместить существующий элемент ЕщёМожетПодойти внутрь <details>
-                        if (ЕщёМожетПодойти)
-                            details.appendChild(ЕщёМожетПодойти)
-                        // Переместить существующий элемент ВамМожетПонравиться внутрь <details>
-                        if (ВамМожетПонравиться)
-                            details.appendChild(ВамМожетПонравиться)
+                            // Переместить существующий элемент ЕщёМожетПодойти внутрь <details>
+                            if (ЕщёМожетПодойти)
+                                details.appendChild(ЕщёМожетПодойти)
+                            // Переместить существующий элемент ВамМожетПонравиться внутрь <details>
+                            if (ВамМожетПонравиться)
+                                details.appendChild(ВамМожетПонравиться)
+                        }
+
                     }
 
+                }, 200);
+
+                // Получение информации из блока "Все характеристики" для десктопной версии
+                // В десктопной версии присутствует нажимаемый span-ссылка
+                const targetSpan = document.getElementById('/content/page/fancyPage/defaultPage/productSpecsList')?.querySelector('span[aria-label="Все характеристики"]')
+                // Проверка найден ли span - значит, версия десктопная
+                if (targetSpan) {
+                    // элемент по ширине страницы или её левой части, до которого будет вставка блоков "О товаре" и "Общие характеристики"
+                    const kitsOfferSet = document.getElementById('/content/page/fancyPage/defaultPage/kitsOfferSet');
+                    if (kitsOfferSet) {
+                        // О товаре
+                        let О_Товаре = document.getElementById('/content/page/fancyPage/defaultPage/specFridge')?.querySelector('div[data-zone-name="MarketProductDescription"]')?.cloneNode(true);
+                        // Общие характеристики
+                        let ОбщиеХарактеристики = document.getElementById('/content/page/fancyPage/defaultPage/specFridge')?.querySelector('div[data-zone-name="ProductSpecsList"]')?.cloneNode(true);
+                        if (О_Товаре || ОбщиеХарактеристики) {
+                            if (О_Товаре) kitsOfferSet.insertAdjacentElement('beforebegin', О_Товаре)
+                            if (ОбщиеХарактеристики) kitsOfferSet.insertAdjacentElement('beforebegin', ОбщиеХарактеристики)
+                        }
+                        else {
+                            // Настраиваем наблюдение за изменениями в документе
+                            const observer_specFridge = new MutationObserver((mutationsList, observer) => {
+                                for (let mutation of mutationsList) {
+                                    if (mutation.type === 'childList') {
+                                        mutation.addedNodes.forEach(node => {
+                                            if (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'DIV') {
+                                                if (node.getAttribute('data-zone-name') === 'MarketProductDescription') {
+                                                    О_Товаре = node.cloneNode(true);
+                                                    // почему-то не отслеживается появление
+                                                    ОбщиеХарактеристики = document.getElementById('/content/page/fancyPage/defaultPage/specFridge')?.querySelector('div[data-zone-name="ProductSpecsList"]')?.cloneNode(true);
+                                                }
+                                                else if (node.getAttribute('data-zone-name') === 'ProductSpecsList') {
+                                                    ОбщиеХарактеристики = node.cloneNode(true);
+                                                }
+                                                if (О_Товаре && ОбщиеХарактеристики) {
+                                                    observer_specFridge.disconnect()
+                                                }
+                                            }
+                                        });
+
+                                    }
+                                }
+                                if (О_Товаре || ОбщиеХарактеристики) {
+                                    if (О_Товаре) kitsOfferSet.insertAdjacentElement('beforebegin', О_Товаре)
+                                    if (ОбщиеХарактеристики) kitsOfferSet.insertAdjacentElement('beforebegin', ОбщиеХарактеристики)
+                                    document.querySelector('div[data-apiary-widget-name="@light/StickyFridgeContent"]')?.
+                                    nextElementSibling?.
+                                    querySelector('button')?.
+                                    click()
+                                }
+
+
+                            });
+                            const observer_config_specFridge = { attributes: true, childList: true, subtree: true }
+                            observer_specFridge.observe(document.getElementById('/content/page/fancyPage/defaultPage/specFridge'), observer_config_specFridge)
+                            targetSpan.click()
+                        }
+                    }
                 }
-
-            }, 200);
-
+            }
         }
     }
 
