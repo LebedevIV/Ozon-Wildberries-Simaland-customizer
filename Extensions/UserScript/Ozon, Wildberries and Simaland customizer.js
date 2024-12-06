@@ -1,12 +1,12 @@
 // ==UserScript==
-// @name         Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
+// @name         Ozon, Wildberries, Simaland и Яндекс.Маркет настройка: сначала плохие отзывы + улучшения интерфейса
 // @name:en      Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
-// @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы + улучшения интерфейса
+// @name:ru      Ozon, Wildberries, Simaland и Яндекс.Маркет настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-12-06_7-14
-// @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
-// @description:en  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
-// @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
+// @version      2024-12-06_7-21
+// @description  Ozon, Wildberries, Simaland и Яндекс.Маркет: сортировка отзывов по товару по возрастанию рейтинга
+// @description:en  Ozon, Wildberries, Simaland and Яндекс.Маркет: sorting reviews by product by ascending rating
+// @description:ru  Ozon, Wildberries, Simaland и Яндекс.Маркет: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
 // @license        GPL-3.0-or-later
 // @icon         https://raw.githubusercontent.com/LebedevIV/Ozon-Wildberries-Simaland-customizer/main/icons/logo_color.svg
