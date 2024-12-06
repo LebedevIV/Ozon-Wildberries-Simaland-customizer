@@ -3,7 +3,7 @@
 // @name:en      Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries и Simaland настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-12-06_7-8
+// @version      2024-12-06_7-14
 // @description  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:en  Ozon, Wildberries and Simaland: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries и Simaland: сортировка отзывов по товару по возрастанию рейтинга
@@ -1067,6 +1067,7 @@
                     webToAppBanner.remove()
                 // Баннер верхний
                 document.getElementById('/content/header/headerPromo')?.remove()
+                document.querySelector('div[data-apiary-widget-id="/content/header/headerPromo"]')?.remove()
                 // Десктопная версия: баннер справа
                 document.getElementById('/content/page/fancyPage/defaultPage/heroBannerCarousel')?.remove()
             }
