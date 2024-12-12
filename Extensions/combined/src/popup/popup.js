@@ -15,6 +15,7 @@ const config = {
 	website_ozon: "https://www.ozon.ru/",	
 	website_wildberries: "https://www.wildberries.ru/",	
 	website_simaland: "https://www.sima-land.ru/",	
+	website_YandexMarket: "https://market.yandex.ru/",		
   }
 };
 
@@ -53,6 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	createLink(config.links.website_ozon, "div_GoToSites_Ozon")
 	createLink(config.links.website_wildberries, "div_GoToSites_Wildberries")
 	createLink(config.links.website_simaland, "div_GoToSites_Simaland")
+	createLink(config.links.website_YandexMarket, "div_GoToSites_Yandex.Market")
 
 	// Визуальные эффекты кнопки Пожертвований
 	const buttonLinkDonate = document.querySelector('#button_Donate');
