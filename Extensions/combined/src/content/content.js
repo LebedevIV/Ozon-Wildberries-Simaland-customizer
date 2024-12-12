@@ -3,7 +3,7 @@
 // @name:en      Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries, Simaland и Яндекс.Маркет настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-12-12_7-55
+// @version      2024-12-12_8-15
 // @description  Ozon, Wildberries, Simaland и Яндекс.Маркет: сортировка отзывов по товару по возрастанию рейтинга
 // @description:en  Ozon, Wildberries, Simaland and Яндекс.Маркет: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries, Simaland и Яндекс.Маркет: сортировка отзывов по товару по возрастанию рейтинга
@@ -1190,6 +1190,7 @@
                     if (kitsOfferSet) {
                         // О товаре
                         let О_Товаре = document.getElementById('/content/page/fancyPage/defaultPage/specFridge')?.querySelector('div[data-zone-name="MarketProductDescription"]')?.cloneNode(true);
+
                         // Общие характеристики
                         let ОбщиеХарактеристики = document.getElementById('/content/page/fancyPage/defaultPage/specFridge')?.querySelector('div[data-zone-name="ProductSpecsList"]')?.cloneNode(true);
                         if (О_Товаре || ОбщиеХарактеристики) {
@@ -1220,7 +1221,12 @@
                                     }
                                 }
                                 if (О_Товаре || ОбщиеХарактеристики) {
-                                    if (О_Товаре) kitsOfferSet.insertAdjacentElement('beforebegin', О_Товаре)
+                                    if (О_Товаре) {
+                                        const О_Товаре_productDescription = О_Товаре.querySelector('div[aria-label="product-description"]');
+                                        if (О_Товаре_productDescription)
+                                            О_Товаре_productDescription.style.maxHeight = 'unset'
+                                        kitsOfferSet.insertAdjacentElement('beforebegin', О_Товаре)
+                                    }
                                     if (ОбщиеХарактеристики) kitsOfferSet.insertAdjacentElement('beforebegin', ОбщиеХарактеристики)
                                     document.querySelector('div[data-apiary-widget-name="@light/StickyFridgeContent"]')?.
                                     nextElementSibling?.
