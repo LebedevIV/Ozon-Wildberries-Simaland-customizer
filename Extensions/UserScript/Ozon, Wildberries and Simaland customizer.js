@@ -3,7 +3,7 @@
 // @name:en      Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries, Simaland и Яндекс.Маркет настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-12-12_6-21
+// @version      2024-12-12_7-55
 // @description  Ozon, Wildberries, Simaland и Яндекс.Маркет: сортировка отзывов по товару по возрастанию рейтинга
 // @description:en  Ozon, Wildberries, Simaland and Яндекс.Маркет: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries, Simaland и Яндекс.Маркет: сортировка отзывов по товару по возрастанию рейтинга
@@ -1364,7 +1364,17 @@
                     position: relative;
                     z-index: 1;
                     color: ${summary_font_color}; /* Изменение цвета текста */
+        display: flex; /*использовали display: flex и align-items: center для summary, чтобы выровнять треугольник и текст по вертикали.*/
+        align-items: center;
                 }
+    summary::before {
+        content: '▶'; /* Треугольник вершиной вправо */
+        margin-right: 8px;
+        font-size: 12px;
+    }
+    details[open] summary::before {
+        content: '▼'; /* Треугольник вершиной вниз */
+    }
                 .shimmer {
                     position: absolute;
                     top: 0;
@@ -1389,7 +1399,7 @@
         // Создание элемента details
         const details = document.createElement("details");
         // Добавляем класс my-details-class к элементу <details>
-        details.classList.add('details_EspeciallyForYou');
+        // details.classList.add('details_EspeciallyForYou'); // не понял зачем это - не могу вспомнить
 
         // Определение языка браузера
         const browserLanguage = navigator.language || navigator.userLanguage;
