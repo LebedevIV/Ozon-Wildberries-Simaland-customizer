@@ -3,7 +3,7 @@
 // @name:en      Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries, Simaland и Яндекс.Маркет настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-12-06_7-21
+// @version      2024-12-12_6-21
 // @description  Ozon, Wildberries, Simaland и Яндекс.Маркет: сортировка отзывов по товару по возрастанию рейтинга
 // @description:en  Ozon, Wildberries, Simaland and Яндекс.Маркет: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries, Simaland и Яндекс.Маркет: сортировка отзывов по товару по возрастанию рейтинга
@@ -930,7 +930,7 @@
             // Ozon: Страница главная
         } else if (currentURL==='https://www.ozon.ru/' ) {
             // Добавление кнопки "Реклама"
-            const EspeciallyForYou = CreateEspeciallyForYou()
+            const EspeciallyForYou = CreateEspeciallyForYou('#df0f70')
             // let EspeciallyForYou_factView = false // факт вывода раскрывающегося блока рекламы
             // Перенос верхнего баннера в блок Реклама
             const targetNode = document.querySelector('div[data-widget="advBanner"]')
@@ -979,7 +979,7 @@
             // Любая другая страница Ozon
         } else if (currentURL.includes('ozon.ru/')) {
             // Добавление кнопки "Реклама"
-            const EspeciallyForYou = CreateEspeciallyForYou()
+            const EspeciallyForYou = CreateEspeciallyForYou('#df0f70')
             // let EspeciallyForYou_factView = false // факт вывода раскрывающегося блока рекламы
             // Перенос верхнего баннера в блок Реклама
             const targetNode = document.querySelector('div[data-widget="advBanner"]')
@@ -1070,6 +1070,26 @@
                 document.querySelector('div[data-apiary-widget-id="/content/header/headerPromo"]')?.remove()
                 // Десктопная версия: баннер справа
                 document.getElementById('/content/page/fancyPage/defaultPage/heroBannerCarousel')?.remove()
+                // Баннер-карусель на главной странице
+                if (window.location.pathname === '/') {
+                    // document.querySelector('div[data-apiary-widget-name="@marketfront/HeroBannerCarousel"]')?.remove()
+                    // Добавление кнопки "Реклама"
+                    const EspeciallyForYou = CreateEspeciallyForYou('#e35539')
+                    // let EspeciallyForYou_factView = false // факт вывода раскрывающегося блока рекламы
+                    // Перенос верхнего баннера в блок Реклама
+                    const targetNode = document.querySelector('div[data-apiary-widget-name="@marketfront/HeroBannerCarousel"]')
+                    // targetNode?.remove()
+                    function Add_targetNode_into_EspeciallyForYou(targetNode) {
+                        if (targetNode && targetNode.parentNode !== EspeciallyForYou) {
+                            if (!targetNode.parentNode.contains(EspeciallyForYou)) {
+                                targetNode.parentNode.insertBefore(EspeciallyForYou, targetNode)
+                            }
+                            targetNode.style.marginTop = '0.3rem'
+                            EspeciallyForYou?.appendChild(targetNode)
+                        }
+                    }
+                    Add_targetNode_into_EspeciallyForYou(targetNode)
+                }
             }
 
             // Настраиваем наблюдение за изменениями в документе
@@ -1095,6 +1115,11 @@
                                 else if (node.id === '/content/page/fancyPage/defaultPage/heroBannerCarousel') {
                                     node.remove()
                                 }
+                                // // Баннер-карусель на главной странице
+                                // else if (window.location.pathname === '/' &&
+                                //          node.dataset.apiaryWidgetName === '@marketfront/HeroBannerCarousel') {
+                                //     node.remove()
+                                // }
                             }
                         });
 
@@ -1316,7 +1341,7 @@
     }
 
     // Добавлекние раскрывающегося блока "Реклама"
-    function CreateEspeciallyForYou() {
+    function CreateEspeciallyForYou(summary_font_color = '#ff0000') {
         // Создание стилей с помощью JavaScript
         const style = document.createElement("style")
         style.textContent = `
@@ -1338,7 +1363,7 @@
                     outline: none;
                     position: relative;
                     z-index: 1;
-                    color: #df0f70; /* Изменение цвета текста на красный */
+                    color: ${summary_font_color}; /* Изменение цвета текста */
                 }
                 .shimmer {
                     position: absolute;
