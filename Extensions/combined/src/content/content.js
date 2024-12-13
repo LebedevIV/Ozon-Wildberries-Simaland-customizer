@@ -3,7 +3,7 @@
 // @name:en      Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries, Simaland и Яндекс.Маркет настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-12-12_8-15
+// @version      2024-12-13_22-59
 // @description  Ozon, Wildberries, Simaland и Яндекс.Маркет: сортировка отзывов по товару по возрастанию рейтинга
 // @description:en  Ozon, Wildberries, Simaland and Яндекс.Маркет: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries, Simaland и Яндекс.Маркет: сортировка отзывов по товару по возрастанию рейтинга
@@ -125,7 +125,7 @@
             // ожидание загрузки страницы до необходимого значения
             const preloader = document.querySelector('#app > div[data-link="visible{:router.showPreview}"]')
             if (preloader?.style.display === 'none') {
-                const sortButton = document.querySelector("#app > div:nth-child(5) > div > section > div.product-feedbacks__main > div.user-activity__tab-content > div.product-feedbacks__sorting > ul > li:nth-child(2) > a");
+                const sortButton = document.querySelector("#app div.product-feedbacks__sorting > ul > li:nth-child(2) > a");
                 if (sortButton) {
                     clearInterval(interval);
 
@@ -1026,12 +1026,11 @@
             const observer_config = { attributes: true, childList: true, subtree: true };
             observer.observe(document.querySelector('div#__ozon'), observer_config);
             // Wildberries: карточка товара
-        } else if (currentURL.includes('wildberries.ru/catalog/') && currentURL.includes('/feedbacks')) {
-
-            sortWildberriesReviews();
-            if (currentURL.endsWith('/detail.aspx'))
+        } else if (currentURL.includes('wildberries.ru/catalog/') && currentURL.endsWith('/detail.aspx')) {
                 Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
-            // Wildberries: каталоги
+            // Wildberries: отзывы товара
+        } else if (currentURL.includes('wildberries.ru/catalog/') && currentURL.includes('/feedbacks')) {
+            sortWildberriesReviews();
         } else if (currentURL.includes('wildberries.ru/')) {
             window.addEventListener('load', addWildberriesSortParamToLinks)
             // Simaland: страница карточки товара
