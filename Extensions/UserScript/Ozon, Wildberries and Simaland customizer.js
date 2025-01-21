@@ -3,7 +3,7 @@
 // @name:en      Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries, Simaland и Яндекс.Маркет настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2025-01-21_20-22
+// @version      2025-01-22_01-05
 // @description  Ozon, Wildberries, Simaland и Яндекс.Маркет: сортировка отзывов по товару по возрастанию рейтинга
 // @description:en  Ozon, Wildberries, Simaland and Яндекс.Маркет: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries, Simaland и Яндекс.Маркет: сортировка отзывов по товару по возрастанию рейтинга
@@ -14,8 +14,10 @@
 // @match          https://*.ozon.ru/*
 // @match          http://*.ozon.com/*
 // @match          https://*.ozon.com/*
+// @match          https://*.ozon.by/*
 // @match          http://*.wildberries.ru/*
 // @match          https://*.wildberries.ru/*
+// @match          https://*.global.wildberries.ru/*
 // @match          http://*.sima-land.ru/*
 // @match          https://*.sima-land.ru/*
 // @match          http://*.market.yandex.ru/*
