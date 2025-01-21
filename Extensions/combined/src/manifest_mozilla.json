@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "version": "24.12.12.6",
+  "version": "25.1.22.1",
   "minimum_chrome_version": "107",
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDesc__",
@@ -21,6 +21,8 @@
  		"*://*.wildberries.ru/*",
 		"*://*.sima-land.com/*",
  		"*://*.sima-land.ru/*"	
+	      ,"*://*.market.yandex.ru/*"
+	      ,"*://*.market.yandex.com/*"	      
      ],
 	"js": [
 		"./content/content.js"
