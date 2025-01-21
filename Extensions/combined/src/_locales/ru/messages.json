@@ -1,14 +1,14 @@
 {
    "extensionName": {
-      "message": "Ozon, Wildberries и Simaland: сначала плохие отзывы + улучшения",
+      "message": "Ozon, WB, Simaland и Яндекс.Маркет: сначала плохие отзывы + улучшения",
 	  "description": "Название"
    },
    "extensionDesc": {
-      "message": "Ozon, Wildberries и Simaland: сортировка отзывов по возрастанию рейтинга, и другие улучшения",
+      "message": "Ozon, WB, Simaland и Яндекс.Маркет: сортировка отзывов по возрастанию рейтинга, и другие улучшения",
 	  "description": "Описание"
    },
    "extensionDefaultTitle": {
-      "message": "Ozon, Wildberries и Simaland: сортировка отзывов по возрастанию рейтинга"
+      "message": "Ozon, WB, Simaland и Яндекс.Маркет: сортировка отзывов по возрастанию рейтинга"
    },
    "extensionWebsite": {
       "message": "Перейти на сайт"
