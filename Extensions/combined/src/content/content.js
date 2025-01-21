@@ -3,7 +3,7 @@
 // @name:en      Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries, Simaland и Яндекс.Маркет настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2024-12-13_22-59
+// @version      2025-01-21_20-22
 // @description  Ozon, Wildberries, Simaland и Яндекс.Маркет: сортировка отзывов по товару по возрастанию рейтинга
 // @description:en  Ozon, Wildberries, Simaland and Яндекс.Маркет: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries, Simaland и Яндекс.Маркет: сортировка отзывов по товару по возрастанию рейтинга
@@ -20,8 +20,8 @@
 // @match          https://*.sima-land.ru/*
 // @match          http://*.market.yandex.ru/*
 // @match          https://*.market.yandex.ru/*
-// @downloadURL https://update.greasyfork.org/scripts/495412/Ozon%2C%20Wildberries%20and%20Simaland%20customizer%3A%20bad%20reviews%20first%20%2B%20interface%20improvements.user.js
-// @updateURL https://update.greasyfork.org/scripts/495412/Ozon%2C%20Wildberries%20and%20Simaland%20customizer%3A%20bad%20reviews%20first%20%2B%20interface%20improvements.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/495412/Ozon%2C%20Wildberries%2C%20Simaland%20%D0%B8%20%D0%AF%D0%BD%D0%B4%D0%B5%D0%BA%D1%81%D0%9C%D0%B0%D1%80%D0%BA%D0%B5%D1%82%20%D0%BD%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D0%BA%D0%B0%3A%20%D1%81%D0%BD%D0%B0%D1%87%D0%B0%D0%BB%D0%B0%20%D0%BF%D0%BB%D0%BE%D1%85%D0%B8%D0%B5%20%D0%BE%D1%82%D0%B7%D1%8B%D0%B2%D1%8B%20%2B%20%D1%83%D0%BB%D1%83%D1%87%D1%88%D0%B5%D0%BD%D0%B8%D1%8F%20%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D1%84%D0%B5%D0%B9%D1%81%D0%B0.user.js
+// @updateURL https://update.greasyfork.org/scripts/495412/Ozon%2C%20Wildberries%2C%20Simaland%20%D0%B8%20%D0%AF%D0%BD%D0%B4%D0%B5%D0%BA%D1%81%D0%9C%D0%B0%D1%80%D0%BA%D0%B5%D1%82%20%D0%BD%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D0%BA%D0%B0%3A%20%D1%81%D0%BD%D0%B0%D1%87%D0%B0%D0%BB%D0%B0%20%D0%BF%D0%BB%D0%BE%D1%85%D0%B8%D0%B5%20%D0%BE%D1%82%D0%B7%D1%8B%D0%B2%D1%8B%20%2B%20%D1%83%D0%BB%D1%83%D1%87%D1%88%D0%B5%D0%BD%D0%B8%D1%8F%20%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D1%84%D0%B5%D0%B9%D1%81%D0%B0.meta.js
 // ==/UserScript==
 
 /* global GM_config */
@@ -337,7 +337,7 @@
                 clearInterval(interval2);
 
                 if (config.SettingsOnOff) {
-                    // проверка что список уже не раскрыт (Сайт Сималенд этот список может раскрывать заранее)
+                    // проверка что список ещё не раскрыт (Сайт Сималенд этот список может раскрывать заранее)
                     const sortButtonSortingPoint =
                           document.querySelector('div[data-overlayscrollbars-viewport="scrollbarHidden overflowXHidden overflowYHidden"] > div:nth-child(4)')
                     document.querySelector('div[data-overlayscrollbars-viewport="scrollbarHidden overflowXHidden overflowYHidden"] > div > div > button:nth-child(4)');
@@ -374,83 +374,48 @@
 
     // Simaland: Ожидание загрузки страницы товара до появления элемента сортировки рейтинга и искусственное нажатие этого элемента чтобы добиться сортировки рейтинга по возрастанию
     function sortSimaLandReviews() {
-        const interval = setInterval(() => {
-            // ожидание загрузки страницы до появления ссылки на отзывы: соответствено для десктопной или мобильной версии
-            const aReviews =
-                  document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(1) > div > div > div.hb20Nd > div.bcg7Pf > div > div > div.RB0Z2S.vZiVTa > a") ||
-                  document.querySelector("button[data-testid='reviews-button']");
 
-            if (aReviews) {
-                clearInterval(interval);
-                // если ссылка активна (когда отзывы есть в случае десктопной версии) или счётчик отзывов > 0 (в случае мобильной версии)
-                if ((aReviews.tagName === 'A' && aReviews.getAttribute('tabindex') === "0" && !aReviews.classList.contains('HuzmFE'))
-                    || (aReviews.tagName === 'BUTTON' && Number(aReviews.querySelector('.WKsLn3 >span.HrbHuT')?.innerText) > 0)
-                   ) {
-                    aReviews?.addEventListener('click', (event) => {
-                        clickLinkReviews()
-                    });
-                }
+        // Ожидание появления интересующего элемента
+        function waitForElement(parentSelector, targetSelector, targetAttributeName, targetAttributeValue, callback) {
+            let parent = document.querySelector(parentSelector);
+
+            if (!parent) {
+                parent = document.body
             }
-        }, 50);
-        // Ссылка на отзывы внизу страницы Все отзывы - появляется только при прокрутке вниз и более не исчезает
-        const intervalAllReviewsBottom = setInterval(() => {
-            // ожидание загрузки страницы до появления ссылки на отзывы: второй элемент из-за влияния подгружаемого блока (в дальнейшем найти более надёжную привязку)
-            const AllReviewsBottom =
-                  document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(2) > div > div:nth-child(5) > div > div.D5cu9p > div.M0Dw8o > a") ||
-                  document.querySelector("#product__root > div > div.Fa76rh > div:nth-child(2) > div > div:nth-child(6) > div > div.D5cu9p > div.M0Dw8o > a")
-            if (AllReviewsBottom) {
-                clearInterval(intervalAllReviewsBottom);
-                // если ссылка активна (когда отзывы есть в случае десктопной версии) или счётчик отзывов > 0 (в случае мобильной версии)
-                if (AllReviewsBottom.tagName === 'A' && AllReviewsBottom.getAttribute('tabindex') === "0" && AllReviewsBottom.role === 'button') {
-                    AllReviewsBottom.addEventListener('click', (event) => {
-                        clickLinkReviews()
-                    });
-                }
-            }
-        }, 50);
 
-        SimaLandAllReviewsPanelTop()
-
-    }
-
-    // Ссылка на отзывы на панели вверху страницы - появляется только при прокрутке вниз и исчезает при прокрутке вверх
-    function SimaLandAllReviewsPanelTop() {
-        // Выбираем элемент, внутри которого будем отслеживать изменения
-        const targetNode = document.body;
-
-        // Опции для обсерватора (какие именно изменения нужно отслеживать)
-        const configObserver = {
-            childList: true,
-            subtree: true
-        };
-        // Функция-коллбэк, которая будет вызвана при изменениях
-        const callback = function(mutationsList, observer) {
-            for (let mutation of mutationsList) {
-                // Если произошло добавление узла
-                if (mutation.type === 'childList') {
-                    mutation.addedNodes.forEach(node => {
-                        if (node.nodeType === Node.ELEMENT_NODE && node.matches('div.M4Ud_g')) {
-                            // console.log('Элемент <a role="button"> появился на странице:', node);
-                            const AllReviewsPanelTop = document.querySelector("#product__root > div > div.M4Ud_g > div > div > div > div.xx8J2G > div > div.pQ3PLI > a:nth-child(2)")
-                            if (AllReviewsPanelTop) {
-                                // если ссылка активна (когда отзывы есть в случае десктопной версии) или счётчик отзывов > 0 (в случае мобильной версии)
-                                if (AllReviewsPanelTop.tagName === 'A' && AllReviewsPanelTop.getAttribute('tabindex') === "0" && AllReviewsPanelTop.role === 'button') {
-                                    AllReviewsPanelTop.addEventListener('click', (event) => {
-                                        clickLinkReviews()
-                                    });
-                                }
+            const observer = new MutationObserver((mutations) => {
+                for (const mutation of mutations) {
+                    if (mutation.type === 'childList') {
+                        const addedNodes = mutation.addedNodes;
+                        addedNodes.forEach((node) => {
+                            // if (node.nodeType === Node.ELEMENT_NODE && node.getAttribute('data-testid') === 'app-wrapper') {
+                            if (node.nodeType === Node.ELEMENT_NODE && node.getAttribute(targetAttributeName) === targetAttributeValue) {
+                                callback(node);
+                                return;
                             }
-                        }
-                    });
+                        });
+
+
+                    }
                 }
-            }
-        };
+            });
 
-        // Создаем экземпляр обсерватора с указанием коллбэк-функции
-        const observer = new MutationObserver(callback);
+            // Начинаем наблюдение за изменениями в DOM
+            observer.observe(parent, {
+                childList: true, // Наблюдаем за добавлением/удалением дочерних элементов
+                subtree: true    // Наблюдаем за всеми элементами в поддереве
+            });
+        }
 
-        // Начинаем наблюдение за целевым узлом с переданными опциями
-        observer.observe(targetNode, configObserver);
+        // Проверяем, может быть элемент уже есть на странице
+        const appWrapper = document.querySelector('#product__root div[data-testid="app-wrapper"]');
+        if (appWrapper) {
+            clickLinkReviews()
+        }
+        waitForElement('#product__root', '[data-testid="app-wrapper"]', 'data-testid', 'app-wrapper', (element) => {
+            clickLinkReviews()
+        });
+
     }
 
     // Simaland: страница карточки товара, вызванная из каталога при нажатии ссылки рейтинга
@@ -926,63 +891,16 @@
             });
             // Ozon: Страница каталога товаров
         } else if (currentURL.includes('ozon.ru/category/') ) {
-            addOzonSortParamToLinks()
+            // addOzonSortParamToLinks() // TODO: вызвыает глюки
             // Ozon: Страница главная
-        } else if (currentURL==='https://www.ozon.ru/' ) {
-            // Добавление кнопки "Реклама"
-            const EspeciallyForYou = CreateEspeciallyForYou('#df0f70')
-            // let EspeciallyForYou_factView = false // факт вывода раскрывающегося блока рекламы
-            // Перенос верхнего баннера в блок Реклама
-            const targetNode = document.querySelector('div[data-widget="advBanner"]')
-            // targetNode?.remove()
-            function Add_targetNode_into_EspeciallyForYou(targetNode) {
-                if (targetNode && targetNode.parentNode !== EspeciallyForYou) {
-                    if (!targetNode.parentNode.contains(EspeciallyForYou)) {
-                        targetNode.parentNode.insertBefore(EspeciallyForYou, targetNode)
-                    }
-                    targetNode.style.marginTop = '0.3rem'
-                    EspeciallyForYou?.appendChild(targetNode)
-                }
-            }
-            Add_targetNode_into_EspeciallyForYou(targetNode)
-            // Мобильная версия
-            // Удаление предложения перейти на мобильное приложение
-            document.querySelector('div[data-widget="webToAppBanner"]')?.parentNode.remove()
-            const interval_webToAppBanner = setInterval(() => {
-                document.querySelector('div[data-widget="webToAppBanner"]')?.parentNode.remove()
-            }, 200)
-
-            // Настраиваем наблюдение за изменениями в документе
-            const observer = new MutationObserver((mutationsList, observer) => {
-                clearInterval(interval_webToAppBanner)
-                for (let mutation of mutationsList) {
-                    if (mutation.type === 'childList') {
-                        mutation.addedNodes.forEach(node => {
-                            if (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'DIV') {
-                                // Перенос верхнего баннера в блок Реклама
-                                if (node.dataset.widget === "advBanner") {
-                                    Add_targetNode_into_EspeciallyForYou(node)
-                                }
-                                // Мобильная версия
-                                // Удаление предложения перейти на мобильное приложение
-                                else if (node.dataset.widget === "webToAppBanner") {
-                                    node.parentNode.remove()
-                                }
-                            }
-                        });
-
-                    }
-                }
-            });
-            const observer_config = { attributes: true, childList: true, subtree: true };
-            observer.observe(document.querySelector('div#__ozon'), observer_config);
-            // Любая другая страница Ozon
+//         } else if (currentURL==='https://www.ozon.ru/' ) {
+//             // Любая другая страница Ozon
         } else if (currentURL.includes('ozon.ru/')) {
             // Добавление кнопки "Реклама"
             const EspeciallyForYou = CreateEspeciallyForYou('#df0f70')
             // let EspeciallyForYou_factView = false // факт вывода раскрывающегося блока рекламы
             // Перенос верхнего баннера в блок Реклама
-            const targetNode = document.querySelector('div[data-widget="advBanner"]')
+            // const targetNode = document.querySelector('div[data-widget="advBanner"]')
             // targetNode?.remove()
             function Add_targetNode_into_EspeciallyForYou(targetNode) {
                 if (targetNode && targetNode.parentNode !== EspeciallyForYou) {
@@ -993,7 +911,8 @@
                     EspeciallyForYou?.appendChild(targetNode)
                 }
             }
-            Add_targetNode_into_EspeciallyForYou(targetNode)
+            Add_targetNode_into_EspeciallyForYou(document.querySelector('div[data-widget="seasonWidget"]'))
+            Add_targetNode_into_EspeciallyForYou(document.querySelector('div[data-widget="advBanner"]'))
             // Мобильная версия
             // Удаление предложения перейти на мобильное приложение
             document.querySelector('div[data-widget="webToAppBanner"]')?.parentNode.remove()
@@ -1009,7 +928,7 @@
                         mutation.addedNodes.forEach(node => {
                             if (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'DIV') {
                                 // Перенос верхнего баннера в блок Реклама
-                                if (node.dataset.widget === "advBanner") {
+                                if (node.dataset.widget === "seasonWidget" || node.dataset.widget === "advBanner" ) {
                                     Add_targetNode_into_EspeciallyForYou(node)
                                 }
                                 // Мобильная версия
@@ -1017,6 +936,9 @@
                                 else if (node.dataset.widget === "webToAppBanner") {
                                     node.parentNode.remove()
                                 }
+                                // else if (node.classList.contains('tsBodyMBold')){
+                                //     div.tsBodyMBold
+                                // }
                             }
                         });
 
@@ -1027,7 +949,7 @@
             observer.observe(document.querySelector('div#__ozon'), observer_config);
             // Wildberries: карточка товара
         } else if (currentURL.includes('wildberries.ru/catalog/') && currentURL.endsWith('/detail.aspx')) {
-                Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
+            Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
             // Wildberries: отзывы товара
         } else if (currentURL.includes('wildberries.ru/catalog/') && currentURL.includes('/feedbacks')) {
             sortWildberriesReviews();
@@ -1301,7 +1223,7 @@
     // Ozon: Замена ссылок на странице на случай если пользователь захочет открыть ссылку карточки товара в новой вкладке. Отработает позднее, после загрузки. Не обязательное действие.
     // Вызываем функцию сразу после загрузки страницы
     if (currentURL.startsWith('https://www.ozon.ru/')) {
-        window.addEventListener('load', addOzonSortParamToLinks)
+        // window.addEventListener('load', addOzonSortParamToLinks) // TODO: вызвыает глюки
     }
 
 
