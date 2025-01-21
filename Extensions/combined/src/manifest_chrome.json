@@ -18,7 +18,9 @@
       "matches": [
 	    "*://*.ozon.com/*",
  		"*://*.ozon.ru/*",
+ 		"*://*.ozon.by/*",	      
  		"*://*.wildberries.ru/*",
+ 		"*://*.global.wildberries.ru/*",	      
 		"*://*.sima-land.com/*",
  		"*://*.sima-land.ru/*"
 	      ,"*://*.market.yandex.ru/*"
