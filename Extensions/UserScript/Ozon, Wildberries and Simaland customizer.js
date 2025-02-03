@@ -3,7 +3,7 @@
 // @name:en      Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries, Simaland и Яндекс.Маркет настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2025-01-23_01-05
+// @version      2025-02-04_03-27
 // @description  Ozon, Wildberries, Simaland и Яндекс.Маркет: сортировка отзывов по товару по возрастанию рейтинга
 // @description:en  Ozon, Wildberries, Simaland and Яндекс.Маркет: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries, Simaland и Яндекс.Маркет: сортировка отзывов по товару по возрастанию рейтинга
@@ -139,9 +139,9 @@
             // ожидание загрузки страницы до необходимого значения
             const preloader = document.querySelector('#app > div[data-link="visible{:router.showPreview}"]')
             if (preloader?.style.display === 'none') {
-                const sortButton = document.querySelector("#app div.product-feedbacks__sorting > ul > li:nth-child(2) > a");
+                const sortButton = document.querySelector('a[data-link*="sorterModel.sortingEntries[\'valuationup\']"]')
                 if (sortButton) {
-                    clearInterval(interval);
+                    clearInterval(interval)
 
                     // Инициируем событие на элементе
                     // Проверяет, содержит ли элемент класс 'sorting__selected'
@@ -1092,8 +1092,8 @@
         } else if (currentURL.includes('wildberries.ru/catalog/') && currentURL.endsWith('/detail.aspx')) {
             Wildberries__Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
             // Wildberries: отзывы товара
-        } else if (window.location.host === 'wildberries.ru' && window.location.pathname.startsWith('/catalog/') && window.location.pathname.includes('/feedbacks')) {
-            sortWildberriesReviews();
+        } else if ((window.location.host === 'wildberries.ru' || window.location.host === 'www.wildberries.ru') && window.location.pathname.startsWith('/catalog/') && window.location.pathname.includes('/feedbacks')) {
+            sortWildberriesReviews()
             // Wildberries Global: страница товара, но не отзывы
         } else if (window.location.host === 'global.wildberries.ru' && window.location.pathname.startsWith('/product/') && !window.location.pathname.includes('/feedbacks')) {
             // TODO:            // WildberriesGlobal__Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
@@ -1382,7 +1382,7 @@
     window.onpopstate = () => {
         // получаем текущий адрес страницы
         // Wildberries
-        if ((window.location.host === 'wildberries.ru' || window.location.host === 'global.wildberries.ru') && new URL(window.location.href).pathname.startsWith('/catalog/') && window.location.href.includes('/feedbacks')) {
+        if ((window.location.host === 'wildberries.ru' || window.location.host === 'www.wildberries.ru' || window.location.host === 'global.wildberries.ru') && new URL(window.location.href).pathname.startsWith('/catalog/') && window.location.href.includes('/feedbacks')) {
             sortWildberriesReviews();
             if (new URL(window.location.href).pathname.endsWith('/detail.aspx'))
                 Wildberries__Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
@@ -1401,7 +1401,7 @@
     history.pushState = function (state, ...args) {
         originalPushState.apply(this, [state, ...args]);
         // Вызываем функцию сортировки после пуша состояния
-        if (window.location.host === 'wildberries.ru') {
+        if (window.location.host === 'wildberries.ru' || window.location.host === 'www.wildberries.ru') {
             sortWildberriesReviews();
         }
         // if (new URL(window.location.href).pathname.endsWith('/detail.aspx'))
@@ -1414,7 +1414,7 @@
     history.replaceState = new Proxy(history.replaceState, {
         apply: function(target, thisArg, argArray) {
             target.apply(thisArg, argArray);
-            if (window.location.host === 'wildberries.ru') {
+            if (window.location.host === 'wildberries.ru' || window.location.host === 'www.wildberries.ru') {
                 sortWildberriesReviews();
                 if (new URL(window.location.href).pathname.endsWith('/detail.aspx'))
                     Wildberries__Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
@@ -1427,7 +1427,7 @@
         api.runtime.onMessage.addListener((request, sender, sendResponse) => {
             // получаем текущий адрес страницы
             // Wildberries
-            if (window.location.host === 'wildberries.ru' && new URL(request.url).pathname.startsWith('/catalog/') && request.url.includes('/feedbacks')) {
+            if ((window.location.host === 'wildberries.ru' || window.location.host === 'www.wildberries.ru') && new URL(request.url).pathname.startsWith('/catalog/') && request.url.includes('/feedbacks')) {
                 sortWildberriesReviews();
                 if (new URL(window.location.href).pathname.endsWith('/detail.aspx'))
                     Wildberries__Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
