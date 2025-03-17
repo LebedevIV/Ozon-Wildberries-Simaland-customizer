@@ -1,12 +1,12 @@
 // ==UserScript==
-// @name         Ozon, Wildberries, Simaland и Яндекс.Маркет настройка: сначала плохие отзывы + улучшения интерфейса
-// @name:en      Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
-// @name:ru      Ozon, Wildberries, Simaland и Яндекс.Маркет настройка: сначала плохие отзывы + улучшения интерфейса
+// @name         Ozon, Wildberries, Simaland, Яндекс.Маркет и Avito настройка: сначала плохие отзывы + улучшения интерфейса
+// @name:en      Ozon, Wildberries, Simaland, Яндекс.Маркет and Avito customizer: bad reviews first + interface improvements
+// @name:ru      Ozon, Wildberries, Simaland, Яндекс.Маркет и Avito настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2025-03-17_18-52
-// @description  Ozon, Wildberries, Simaland и Яндекс.Маркет: сортировка отзывов по товару по возрастанию рейтинга
-// @description:en  Ozon, Wildberries, Simaland and Яндекс.Маркет: sorting reviews by product by ascending rating
-// @description:ru  Ozon, Wildberries, Simaland и Яндекс.Маркет: сортировка отзывов по товару по возрастанию рейтинга
+// @version      2025-03-18_02-06
+// @description  Ozon, Wildberries, Simaland, Яндекс.Маркет и Avito: сортировка отзывов по товару по возрастанию рейтинга
+// @description:en  Ozon, Wildberries, Simaland, Яндекс.Маркет and Avito: sorting reviews by product by ascending rating
+// @description:ru  Ozon, Wildberries, Simaland, Яндекс.Маркет и Avito: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
 // @license        GPL-3.0-or-later
 // @icon         https://raw.githubusercontent.com/LebedevIV/Ozon-Wildberries-Simaland-customizer/main/icons/logo_color.svg
@@ -22,6 +22,7 @@
 // @match          https://*.sima-land.ru/*
 // @match          http://*.market.yandex.ru/*
 // @match          https://*.market.yandex.ru/*
+// @match          https://*.avito.ru/*
 // @downloadURL https://update.greasyfork.org/scripts/495412/Ozon%2C%20Wildberries%2C%20Simaland%20%D0%B8%20%D0%AF%D0%BD%D0%B4%D0%B5%D0%BA%D1%81%D0%9C%D0%B0%D1%80%D0%BA%D0%B5%D1%82%20%D0%BD%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D0%BA%D0%B0%3A%20%D1%81%D0%BD%D0%B0%D1%87%D0%B0%D0%BB%D0%B0%20%D0%BF%D0%BB%D0%BE%D1%85%D0%B8%D0%B5%20%D0%BE%D1%82%D0%B7%D1%8B%D0%B2%D1%8B%20%2B%20%D1%83%D0%BB%D1%83%D1%87%D1%88%D0%B5%D0%BD%D0%B8%D1%8F%20%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D1%84%D0%B5%D0%B9%D1%81%D0%B0.user.js
 // @updateURL https://update.greasyfork.org/scripts/495412/Ozon%2C%20Wildberries%2C%20Simaland%20%D0%B8%20%D0%AF%D0%BD%D0%B4%D0%B5%D0%BA%D1%81%D0%9C%D0%B0%D1%80%D0%BA%D0%B5%D1%82%20%D0%BD%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D0%BA%D0%B0%3A%20%D1%81%D0%BD%D0%B0%D1%87%D0%B0%D0%BB%D0%B0%20%D0%BF%D0%BB%D0%BE%D1%85%D0%B8%D0%B5%20%D0%BE%D1%82%D0%B7%D1%8B%D0%B2%D1%8B%20%2B%20%D1%83%D0%BB%D1%83%D1%87%D1%88%D0%B5%D0%BD%D0%B8%D1%8F%20%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D1%84%D0%B5%D0%B9%D1%81%D0%B0.meta.js
 // ==/UserScript==
@@ -1036,8 +1037,8 @@
             // Ozon: Страница главная
             //         } else if (currentURL==='https://www.ozon.ru/' ) {
             //             // Любая другая страница Ozon
-        // Ozon: Страница заказов
-        // Изменено: 2025-03-17 18:52, Автор:
+            // Ozon: Страница заказов
+            // Изменено: 2025-03-17 18:52, Автор:
         } else if ((window.location.host.endsWith('ozon.ru') || window.location.host.endsWith('ozon.com') || window.location.host.endsWith('ozon.by')) &&
                    (window.location.pathname.startsWith('/my/orderlist') )) {
             const observer = new MutationObserver((mutationsList, observer) => {
@@ -1443,6 +1444,149 @@
                 sortWildberriesReviews();
                 if (new URL(window.location.href).pathname.endsWith('/detail.aspx'))
                     Wildberries__Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
+            }
+            // avito.ru: Страница отзывов продавца
+            else if (window.location.host.endsWith('avito.ru') && window.location.href.endsWith('#open-reviews-list') ) {
+
+
+
+
+
+                // Функция, которая будет вызвана при обнаружении нужного элемента
+                function handleDivAppearance(div) {
+
+                    const observer_Выпадающий_список = new MutationObserver((mutationsList, observer) => {
+                        for (let mutation of mutationsList) {
+                            if (mutation.type === 'childList') {
+                                mutation.addedNodes.forEach(node => {
+                                    if (node.nodeType === 1 && node.matches('span[class*=" styles-module-size_m_dense-"]')) {
+                                        observer_Выпадающий_список.disconnect();
+
+
+
+
+
+                                        // document.querySelectorAll('span[class*=" styles-module-size_m_dense-"]').forEach(span => {
+                                        // if (span.textContent.trim() !== 'Сначала положительные') {
+                                        //                                             if (node.textContent.trim() !== 'Сначала положительные') {
+
+                                        //                                                 // Настраиваем наблюдение за изменениями в документе
+                                        //                                                 const observer_specFridge = new MutationObserver((mutationsList, observer) => {
+                                        //                                                     for (let mutation of mutationsList) {
+                                        //                                                         if (mutation.type === 'childList') {
+                                        //                                                             mutation.addedNodes.forEach(node => {
+                                        //                                                                 if (node.nodeType === 1 && node.matches('button[data-marker="searchParameters/custom-option(score_asc)"]')) {
+                                        //                                                                     node.click()
+                                        //                                                                 }
+                                        //                                                             });
+                                        //                                                         }
+                                        //                                                     }
+                                        //                                                 });
+                                        //                                                 observer_specFridge.observe(node.parentNode, { attributes: true, childList: true, subtree: true })
+                                        //                                                 node.click()
+                                        //                                             }
+                                        // });
+                                        Проверка_сортировки_отзывов(node)
+                                    }
+
+                                    // Также проверяем вложенные элементы, если они есть
+                                    else if (node.querySelectorAll) {
+                                        const elements = node.querySelectorAll('span[class*=" styles-module-size_m_dense-"]');
+                                        elements.forEach(elem => {
+                                            observer_Выпадающий_список.disconnect();
+
+
+                                            Проверка_сортировки_отзывов(elem)
+                                        });
+                                    }
+
+                                    function Проверка_сортировки_отзывов(node) {
+
+
+
+                                        if (node.textContent.trim() !== 'Сначала положительные') {
+
+                                            // Настраиваем наблюдение за изменениями в документе
+                                            const observer_specFridge = new MutationObserver((mutationsList, observer) => {
+                                                for (let mutation of mutationsList) {
+                                                    if (mutation.type === 'childList') {
+                                                        mutation.addedNodes.forEach(node => {
+                                                            // if (node.nodeType === 1 && node.matches('button[data-marker="searchParameters/custom-option(score_asc)"]')) {
+                                                            //     node.click()
+                                                            // }
+                                                            // // Также проверяем вложенные элементы, если они есть
+                                                            // else if (node.querySelectorAll) {
+                                                            //     const elements = node.querySelectorAll('button[data-marker="searchParameters/custom-option(score_asc)"]');
+                                                            //     elements.forEach(elem => {
+                                                            //         elem.click()
+                                                            //     });
+                                                            // }
+                                                            const кнопка_Сортировка_по_рейтингу_по_убвыанию = document.querySelector('button[data-marker="searchParameters/custom-option(score_asc)"]')
+                                                            if (кнопка_Сортировка_по_рейтингу_по_убвыанию) {
+                                                            observer_specFridge.disconnect()
+                                                                кнопка_Сортировка_по_рейтингу_по_убвыанию.click()
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            });
+                                            observer_specFridge.observe(node.parentNode, { attributes: true, childList: true, subtree: true })
+                                            node.click()
+                                        }
+
+                                    }
+
+                                });
+                            }
+                        }
+                    });
+                    observer_Выпадающий_список.observe(div, { attributes: true, childList: true, subtree: true })
+
+
+
+
+
+                }
+
+                // Настройка MutationObserver
+                const observer = new MutationObserver((mutationsList) => {
+                    for (const mutation of mutationsList) {
+                        // Проверяем, были ли добавлены новые узлы
+                        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                            // Ищем нужный элемент среди добавленных узлов
+                            mutation.addedNodes.forEach(node => {
+                                if (node.nodeType === 1 && node.matches('div[role="region"][data-marker="rating-popup/overlay"]')) {
+                                    observer.disconnect();
+                                    handleDivAppearance(node);
+                                }
+                                // // Также проверяем вложенные элементы, если они есть
+                                // if (node.querySelectorAll) {
+                                //     const divs = node.querySelectorAll('div[role="region"][data-marker="rating-popup/overlay"]');
+                                //     divs.forEach(div => handleDivAppearance(div));
+                                // }
+                            });
+                        }
+                    }
+                });
+
+                // Начинаем наблюдение за изменениями в DOM
+                observer.observe(document.body, {
+                    childList: true, // Наблюдаем за добавлением/удалением дочерних элементов
+                    subtree: true,   // Наблюдаем за всеми вложенными элементами
+                });
+
+                // Проверяем, может быть элемент уже есть на странице
+                const existingDiv = document.querySelector('div[role="region"][data-marker="rating-popup/overlay"]');
+                if (existingDiv) {
+                    handleDivAppearance(existingDiv);
+                }
+
+
+
+
+
+
+
             }
         }
     });
