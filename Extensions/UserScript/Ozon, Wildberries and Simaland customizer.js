@@ -3,7 +3,7 @@
 // @name:en      Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries, Simaland и Яндекс.Маркет настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2025-02-04_03-27
+// @version      2025-03-17_18-52
 // @description  Ozon, Wildberries, Simaland и Яндекс.Маркет: сортировка отзывов по товару по возрастанию рейтинга
 // @description:en  Ozon, Wildberries, Simaland and Яндекс.Маркет: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries, Simaland и Яндекс.Маркет: сортировка отзывов по товару по возрастанию рейтинга
@@ -1036,6 +1036,31 @@
             // Ozon: Страница главная
             //         } else if (currentURL==='https://www.ozon.ru/' ) {
             //             // Любая другая страница Ozon
+        // Ozon: Страница заказов
+        // Изменено: 2025-03-17 18:52, Автор:
+        } else if ((window.location.host.endsWith('ozon.ru') || window.location.host.endsWith('ozon.com') || window.location.host.endsWith('ozon.by')) &&
+                   (window.location.pathname.startsWith('/my/orderlist') )) {
+            const observer = new MutationObserver((mutationsList, observer) => {
+                for (let mutation of mutationsList) {
+                    if (mutation.type === 'childList') {
+                        mutation.addedNodes.forEach(node => {
+                            if (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'DIV') {
+                                // Мобильная версия
+                                // Удаление предложения перейти на мобильное приложение
+                                if (node.dataset.widget === "skuShelfGoods") {
+                                    node.style.display = 'none'
+                                }
+                            }
+                        });
+
+                    }
+                }
+            });
+            const observer_config = { attributes: true, childList: true, subtree: true }
+            observer.observe(document.querySelector('div#__ozon'), observer_config)
+
+            document.querySelectorAll('div[data-widget="skuShelfGoods"]').forEach(node => {node.remove()})
+
         } else if (window.location.host.endsWith('ozon.ru') || window.location.host.endsWith('ozon.com') || window.location.host.endsWith('ozon.by')) {
             // Добавление кнопки "Реклама"
             const EspeciallyForYou = CreateEspeciallyForYou('#df0f70')
