@@ -3,7 +3,7 @@
 // @name:en      Ozon, Wildberries, Simaland, Яндекс.Маркет and Avito customizer: bad reviews first + interface improvements
 // @name:ru      Ozon, Wildberries, Simaland, Яндекс.Маркет и Avito настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2025-03-18_02-06
+// @version      2025-03-27_23-42
 // @description  Ozon, Wildberries, Simaland, Яндекс.Маркет и Avito: сортировка отзывов по товару по возрастанию рейтинга
 // @description:en  Ozon, Wildberries, Simaland, Яндекс.Маркет and Avito: sorting reviews by product by ascending rating
 // @description:ru  Ozon, Wildberries, Simaland, Яндекс.Маркет и Avito: сортировка отзывов по товару по возрастанию рейтинга
