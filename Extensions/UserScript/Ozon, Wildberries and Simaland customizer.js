@@ -1,12 +1,12 @@
 // ==UserScript==
-// @name         Ozon, Wildberries, Simaland, Яндекс.Маркет и Avito настройка: сначала плохие отзывы + улучшения интерфейса
-// @name:en      Ozon, Wildberries, Simaland, Яндекс.Маркет and Avito customizer: bad reviews first + interface improvements
-// @name:ru      Ozon, Wildberries, Simaland, Яндекс.Маркет и Avito настройка: сначала плохие отзывы + улучшения интерфейса
+// @name         Ozon, Wildberries, Simaland и Яндекс.Маркет настройка: сначала плохие отзывы + улучшения интерфейса
+// @name:en      Ozon, Wildberries and Simaland customizer: bad reviews first + interface improvements
+// @name:ru      Ozon, Wildberries, Simaland и Яндекс.Маркет настройка: сначала плохие отзывы + улучшения интерфейса
 // @namespace    http://tampermonkey.net/
-// @version      2025-03-27_23-42
-// @description  Ozon, Wildberries, Simaland, Яндекс.Маркет и Avito: сортировка отзывов по товару по возрастанию рейтинга
-// @description:en  Ozon, Wildberries, Simaland, Яндекс.Маркет and Avito: sorting reviews by product by ascending rating
-// @description:ru  Ozon, Wildberries, Simaland, Яндекс.Маркет и Avito: сортировка отзывов по товару по возрастанию рейтинга
+// @version      2025-05-11_9-52
+// @description  Ozon, Wildberries, Simaland и Яндекс.Маркет: сортировка отзывов по товару по возрастанию рейтинга
+// @description:en  Ozon, Wildberries, Simaland and Яндекс.Маркет: sorting reviews by product by ascending rating
+// @description:ru  Ozon, Wildberries, Simaland и Яндекс.Маркет: сортировка отзывов по товару по возрастанию рейтинга
 // @author       Igor Lebedev
 // @license        GPL-3.0-or-later
 // @icon         https://raw.githubusercontent.com/LebedevIV/Ozon-Wildberries-Simaland-customizer/main/icons/logo_color.svg
@@ -22,7 +22,6 @@
 // @match          https://*.sima-land.ru/*
 // @match          http://*.market.yandex.ru/*
 // @match          https://*.market.yandex.ru/*
-// @match          https://*.avito.ru/*
 // @downloadURL https://update.greasyfork.org/scripts/495412/Ozon%2C%20Wildberries%2C%20Simaland%20%D0%B8%20%D0%AF%D0%BD%D0%B4%D0%B5%D0%BA%D1%81%D0%9C%D0%B0%D1%80%D0%BA%D0%B5%D1%82%20%D0%BD%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D0%BA%D0%B0%3A%20%D1%81%D0%BD%D0%B0%D1%87%D0%B0%D0%BB%D0%B0%20%D0%BF%D0%BB%D0%BE%D1%85%D0%B8%D0%B5%20%D0%BE%D1%82%D0%B7%D1%8B%D0%B2%D1%8B%20%2B%20%D1%83%D0%BB%D1%83%D1%87%D1%88%D0%B5%D0%BD%D0%B8%D1%8F%20%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D1%84%D0%B5%D0%B9%D1%81%D0%B0.user.js
 // @updateURL https://update.greasyfork.org/scripts/495412/Ozon%2C%20Wildberries%2C%20Simaland%20%D0%B8%20%D0%AF%D0%BD%D0%B4%D0%B5%D0%BA%D1%81%D0%9C%D0%B0%D1%80%D0%BA%D0%B5%D1%82%20%D0%BD%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D0%BA%D0%B0%3A%20%D1%81%D0%BD%D0%B0%D1%87%D0%B0%D0%BB%D0%B0%20%D0%BF%D0%BB%D0%BE%D1%85%D0%B8%D0%B5%20%D0%BE%D1%82%D0%B7%D1%8B%D0%B2%D1%8B%20%2B%20%D1%83%D0%BB%D1%83%D1%87%D1%88%D0%B5%D0%BD%D0%B8%D1%8F%20%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D1%84%D0%B5%D0%B9%D1%81%D0%B0.meta.js
 // ==/UserScript==
@@ -135,68 +134,40 @@
     }
 
     // Wildberries: Ожидание загрузки страницы товара до появления элемента сортировки рейтинга и искусственное двойное нажатие этого элемента чтобы добиться сортировки рейтинга по возрастанию
-    // Изменено: 2025-03-27 23:11, Автор:
     function sortWildberriesReviews() {
+        const interval = setInterval(() => {
+            // ожидание загрузки страницы до необходимого значения
+            const preloader = document.querySelector('#app > div[data-link="visible{:router.showPreview}"]')
+            if (preloader?.style.display === 'none') {
+                const sortButton = document.querySelector('a[data-link*="sorterModel.sortingEntries[\'valuationup\']"]')
+                if (sortButton) {
+                    clearInterval(interval)
 
-        // Селектор целевой кнопки
-        const buttonSelector = 'div.product-feedbacks__sorting a[type="button"][aria-label="Оценке"]';
-
-        // Функция для проверки состояния и выполнения кликов
-        function checkAndClick() {
-            let attempts = 0;
-            const maxAttempts = 2; // Максимальное количество попыток
-
-            const attempt = () => {
-                const button = document.querySelector(buttonSelector);
-
-                // Если кнопка не найдена или превышены попытки, выходим
-                if (!button || attempts >= maxAttempts) return;
-
-                const span = button.querySelector('span');
-
-                // Проверяем наличие нужного класса у span
-                if (span && span.classList.contains('sorting__decor--up')) {
-                    return;
-                }
-
-                // Если кнопка не выбрана, кликаем и повторяем проверку
-                if (!button.classList.contains('sorting__selected')) {
-                    button.click();
-                    attempts++;
-                    setTimeout(attempt, 500); // Задержка перед следующей проверкой
-                }
-            };
-
-            attempt();
-        }
-
-        // Проверяем наличие кнопки при загрузке страницы
-        const initialButton = document.querySelector(buttonSelector);
-        if (initialButton) {
-            checkAndClick();
-        } else {
-            // Настраиваем наблюдение за появлением кнопки
-            const observer = new MutationObserver((mutations) => {
-                for (const mutation of mutations) {
-                    for (const node of mutation.addedNodes) {
-                        if (node.nodeType !== Node.ELEMENT_NODE) continue;
-
-                        // Проверяем, содержит ли узел целевую кнопку
-                        if (node.matches(buttonSelector) || node.querySelector(buttonSelector)) {
-                            observer.disconnect();
-                            checkAndClick();
-                            return;
+                    // Инициируем событие на элементе
+                    // Проверяет, содержит ли элемент класс 'sorting__selected'
+                    if (sortButton.classList.contains('sorting__selected')) {
+                        // Находим элемент <span> внутри найденного <a>
+                        let span = sortButton.querySelector('span');
+                        // Проверяем, содержит ли <span> класс 'sorting__decor--up'
+                        // Если содержит, значит, сортировка по возрастанию уже произведена и никаких действий производить не нужно (всё равно приходится произвести два клика, так как, по-видимому, по мере загрузки происходит последующий сброс настроек) - надо отловить объект, который появляется уже после сброса, и зацепиться за него
+                        if (span && span.classList.contains('sorting__decor--up')) {
+                            // Первое нажатие производит сортировку по убыванию рейтинга
+                            // sortButton.click();
+                            // Второе нажатие производит сортировку по возрастанию рейтинга
+                            // sortButton.click();
+                        } else {
+                            // Нажатие производит сортировку по возрастанию рейтинга
+                            sortButton.click();
                         }
+                    } else {
+                        // Первое нажатие производит сортировку по убыванию рейтинга
+                        sortButton.click();
+                        // Второе нажатие производит сортировку по возрастанию рейтинга
+                        sortButton.click();
                     }
                 }
-            });
-
-            // Начинаем наблюдение за изменениями в DOM
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
-        }
+            }
+        }, 50);
     }
 
     // Wildberries: Показать блок "Характеристики и описание" и разместить под фото товара()
@@ -524,13 +495,23 @@
                                 sortButton.click();
                                 const interval3 = setInterval(() => {
                                     // ожидание дозагрузки страницы до раскрытия списка сортировки ипоявления пункта сортировки по возрастанию рейтинга
-                                    const sortButtonSortingPoint =
-                                          document.querySelector('div[data-overlayscrollbars-viewport="scrollbarHidden overflowXHidden overflowYHidden"] > div:nth-child(4)') ||
-                                          document.querySelector('div[data-overlayscrollbars-viewport="scrollbarHidden overflowXHidden overflowYHidden"] > div > div > button:nth-child(4)');
-                                    if (sortButtonSortingPoint) {
-                                        clearInterval(interval3);
-                                        if (config.SettingsOnOff) {
-                                            sortButtonSortingPoint.click();
+                                    // const sortButtonSortingPoint =
+                                    //       document.querySelector('div[data-overlayscrollbars-viewport="scrollbarHidden overflowXHidden overflowYHidden"] > div:nth-child(4)') ||
+                                    //       document.querySelector('div[data-overlayscrollbars-viewport="scrollbarHidden overflowXHidden overflowYHidden"] > div > div > button:nth-child(4)');
+                                    // if (sortButtonSortingPoint) {
+                                    const sortButtonSorting =
+                                          document.querySelector('div[data-overlayscrollbars-viewport="scrollbarHidden overflowXHidden overflowYHidden"]') ;
+                                    if (sortButtonSorting) {
+                                        // Ищем все div внутри родителя и фильтруем по тексту
+                                        const sortButtonSortingPoint = Array.from(sortButtonSorting.querySelectorAll('div'))
+                                        .find(div => div.textContent.includes('Сначала с низкой оценкой'));
+
+                                        if (sortButtonSortingPoint) {
+                                            // Действия с sortButtonSortingPoint
+                                            clearInterval(interval3);
+                                            if (config.SettingsOnOff) {
+                                                sortButtonSortingPoint.click();
+                                            }
                                         }
                                     }
                                 }, 50);
@@ -1216,71 +1197,9 @@
             //             // -- Создание ссылки с параметром-сортировкой: не сработало
         } else if (window.location.host === 'global.wildberries.ru' && window.location.pathname.startsWith('/product/') && window.location.pathname.includes('/feedbacks')) {
             WildberriesGlobal__Сортировка_отзывов_по_возрастанию()
-        // Главная страница
-        // Изменено: 2025-03-27 23:41, Автор:
-        } else if (window.location.host === 'wildberries.ru' || window.location.host === 'www.wildberries.ru') {
+
+        } else if (currentURL.includes('wildberries.ru/')) {
             window.addEventListener('load', addWildberriesSortParamToLinks)
-
-            // Добавление кнопки "Реклама"
-            const EspeciallyForYou = CreateEspeciallyForYou('#df0f70')
-            // let EspeciallyForYou_factView = false // факт вывода раскрывающегося блока рекламы
-            // Перенос верхнего баннера в блок Реклама
-            // const targetNode = document.querySelector('div[data-widget="advBanner"]')
-            // targetNode?.remove()
-            function Add_targetNode_into_EspeciallyForYou(targetNode) {
-                if (targetNode && targetNode.parentNode !== EspeciallyForYou) {
-                    if (!targetNode.parentNode.contains(EspeciallyForYou)) {
-                        targetNode.parentNode.insertBefore(EspeciallyForYou, targetNode)
-                    }
-                    targetNode.style.marginTop = '0.3rem'
-                    EspeciallyForYou?.appendChild(targetNode)
-                }
-            }
-
-            // Мобильная версия
-            // Удаление предложения перейти на мобильное приложение
-            // document.querySelector('div[data-widget="webToAppBanner"]')?.parentNode.remove()
-            // const interval_webToAppBanner = setInterval(() => {
-            //     document.querySelector('div[data-widget="webToAppBanner"]')?.parentNode.remove()
-            // }, 200)
-
-            // Настраиваем наблюдение за изменениями в документе
-            const observer = new MutationObserver((mutationsList, observer) => {
-                for (let mutation of mutationsList) {
-                    if (mutation.type === 'childList') {
-                        mutation.addedNodes.forEach(node => {
-                            if (node.nodeType === Node.ELEMENT_NODE) {
-                                // Перенос верхнего баннера в блок Реклама
-                                if (node.nodeName === 'DIV' && (node.classList.contains('main-page__banner-info') || node.classList.contains('main-page__banner') )) {
-                                    Add_targetNode_into_EspeciallyForYou(node)
-                                }
-                                else if (
-                                    node.querySelector('div.main-page__banner-info') ||
-                                    node.querySelector('div.main-page__banner')
-                                ) {
-                                    const targetNode = node.querySelector('div.main-page__banner-info') || node.querySelector('div.main-page__banner')
-                                    Add_targetNode_into_EspeciallyForYou(targetNode)
-                                    // Мобильная версия
-                                    // Удаление предложения перейти на мобильное приложение
-                                    // else if (node.dataset.widget === "webToAppBanner") {
-                                    //     node.parentNode.remove()
-                                    // }
-                                    // else if (node.classList.contains('tsBodyMBold')){
-                                    //     div.tsBodyMBold
-                                    // }
-                                }
-                            }
-                        });
-
-                    }
-                }
-            });
-            const observer_config = { attributes: true, childList: true, subtree: true }
-            observer.observe(document.body, observer_config)
-
-            Add_targetNode_into_EspeciallyForYou(document.querySelector('div.main-page__banner-info'))
-            Add_targetNode_into_EspeciallyForYou(document.querySelector('div.main-page__banner'))
-            
             // Simaland: страница карточки товара
         } else if (currentURL.match(/^https:\/\/www\.sima-land\.ru\/\d+\/.+\/$/)) {
             // } else if (/^https:\/\/www\.sima-land\.ru\/\d{7}\/.*\/$/.test(currentURL)) {
@@ -1534,149 +1453,6 @@
                 sortWildberriesReviews();
                 if (new URL(window.location.href).pathname.endsWith('/detail.aspx'))
                     Wildberries__Показать_блок__Характеристики_и_описание__и_разместить_под_фото_товара()
-            }
-            // avito.ru: Страница отзывов продавца
-            else if (window.location.host.endsWith('avito.ru') && window.location.href.endsWith('#open-reviews-list') ) {
-
-
-
-
-
-                // Функция, которая будет вызвана при обнаружении нужного элемента
-                function handleDivAppearance(div) {
-
-                    const observer_Выпадающий_список = new MutationObserver((mutationsList, observer) => {
-                        for (let mutation of mutationsList) {
-                            if (mutation.type === 'childList') {
-                                mutation.addedNodes.forEach(node => {
-                                    if (node.nodeType === 1 && node.matches('span[class*=" styles-module-size_m_dense-"]')) {
-                                        observer_Выпадающий_список.disconnect();
-
-
-
-
-
-                                        // document.querySelectorAll('span[class*=" styles-module-size_m_dense-"]').forEach(span => {
-                                        // if (span.textContent.trim() !== 'Сначала положительные') {
-                                        //                                             if (node.textContent.trim() !== 'Сначала положительные') {
-
-                                        //                                                 // Настраиваем наблюдение за изменениями в документе
-                                        //                                                 const observer_specFridge = new MutationObserver((mutationsList, observer) => {
-                                        //                                                     for (let mutation of mutationsList) {
-                                        //                                                         if (mutation.type === 'childList') {
-                                        //                                                             mutation.addedNodes.forEach(node => {
-                                        //                                                                 if (node.nodeType === 1 && node.matches('button[data-marker="searchParameters/custom-option(score_asc)"]')) {
-                                        //                                                                     node.click()
-                                        //                                                                 }
-                                        //                                                             });
-                                        //                                                         }
-                                        //                                                     }
-                                        //                                                 });
-                                        //                                                 observer_specFridge.observe(node.parentNode, { attributes: true, childList: true, subtree: true })
-                                        //                                                 node.click()
-                                        //                                             }
-                                        // });
-                                        Проверка_сортировки_отзывов(node)
-                                    }
-
-                                    // Также проверяем вложенные элементы, если они есть
-                                    else if (node.querySelectorAll) {
-                                        const elements = node.querySelectorAll('span[class*=" styles-module-size_m_dense-"]');
-                                        elements.forEach(elem => {
-                                            observer_Выпадающий_список.disconnect();
-
-
-                                            Проверка_сортировки_отзывов(elem)
-                                        });
-                                    }
-
-                                    function Проверка_сортировки_отзывов(node) {
-
-
-
-                                        if (node.textContent.trim() !== 'Сначала положительные') {
-
-                                            // Настраиваем наблюдение за изменениями в документе
-                                            const observer_specFridge = new MutationObserver((mutationsList, observer) => {
-                                                for (let mutation of mutationsList) {
-                                                    if (mutation.type === 'childList') {
-                                                        mutation.addedNodes.forEach(node => {
-                                                            // if (node.nodeType === 1 && node.matches('button[data-marker="searchParameters/custom-option(score_asc)"]')) {
-                                                            //     node.click()
-                                                            // }
-                                                            // // Также проверяем вложенные элементы, если они есть
-                                                            // else if (node.querySelectorAll) {
-                                                            //     const elements = node.querySelectorAll('button[data-marker="searchParameters/custom-option(score_asc)"]');
-                                                            //     elements.forEach(elem => {
-                                                            //         elem.click()
-                                                            //     });
-                                                            // }
-                                                            const кнопка_Сортировка_по_рейтингу_по_убвыанию = document.querySelector('button[data-marker="searchParameters/custom-option(score_asc)"]')
-                                                            if (кнопка_Сортировка_по_рейтингу_по_убвыанию) {
-                                                            observer_specFridge.disconnect()
-                                                                кнопка_Сортировка_по_рейтингу_по_убвыанию.click()
-                                                            }
-                                                        });
-                                                    }
-                                                }
-                                            });
-                                            observer_specFridge.observe(node.parentNode, { attributes: true, childList: true, subtree: true })
-                                            node.click()
-                                        }
-
-                                    }
-
-                                });
-                            }
-                        }
-                    });
-                    observer_Выпадающий_список.observe(div, { attributes: true, childList: true, subtree: true })
-
-
-
-
-
-                }
-
-                // Настройка MutationObserver
-                const observer = new MutationObserver((mutationsList) => {
-                    for (const mutation of mutationsList) {
-                        // Проверяем, были ли добавлены новые узлы
-                        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-                            // Ищем нужный элемент среди добавленных узлов
-                            mutation.addedNodes.forEach(node => {
-                                if (node.nodeType === 1 && node.matches('div[role="region"][data-marker="rating-popup/overlay"]')) {
-                                    observer.disconnect();
-                                    handleDivAppearance(node);
-                                }
-                                // // Также проверяем вложенные элементы, если они есть
-                                // if (node.querySelectorAll) {
-                                //     const divs = node.querySelectorAll('div[role="region"][data-marker="rating-popup/overlay"]');
-                                //     divs.forEach(div => handleDivAppearance(div));
-                                // }
-                            });
-                        }
-                    }
-                });
-
-                // Начинаем наблюдение за изменениями в DOM
-                observer.observe(document.body, {
-                    childList: true, // Наблюдаем за добавлением/удалением дочерних элементов
-                    subtree: true,   // Наблюдаем за всеми вложенными элементами
-                });
-
-                // Проверяем, может быть элемент уже есть на странице
-                const existingDiv = document.querySelector('div[role="region"][data-marker="rating-popup/overlay"]');
-                if (existingDiv) {
-                    handleDivAppearance(existingDiv);
-                }
-
-
-
-
-
-
-
             }
         }
     });
